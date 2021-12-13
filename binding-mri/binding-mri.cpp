@@ -86,6 +86,7 @@ void steamBindingInit();
 void chromaBindingInit();
 void modshotwindowBindingInit();
 void aleffectBindingInit();
+void otherviewBindingInit();
 RB_METHOD(mriPrint);
 RB_METHOD(mriP);
 RB_METHOD(mkxpDataDirectory);
@@ -124,6 +125,7 @@ static void mriBindingInit()
 	chromaBindingInit();
 	modshotwindowBindingInit();
 	aleffectBindingInit();
+	otherviewBindingInit();
 	rb_define_global_const("MODSHOT_VERSION", rb_str_new_cstr(MODSHOT_VERSION));
 	if (rgssVer >= 3)
 	{
@@ -441,6 +443,7 @@ static void runRMXPScripts(BacktraceData &btData)
 
 	/* Set the debug flag */
 	rb_gv_set("$debug", conf.debugMode ? Qtrue : Qfalse);
+	rb_gv_set("$otherview", conf.isOtherView ? Qtrue : Qfalse);
 
 	rb_gv_set("$RGSS_SCRIPTS", scriptArray);
 
@@ -620,6 +623,7 @@ static void mriBindingExecute()
 
 	// the three arguments are the executable name, and the '-e ""' is to tell ruby to run an empty file
 	// otherwise (since this parses options for the ruby executable) it's gonna wait on stdin for code
+	// --jit enables the jit i think
 	char options_argv1[] = "oneshot", options_argv2[] = "-e", options_argv3[] = "";
 	char* options_argv[] = {options_argv1, options_argv2, options_argv3, NULL};
 	ruby_options(3, options_argv);

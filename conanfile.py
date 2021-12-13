@@ -1,7 +1,8 @@
 import os.path
 import datetime
 
-from conans import CMake, ConanFile, tools
+from conans import CMake, ConanFile, tools, AutoToolsBuildEnvironment
+from conans.client.tools import win
 from conans.errors import ConanException
 
 MODSHOT_VERSION_H='''#ifndef MODSHOT_VERSION
@@ -19,32 +20,35 @@ class MkxpConan(ConanFile):
     generators = "cmake"
     exports_sources = "*"
     requires = (
-        "boost/1.73.0",
+        "boost/1.77.0",
         "openal/1.18.2@bincrafters/stable",
-        "physfs/3.0.1@bincrafters/stable",
-        "pixman/0.34.0@bincrafters/stable",
-        "ruby/2.5.3@eliza/testing",
-        "sdl2/2.0.9@bincrafters/stable",
+        "physfs/3.0.1@astrabit/testing",
+        "pixman/0.34.0@astrabit/testing",
+        "ruby/3.0.2@astrabit/testing",
         "sdl2_image/2.0.5@bincrafters/stable",
         "sdl2_ttf/2.0.15@bincrafters/stable",
         "sdl_sound-mkxp/1.0.1@eliza/stable",
-        "sigc++/2.10.0@bincrafters/stable",
+        "sigc++/2.10.0@astrabit/testing",
         # Overrides
         "libpng/1.6.37",
         "zlib/1.2.11",
         "bzip2/1.0.8",
+        "cppzmq/4.8.1"
     )
-    build_requires = ("ruby_installer/2.5.5@bincrafters/stable", )
+    build_requires = ("ruby_installer/3.0.2@astrabit/testing")
     options = {
         "platform": ["standalone", "steam"],
+        "msys2": [True, False],
     }
     default_options = (
         "platform=standalone",
         "boost:without_test=True",
+	"boost:without_fiber=True",
         "cygwin_installer:packages=xxd",
         # Avoid dead url bitrot in cygwin_installer
         "cygwin_installer:with_pear=False",
         "ruby:with_openssl=True",
+        "msys2=False",
     )
 
     #def build_requirements(self):
@@ -59,6 +63,16 @@ class MkxpConan(ConanFile):
             self.requires("ogg/1.3.4")
             self.requires("vorbis/1.3.6")
             self.requires("libalsa/1.1.9")
+            self.requires("sdl2/2.0.9@bincrafters/stable")
+            self.requires("openssl/1.1.1l")
+        if tools.os_info.is_windows:
+            self.requires("sdl2/2.0.14@bincrafters/stable")
+            self.requires("openssl/1.1.1k")
+    
+    def build_requirements(self):
+        if self.options.msys2:
+            self.build_requires("msys2/cci.latest")
+            self.build_requires("mingw-w64/8.1")
 
     def configure(self):
         if tools.os_info.is_windows:
@@ -66,6 +80,10 @@ class MkxpConan(ConanFile):
             self.options["openal"].shared = True
             # Fix linker error in SDL_sound fork with SDL2
             self.options["sdl2"].shared = True
+            self.options["openssl"].shared = True
+            win_bash = self.settings.compiler != "Visual Studio"
+            if win_bash or self.options.msys2:
+                self.win_bash = win_bash           
 
     def generate_version_number(self):
         try:
@@ -89,6 +107,23 @@ class MkxpConan(ConanFile):
         cmake.configure()
         cmake.build()
 
+        #if self.options.platform == "steam":
+        #    cmake_command = f"cmake -D STEAM=ON {self.source_folder}"
+        #    if self.options.msys2:
+        #        cmake_command += " -G \"MinGW Makefiles\""
+        #else:
+        #    cmake_command = f"cmake {self.source_folder}"
+        #    if self.options.msys2:
+        #        cmake_command += " -G \"MinGW Makefiles\""
+        #self.run(cmake_command)
+        #self.run("make")
+        
+        #autotools = AutoToolsBuildEnvironment(self, win_bash=self.options.msys2)
+        #if self.options.platform == "steam":
+        #    autotools.defines.append("STEAM=ON")
+        #    autotools.configure()
+        #    autotools.make()
+
     def build(self):
         #if tools.os_info.is_windows:
         #    cygwin_bin = self.deps_env_info["cygwin_installer"].CYGWIN_BIN
@@ -108,6 +143,11 @@ class MkxpConan(ConanFile):
 
     def package(self):
         self.copy("*", dst="bin", src="bin")
+
+    #def package_info(self):
+    #    if self.options.msys2:
+    #        self.conf_info["tools.microsoft.bash:subsystem"] = "msys2"
+    #        self.conf_info["tools.microsoft.bash:path"] =  "C:\\msys64\\usr\\bin\\bash.exe"
 
     def imports(self):
         self.do_copy_deps(self.copy)
@@ -137,6 +177,6 @@ class MkxpConan(ConanFile):
 	# but this makes distributing mods easier, and also makes sure windows and linux are mostly the same
         copy("*",
             dst="bin/lib/ruby/",
-            src="lib/ruby/2.5.0/",
+            src="lib/ruby/3.0.0/",
             root_package="ruby",
             keep_path=True)

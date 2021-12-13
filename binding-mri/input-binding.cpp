@@ -181,6 +181,27 @@ RB_METHOD(inputUnsetKey)
 	shState->input().unsetKey(num);
 	return Qnil;
 }
+RB_METHOD(inputSetKeyPressed)
+{
+	RB_UNUSED_PARAM;
+	int num = getButtonArg(argc, argv);
+	shState->input().setPressed(num);
+	return Qnil;
+}
+RB_METHOD(inputSetKeyTriggered)
+{
+	RB_UNUSED_PARAM;
+	int num = getButtonArg(argc, argv);
+	shState->input().setTriggered(num);
+	return Qnil;
+}
+RB_METHOD(inputSetKeyRepeated)
+{
+	RB_UNUSED_PARAM;
+	int num = getButtonArg(argc, argv);
+	shState->input().setRepeated(num);
+	return Qnil;
+}
 
 struct
 {
@@ -207,6 +228,9 @@ static buttonCodes[] =
 	{ "L",          Input::L          },
 	{ "R",          Input::R          },
 
+	{ "SETTINGS", 	Input::Settings   },
+	{ "PAUSE", 		Input::Pause	  },
+	
 	{ "F5",         Input::F5         },
 	{ "F6",         Input::F6         },
 	{ "F7",         Input::F7         },
@@ -473,7 +497,48 @@ RB_METHOD(inputGetAllPressed)
 	}
 	return res;
 }
-
+RB_METHOD(inputGetAllTriggered)
+{
+	RB_UNUSED_PARAM;
+	VALUE res = rb_ary_new();
+    for (size_t i = 0; i < buttonCodesN; i++) {
+		if (shState->input().isTriggered(buttonCodes[i].val)) {
+            rb_ary_push(res, INT2FIX(buttonCodes[i].val));
+		}
+	}
+	return res;
+}
+RB_METHOD(inputGetAllRepeated)
+{
+	RB_UNUSED_PARAM;
+	VALUE res = rb_ary_new();
+    for (size_t i = 0; i < buttonCodesN; i++) {
+		if (shState->input().isRepeated(buttonCodes[i].val)) {
+            rb_ary_push(res, INT2FIX(buttonCodes[i].val));
+		}
+	}
+	return res;
+}
+RB_METHOD(inputSetAllPressedUnPressed)
+{
+	RB_UNUSED_PARAM;
+	VALUE res = rb_ary_new();
+    for (size_t i = 0; i < buttonCodesN; i++) {
+		if (shState->input().isPressed(buttonCodes[i].val)) {
+            shState->input().unsetKey(buttonCodes[i].val);
+		}
+	}
+	return Qnil;
+}
+RB_METHOD(inputSetAllUnPressed)
+{
+	RB_UNUSED_PARAM;
+	VALUE res = rb_ary_new();
+    for (size_t i = 0; i < buttonCodesN; i++) {
+        shState->input().unsetKey(buttonCodes[i].val);		
+	}
+	return Qnil;
+}
 void
 inputBindingInit()
 {
@@ -498,8 +563,16 @@ inputBindingInit()
 	_rb_define_module_function(module, "set_text_input", inputSetTextInput);
 
 	_rb_define_module_function(module, "get_all_pressed", inputGetAllPressed);
+	_rb_define_module_function(module, "get_all_triggered", inputGetAllTriggered);
+	_rb_define_module_function(module, "get_all_repeated", inputGetAllRepeated);
+	_rb_define_module_function(module, "set_all_pressed_unpressed", inputSetAllPressedUnPressed);
+	_rb_define_module_function(module, "set_all_unpressed", inputSetAllUnPressed);
 	_rb_define_module_function(module, "set_key", inputSetKey);
 	_rb_define_module_function(module, "unset_key", inputUnsetKey);
+
+	_rb_define_module_function(module, "set_key_pressed", inputSetKeyPressed);
+	_rb_define_module_function(module, "set_key_repeated", inputSetKeyRepeated);
+	_rb_define_module_function(module, "set_key_triggered", inputSetKeyTriggered);
 
 	if (rgssVer >= 3)
 	{
