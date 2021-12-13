@@ -1,4 +1,4 @@
-# somedevfox/OSFM-Core-Public
+# /SFM-Core-Public
 [![Build Modshot](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-standalone.yaml/badge.svg)](https://github.com/somedevfox/OSFM-Core-Public/actions/workflows/build-standalone.yaml)[![Build Modshot with Steam support](https://github.com/somedevfox/OSFM-Core-Public/actions/workflows/build-steam.yaml/badge.svg)](https://github.com/somedevfox/OSFM-Core-Public/actions/workflows/build-steam.yaml)[![Build Modshot with MSYS2](https://github.com/somedevfox/OSFM-Core-Public/actions/workflows/build-mys2.yml/badge.svg)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-mys2.yml)
 ---
 
