@@ -81,7 +81,7 @@ jobs:
       - name: Create dist folder
         run: |
           mkdir ${{ runner.temp }}/dist &&
-          ${{ github.workspace }}scripts/shell/make-linux-dist.sh ${{ runner.temp }}/build ${{ runner.temp }}/dist &&
+          ${{ github.workspace }}/scripts/shell/make-linux-dist.sh ${{ runner.temp }}/build ${{ runner.temp }}/dist &&
           cd ${{ runner.temp }}/dist &&
           tar czf ${{ runner.temp }}/modshot_${{ github.sha }}.tar.gz .
       - name: Upload artifact
