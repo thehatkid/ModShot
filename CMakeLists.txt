@@ -361,7 +361,7 @@ target_link_libraries(${PROJECT_NAME}
 	CONAN_PKG::sdl2_ttf
 	CONAN_PKG::sdl_sound-mkxp
 	CONAN_PKG::sigc++
-	CONAN_PKG::glflib
+	
 	${PLATFORM_LIBRARIES})
 
 IF(APPLE)
