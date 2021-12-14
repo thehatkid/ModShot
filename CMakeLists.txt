@@ -349,6 +349,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_GRAPHICS_HEADER_PATH})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_OPENGL_HEADER_PATH})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_INPUT_HEADER_PATH})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_FS_HEADER_PATH})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_STEAM_PATH})
 target_link_libraries(${PROJECT_NAME}
 	CONAN_PKG::boost
 	CONAN_PKG::openal
