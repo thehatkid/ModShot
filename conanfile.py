@@ -104,6 +104,7 @@ class MkxpConan(ConanFile):
         cmake = CMake(self, msbuild_verbosity='minimal')
         if self.options.platform == "steam":
             cmake.definitions["STEAM"] = "ON"
+        else: cmake.definitions["STEAM"] = "OFF"
         cmake.configure()
         cmake.build()
 
