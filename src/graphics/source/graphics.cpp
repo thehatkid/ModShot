@@ -216,7 +216,7 @@ public:
 			shader.bind();
 			shader.setGray(t.w);
 			shader.applyViewportProj();
-			shader.setTexSize(screenRect.size());
+			shader.setTexSize(viewpRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
@@ -247,7 +247,7 @@ public:
 			ScannedShader &shader = shState->shaders().scanned;
 			shader.bind();
 			shader.applyViewportProj();
-			shader.setTexSize(screenRect.size());
+			shader.setTexSize(viewpRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
@@ -279,7 +279,7 @@ public:
 			shader.bind();
 			shader.setiTime(water);
 			shader.applyViewportProj();
-			shader.setTexSize(screenRect.size());
+			shader.setTexSize(viewpRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
@@ -311,7 +311,7 @@ public:
 			shader.bind();
 			shader.setiTime(cubic);
 			shader.applyViewportProj();
-			shader.setTexSize(screenRect.size());
+			shader.setTexSize(viewpRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
@@ -343,7 +343,7 @@ public:
 			shader.bind();
 			shader.setrgbOffset(rx, ry);
 			shader.applyViewportProj();
-			shader.setTexSize(screenRect.size());
+			shader.setTexSize(viewpRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
@@ -375,7 +375,7 @@ public:
 			shader.bind();
 			shader.setZoom(z);
 			shader.applyViewportProj();
-			shader.setTexSize(screenRect.size());
+			shader.setTexSize(viewpRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
