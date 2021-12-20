@@ -44,7 +44,7 @@ jobs:
       - name: Install msys2 and mingw
         run: |
           conan install mingw_installer/1.0@conan/stable --profile=msys2;
-          conan install msys2_installer/20210725@somedevfox/testing --profile=msys2
+          conan install msys2_installer/20210725@somedevfox/testing --profile=msys2 --build=missing
       - name: Append to msys2 profile
         run: |
           echo [build_requires] >> C:\.conan\.conan\profiles\msys2;
