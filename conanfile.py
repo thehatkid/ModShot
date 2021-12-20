@@ -71,7 +71,7 @@ class MkxpConan(ConanFile):
     
     def build_requirements(self):
         if self.options.msys2:
-            self.build_requires("msys2_installer/20210725@somedevfox/_")
+            self.build_requires("msys2_installer/20210725@somedevfox/testing")
             self.build_requires("mingw-w64/8.1")
 
     def configure(self):
