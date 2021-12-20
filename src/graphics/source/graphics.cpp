@@ -197,20 +197,20 @@ public:
 		{
 			pp.swapRender();
 
-			if (!viewpRect.encloses(screenRect))
-			{
-				/* Scissor test _does_ affect FBO blit operations,
-				 * and since we're inside the draw cycle, it will
-				 * be turned on, so turn it off temporarily */
-				glState.scissorTest.pushSet(false);
+			//if (!viewpRect.encloses(screenRect))
+			//{
+			//	/* Scissor test _does_ affect FBO blit operations,
+			//	 * and since we're inside the draw cycle, it will
+			//	 * be turned on, so turn it off temporarily */
+			//	glState.scissorTest.pushSet(false);
 
-				GLMeta::blitBegin(pp.frontBuffer());
-				GLMeta::blitSource(pp.backBuffer());
-				GLMeta::blitRectangle(geometry.rect, Vec2i());
-				GLMeta::blitEnd();
+			//	GLMeta::blitBegin(pp.frontBuffer());
+			//	GLMeta::blitSource(pp.backBuffer());
+			//	GLMeta::blitRectangle(geometry.rect, Vec2i());
+			//	GLMeta::blitEnd();
 
-				glState.scissorTest.pop();
-			}
+			//	glState.scissorTest.pop();
+			//}
 
 			GrayShader &shader = shState->shaders().gray;
 			shader.bind();
