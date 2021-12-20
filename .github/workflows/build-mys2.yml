@@ -44,12 +44,12 @@ jobs:
       - name: Install msys2 and mingw
         run: |
           conan install mingw_installer/1.0@conan/stable --profile=msys2;
-          conan install . -r somedevfox --profile=msys2
+          conan install msys2_installer/20210725@somedevfox/testing --profile=msys2
       - name: Append to msys2 profile
         run: |
           echo [build_requires] >> C:\.conan\.conan\profiles\msys2;
           echo mingw_installer/1.0@conan/stable >> C:\.conan\.conan\profiles\msys2;
-          echo msys2_installer/20210725@somedevfox/_ >> C:\.conan\.conan\profiles\msys2
+          echo msys2_installer/20210725@somedevfox/testing >> C:\.conan\.conan\profiles\msys2
       - name: Setup path in msys2
         run: |
           echo 'export PATH="$PATH:C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64"' >> C:\msys64\home\runneradmin\.bashrc;
