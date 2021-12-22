@@ -27,6 +27,7 @@ Makefile*
 
 __pycache__
 /build*
+/m32build
 /dist
 /debug
 /release
