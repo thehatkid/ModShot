@@ -23,6 +23,7 @@ jobs:
           conan remote add eliza https://rkevin.jfrog.io/artifactory/api/conan/eliza;
           conan remote add bincrafters https://bincrafters.jfrog.io/artifactory/api/conan/public-conan;
           conan remote add astrabit https://rkevin.jfrog.io/artifactory/api/conan/astrabit;
+          conan remote add somedevfox https://somedevfox.jfrog.io/artifactory/api/conan/somedevfox;
           conan config set general.revisions_enabled=1;
           conan config get;
           setx CONAN_USE_ALWAYS_SHORT_PATHS 1;
@@ -43,15 +44,12 @@ jobs:
       - name: Install msys2 and mingw
         run: |
           conan install mingw_installer/1.0@conan/stable --profile=msys2;
-          conan install msys2/cci.latest@ --profile=msys2
-      - name: Install gems
-        run: |
-          gem install pathname
+          conan install msys2_installer/20210725@somedevfox/testing --profile=msys2 --build=missing
       - name: Append to msys2 profile
         run: |
           echo [build_requires] >> C:\.conan\.conan\profiles\msys2;
           echo mingw_installer/1.0@conan/stable >> C:\.conan\.conan\profiles\msys2;
-          echo msys2/cci.latest@ >> C:\.conan\.conan\profiles\msys2
+          echo msys2_installer/20210725@somedevfox/testing >> C:\.conan\.conan\profiles\msys2
       - name: Setup path in msys2
         run: |
           echo 'export PATH="$PATH:C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64"' >> C:\msys64\home\runneradmin\.bashrc;
