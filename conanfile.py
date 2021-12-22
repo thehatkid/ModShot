@@ -20,13 +20,14 @@ class MkxpConan(ConanFile):
     generators = "cmake"
     exports_sources = "*"
     requires = (
+        "sdl/2.0.18",
         "boost/1.77.0",
         "openal/1.18.2@bincrafters/stable",
         "physfs/3.0.1@astrabit/testing",
         "pixman/0.34.0@astrabit/testing",
         "ruby/3.0.2@astrabit/testing",
-        "sdl2_image/2.0.5@bincrafters/stable",
-        "sdl2_ttf/2.0.15@bincrafters/stable",
+        "sdl_image/2.0.5",
+        "sdl_ttf/2.0.15",
         "sdl_sound-mkxp/1.0.1@eliza/stable",
         "sigc++/2.10.0@astrabit/testing",
         # Overrides
@@ -43,7 +44,7 @@ class MkxpConan(ConanFile):
     default_options = (
         "platform=standalone",
         "boost:without_test=True",
-	"boost:without_fiber=True",
+	    "boost:without_fiber=True",
         "cygwin_installer:packages=xxd",
         # Avoid dead url bitrot in cygwin_installer
         "cygwin_installer:with_pear=False",
@@ -63,10 +64,10 @@ class MkxpConan(ConanFile):
             self.requires("ogg/1.3.4")
             self.requires("vorbis/1.3.6")
             self.requires("libalsa/1.1.9")
-            self.requires("sdl2/2.0.9@bincrafters/stable")
+            #self.requires("sdl2/2.0.9@bincrafters/stable")
             self.requires("openssl/1.1.1l")
         if tools.os_info.is_windows:
-            self.requires("sdl2/2.0.14@bincrafters/stable")
+            #self.requires("sdl2/2.0.14@bincrafters/stable")
             self.requires("openssl/1.1.1k")
     
     def build_requirements(self):
