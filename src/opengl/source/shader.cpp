@@ -762,7 +762,7 @@ void WaterShader::setOpacity(const float value)
 
 BinaryShader::BinaryShader()
 {
-	INIT_SHADER(simple, binary, BinaryShader);
+	INIT_SHADER(simple, binary_glitch, BinaryShader);
 
 	ShaderBase::init();
 
