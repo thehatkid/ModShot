@@ -7,7 +7,7 @@
 // dean@neuroid.co.uk
 
 uniform sampler2D texture;
-uniform int strength
+uniform int strength;
 varying vec2 v_texCoord;
 
 void main()
