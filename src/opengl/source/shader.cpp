@@ -769,7 +769,7 @@ BinaryShader::BinaryShader()
 	GET_U(strength);
 }
 
-void BinaryShader::setStrength(const int value)
+void BinaryShader::setStrength(const float value)
 {
-	gl.Uniform1i(u_strength, value);
+	gl.Uniform1f(u_strength, value);
 }

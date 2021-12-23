@@ -48,7 +48,7 @@ public:
 	DECL_ATTR( RGBOffsetx, Vec4 )
 	DECL_ATTR( RGBOffsety, Vec4 )
 	DECL_ATTR( CubicTime, float )
-	DECL_ATTR( BinaryStrength, int )
+	DECL_ATTR( BinaryStrength, float )
 	DECL_ATTR( WaterTime, float )
 	DECL_ATTR( Zoom, Vec2 )
 

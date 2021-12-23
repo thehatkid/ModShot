@@ -7,7 +7,7 @@
 // dean@neuroid.co.uk
 
 uniform sampler2D texture;
-uniform int strength;
+uniform float strength;
 varying vec2 v_texCoord;
 
 void main()
@@ -19,7 +19,7 @@ void main()
     float y = uv.t;
     
     //
-    float glitchStrength = 10. - float(strength);
+    float glitchStrength = 100. - strength;
     
     // get snapped position
     float psize = 0.04 * glitchStrength;

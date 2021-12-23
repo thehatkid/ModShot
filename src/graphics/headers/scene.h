@@ -64,7 +64,7 @@ public:
 									   const Vec2 /* zoom */,
 									   const float /* cubic */,
 									   const float /* water */,
-									   const int /* binary */) {}
+									   const float /* binary */) {}
 
 	const Geometry &getGeometry() const { return geometry; }
 

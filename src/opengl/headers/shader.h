@@ -399,7 +399,7 @@ class BinaryShader : public ShaderBase
 public:
 	BinaryShader();
 
-	void setStrength(const int value);
+	void setStrength(const float value);
 private:
 	GLint u_strength;
 };

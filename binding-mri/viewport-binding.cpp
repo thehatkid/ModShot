@@ -104,8 +104,8 @@ RB_METHOD(setCubicTime)
 
 RB_METHOD(setBinaryStrength)
 {
-	int strength;
-	rb_get_args(argc, argv, "i", &strength);
+	double strength;
+	rb_get_args(argc, argv, "f", &strength);
 
 	Viewport *v = getPrivateData<Viewport>(self);
 
