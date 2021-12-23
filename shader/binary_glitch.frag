@@ -12,14 +12,14 @@ varying vec2 v_texCoord;
 
 void main()
 {
-	vec2 uv = v_texCoord;
+	vec2 uv = v_texCoord.xy / vec2(640, 480).xy;
 //    uv.t = 1.0 - uv.t;
     
     float x = uv.s;
     float y = uv.t;
     
     //
-    float glitchStrength = 100. - strength;
+    float glitchStrength = strength * 5.0;
     
     // get snapped position
     float psize = 0.04 * glitchStrength;
