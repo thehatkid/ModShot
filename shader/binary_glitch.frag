@@ -12,7 +12,7 @@ varying vec2 v_texCoord;
 
 void main()
 {
-	vec2 uv = v_texCoord.xy / vec2(640, 480).xy;
+	vec2 uv = v_texCoord.xy;
 //    uv.t = 1.0 - uv.t;
     
     float x = uv.s;

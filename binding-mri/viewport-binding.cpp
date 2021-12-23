@@ -109,7 +109,7 @@ RB_METHOD(setBinaryStrength)
 
 	Viewport *v = getPrivateData<Viewport>(self);
 
-	v->setBinaryStrength(strength);
+	v->setBinaryStrength(clamp(strength, 0.0, 1.0));
 
 	return Qnil;
 }
