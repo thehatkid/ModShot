@@ -58,6 +58,7 @@
 #include "crt_sprite.frag.xxd"
 #include "cubic_lens.frag.xxd"
 #include "water.frag.xxd"
+#include "binary_glitch.frag.xxd"
 #include "chronos.frag.xxd"
 #include "zoom.vert.xxd"
 
@@ -757,4 +758,18 @@ void WaterShader::setiTime(const float value)
 void WaterShader::setOpacity(const float value)
 {
 	gl.Uniform1f(u_opacity, value);
+}
+
+BinaryShader::BinaryShader()
+{
+	INIT_SHADER(simple, binary, BinaryShader);
+
+	ShaderBase::init();
+
+	GET_U(strength);
+}
+
+void BinaryShader::setStrength(const int value)
+{
+	gl.Uniform1i(u_strength, value);
 }

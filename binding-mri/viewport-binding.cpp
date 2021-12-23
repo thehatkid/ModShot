@@ -102,6 +102,18 @@ RB_METHOD(setCubicTime)
 	return Qnil;
 }
 
+RB_METHOD(setBinaryStrength)
+{
+	int strength;
+	rb_get_args(argc, argv, "i", &strength);
+
+	Viewport *v = getPrivateData<Viewport>(self);
+
+	v->setBinaryStrength(strength);
+
+	return Qnil;
+}
+
 RB_METHOD(setWaterTime)
 {
 	double time;
@@ -148,6 +160,7 @@ viewportBindingInit()
 	_rb_define_method(klass, "setRGBOffset", setRGBOffset);
 	_rb_define_method(klass, "setZoom", setZoom);
 	_rb_define_method(klass, "setCubicTime", setCubicTime);
+	_rb_define_method(klass, "setBinaryStrength", setBinaryStrength);
 	_rb_define_method(klass, "setWaterTime", setWaterTime);
 
 	INIT_PROP_BIND( Viewport, Rect,  "rect"  );
