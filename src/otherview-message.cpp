@@ -116,10 +116,18 @@ OtherViewMessager::OtherViewMessager(const Config &c):
 
 void openoneshot_thread() {
     ipstream pipeStream;
-    #ifdef _WIN32
-    child c("oneshot.exe --otherView=true", std_out > pipeStream);
+    #ifdef STEAM
+        #ifdef _WIN32
+            child c("./steamshim.exe --otherView=true", std_out > pipeStream);
+        #else
+            child c("./steamshim --otherView=true", std_out > pipeStream);
+        #endif
     #else
-    child c("./lib/oneshot --otherView=true", std_out > pipeStream);
+        #ifdef _WIN32
+            child c("oneshot.exe --otherView=true", std_out > pipeStream);
+        #else
+            child c("./lib/oneshot --otherView=true", std_out > pipeStream);
+        #endif
     #endif
 
     string line;
