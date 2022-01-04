@@ -138,5 +138,5 @@ void OtherViewMessager::sendMsg(string str) {
 string OtherViewMessager::getMsg() {
     if(ovh_read_named_pipe() != "")
         return ovh_read_named_pipe();
-    else return nullptr;
+    else return "";
 }
