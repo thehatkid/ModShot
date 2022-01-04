@@ -217,7 +217,7 @@ public:
 			shader.bind();
 			shader.setGray(t.w);
 			/* shader.applyViewportProj(); */
-			shader.setTexSize(screenRectt.size());
+			shader.setTexSize(screenRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
 
