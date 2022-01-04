@@ -117,9 +117,9 @@ OtherViewMessager::OtherViewMessager(const Config &c):
 void openoneshot_thread() {
     ipstream pipeStream;
     #ifdef _WIN32
-    child c("oneshot.exe", std_out > pipeStream);
+    child c("oneshot.exe --otherView=true", std_out > pipeStream);
     #else
-    child c("./lib/oneshot", std_out > pipeStream);
+    child c("./lib/oneshot --otherView=true", std_out > pipeStream);
     #endif
 
     string line;
