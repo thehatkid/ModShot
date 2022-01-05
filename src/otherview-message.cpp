@@ -11,6 +11,7 @@
 #include "otherview-message.h"
 #include "config.h"
 #include "debugwriter.h"
+#include "sharedstate.h"
 
 // Boost Interprocess.
 #include <boost/asio.hpp>
