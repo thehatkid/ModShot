@@ -116,8 +116,8 @@ OtherViewMessager::OtherViewMessager(const Config &c):
 
 void openoneshot_thread() {
     ipstream pipeStream;
-    const std::string &path = shState->config().customDataPath;
-	const char *s = path.empty() ? "." : path.c_str();
+    std::string &path = shState->config().customDataPath;
+	std::string &s = path.empty() ? "." : path;
     #ifdef STEAM
         #ifdef _WIN32
             child c(s + "/steamshim.exe --otherView=true", std_out > pipeStream);
