@@ -121,15 +121,15 @@ void openoneshot_thread() {
 	const std::string &s = path.empty() ? "." : path;
     #ifdef STEAM
         #ifdef _WIN32
-            child c(s + "/steamshim.exe --otherView=true", std_out > pipeStream);
+            child c(s + "/steamshim.exe --isOtherView=true", std_out > pipeStream);
         #else
-            child c(s + "/steamshim --otherView=true", std_out > pipeStream);
+            child c(s + "/steamshim --isOtherView=true", std_out > pipeStream);
         #endif
     #else
         #ifdef _WIN32
-            child c(s + "oneshot.exe --otherView=true", std_out > pipeStream);
+            child c(s + "oneshot.exe --isOtherView=true", std_out > pipeStream);
         #else
-            child c(s + "/lib/oneshot --otherView=true", std_out > pipeStream);
+            child c(s + "/lib/oneshot --isOtherView=true", std_out > pipeStream);
         #endif
     #endif
 
