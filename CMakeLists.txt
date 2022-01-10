@@ -1,10 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-Project(oneshot)
-
-#set(CONAN_DISABLE_CHECK_COMPILER ON) 
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
+Project(modshot)
 
 ## Setup options ##
 
@@ -343,30 +338,15 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINES})
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_AUDIO_HEADER_PATH})
-target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_GRAPHICS_HEADER_PATH})
-target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_OPENGL_HEADER_PATH})
-target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_INPUT_HEADER_PATH})
-target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_FS_HEADER_PATH})
-target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_STEAM_PATH})
-target_link_libraries(${PROJECT_NAME}
-	CONAN_PKG::boost
-	CONAN_PKG::openal
-	CONAN_PKG::physfs
-	CONAN_PKG::pixman
-	CONAN_PKG::ruby
-	CONAN_PKG::sdl2
-	CONAN_PKG::sdl2_image
-	CONAN_PKG::sdl2_ttf
-	CONAN_PKG::sdl_sound-mkxp
-	CONAN_PKG::sigc++
-	
-	${PLATFORM_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE src ${SRC_STEAM_PATH} ${SRC_AUDIO_HEADER_PATH} ${SRC_GRAPHICS_HEADER_PATH} ${SRC_OPENGL_HEADER_PATH} ${SRC_INPUT_HEADER_PATH} ${SRC_FS_HEADER_PATH})
 
-IF(APPLE)
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cmake -P "${CMAKE_SOURCE_DIR}/patches/mac/CompleteBundle.cmake" VERBATIM)
-ENDIF()
+target_include_directories(${PROJECT_NAME} PRIVATE 
+	build/exlibs/boost/boost_1_78_0
+	build/exlibs/bzip2
+	build/exlibs/libnsgif
+	build/exlibs/libsigcplusplus-2.10.7
+	build/exlibs/openal-soft/include
+)
 
 if(WIN32 AND NOT STEAM)
 	add_executable("oneshot-shim" WIN32
