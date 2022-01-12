@@ -172,7 +172,7 @@ elseif(APPLE)
 	list(APPEND MAIN_SOURCE src/mac-desktop.mm)
 else()
 	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(LINUXPKGS REQUIRED gtk+-2.0 libxfconf-0)
+	#pkg_check_modules(LINUXPKGS REQUIRED gtk+-2.0 libxfconf-0)
 	include_directories(${LINUXPKGS_INCLUDE_DIRS})
 	add_compile_options(${LINUXPKGS_CFLAGS_OTHER} -g)
 	list(APPEND PLATFORM_LIBRARIES ${LINUXPKGS_LDFLAGS})
@@ -344,8 +344,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/boost/boost_1_78_0
 	build/exlibs/bzip2
 	build/exlibs/libnsgif
-	build/exlibs/libsigcplusplus-2.10.7
-	build/exlibs/openal-soft/include
+	build/exlibs/libsigcplusplus-2.10.7/libsigcplusplus-2.10.7/
+	build/exlibs/openal-soft/include/AL
+	build/exlibs/sdl/include
+	build/exlibs/ruby/include
+	build/exlibs/SDL_sound
+	build/exlibs/vorbis/include
 )
 
 if(WIN32 AND NOT STEAM)
