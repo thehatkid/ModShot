@@ -11,7 +11,7 @@ export sdl2_url="https://github.com/libsdl-org/SDL.git"
 export sdl2_path="$libpath/sdl"
 export sdl2_image_url="https://github.com/libsdl-org/SDL_image.git"
 export sdl2_image_path="$libpath/SDL_Image"
-export sdl2_ttf_url="https://github.com/libsdl-org/SDL_ttf.git"
+export sdl2_ttf_url="https://github.com/libsdl-org/SDL_ttf"
 export sdl2_ttf_path="$libpath/SDL_ttf"
 export openal_url="https://github.com/kcat/openal-soft.git"
 export openal_path="$libpath/openal-soft"
@@ -33,6 +33,8 @@ export ruby_url="https://github.com/ruby/ruby.git"
 export ruby_path="$libpath/ruby"
 export vorbis_url="https://github.com/xiph/vorbis"
 export vorbis_path="$libpath/vorbis"
+export ogg_url="https://github.com/gcp/libogg"
+export ogg_path="$libpath/libogg"
 
 # Non-git
 # Boost C++ Libraries
@@ -101,6 +103,12 @@ else
     sudo make install
 fi
 
+echo "* Downloading libogg"
+git clone $ogg_url $ogg_path
+cd $ogg_path
+./autogen.sh
+make
+make install
 
 echo "* Downloading boost."
 downloadAndUntarGZ $boost_url $boost_path
@@ -125,6 +133,7 @@ echo "* Downloading pixman."
 git clone $pixman_url $pixman_path
 cd $pixman_path
 echo "* Building pixman."
+./autogen.sh
 ./configure
 make
 makeinstall
@@ -203,7 +212,7 @@ make
 makeinstall
 
 echo "* Downloading SDL_ttf."
-git clone $sdl2_ttf_url $sdl2_image_path
+git clone $sdl2_ttf_url $sdl2_ttf_path
 cd $sdl2_ttf_path
 echo "* Building SDL_ttf"
 ./configure
