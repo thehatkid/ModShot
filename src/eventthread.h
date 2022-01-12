@@ -37,6 +37,8 @@
 
 #include <stdint.h>
 
+#include <al.h>
+
 struct RGSSThreadData;
 struct SDL_Window;
 union SDL_Event;
