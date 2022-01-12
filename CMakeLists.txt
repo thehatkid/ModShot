@@ -347,6 +347,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/libsigcplusplus-2.10.7/libsigcplusplus-2.10.7/
 	build/exlibs/openal-soft/include/AL
 	build/exlibs/sdl/include
+	#build/exlibs/ruby/include
 	/usr/include/ruby-3.2.0/
 	build/exlibs/SDL_sound
 	build/exlibs/vorbis/include
@@ -354,6 +355,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/SDL_Image
 	build/exlibs/SDL_ttf
 	build/exlibs/pixman/pixman
+	build/exlibs/physfs/src
 )
 
 if(WIN32 AND NOT STEAM)

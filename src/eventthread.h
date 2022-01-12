@@ -37,7 +37,7 @@
 
 #include <stdint.h>
 
-#include <al.h>
+#include <alc.h>
 
 struct RGSSThreadData;
 struct SDL_Window;
