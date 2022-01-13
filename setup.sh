@@ -172,6 +172,7 @@ cd $vorbis_path
 ./autogen.sh
 ./configure --prefix="$libpath/vorbis_dest"
 make
+make install
 
 echo "* Downloading OpenAL Soft."
 git clone $openal_url $openal_path
@@ -188,7 +189,7 @@ git clone $sdlsound_url $sdlsound_path
 cd $sdlsound_path
 echo "* Building and installing SDL_Sound."
 ./bootstrap
-./configure --prefix="$libpath/sdlsound_dest"
+./configure --prefix="$libpath/sdl_sound_dest"
 make 
 makeinstall
 
