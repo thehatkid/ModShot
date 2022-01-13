@@ -337,6 +337,7 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 	${EMBEDDED_SOURCE}
 )
 
+target_link_libraries($(PROJECT_NAME) -Lbuild/exlibs/ruby/libx64-msvcrt-ruby310.dll.a)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINES})
 target_include_directories(${PROJECT_NAME} PRIVATE src ${SRC_STEAM_PATH} ${SRC_AUDIO_HEADER_PATH} ${SRC_GRAPHICS_HEADER_PATH} ${SRC_OPENGL_HEADER_PATH} ${SRC_INPUT_HEADER_PATH} ${SRC_FS_HEADER_PATH})
 
@@ -347,8 +348,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/libsigcplusplus-2.10.7/libsigcplusplus-2.10.7/
 	build/exlibs/openal-soft/include/AL
 	build/exlibs/sdl/include
-	#build/exlibs/ruby/include
-	/usr/include/ruby-3.2.0/
 	build/exlibs/SDL_sound
 	build/exlibs/vorbis/include
 	build/exlibs/libogg/include
@@ -356,6 +355,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/SDL_ttf
 	build/exlibs/pixman/pixman
 	build/exlibs/physfs/src
+	build/exlibs/ruby/include
 )
 
 if(WIN32 AND NOT STEAM)

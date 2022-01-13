@@ -41,7 +41,7 @@ export ogg_path="$libpath/libogg"
 export boost_url="https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz"
 export boost_path="$libpath/boost"
 # libpng (required for SDL_Image)
-export libpng_url="http://prdownloads.sourceforge.net/libpng/libpng-1.6.37.tar.gz\?download"
+export libpng_url="https://github.com/glennrp/libpng"
 export libpng_path="$libpath/libpng"
 
 # Functions.
@@ -82,49 +82,42 @@ makeinstall() {
     fi
 }
 # Main code.
+
 echo "* Downloading zlib."
 git clone $zlib_url $zlib_path
 cd $zlib_path
-cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWITH_FUZZERS=ON -DWITH_CODE_COVERAGE=ON -DWITH_MAINTAINER_WARNINGS=ON
+cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWITH_FUZZERS=ON -DWITH_CODE_COVERAGE=ON -DWITH_MAINTAINER_WARNINGS=ON -B "$libpath/zlib_dest"
 cmake --build . --config Release
 
 echo "* Downloading bzip2."
 git clone $bzip2_url $bzip2_path
 cd $bzip2_path
-#mkdir build
-#cd build
-#cmake .. -G "Unix Makefiles"
-#cmake --build . --config Release
-#make check
-make
-if [ "$OSTYPE" = "msys" ]; then
-    make install
-else
-    sudo make install
-fi
+make PREFIX="$libpath/bzip2_dest"
+make install PREFIX="$libpath/bzip2_dest"
 
 echo "* Downloading libogg"
 git clone $ogg_url $ogg_path
 cd $ogg_path
 ./autogen.sh
+./configure --prefix="$libpath/libogg_dest"
 make
-make install
+makeinstall
 
 echo "* Downloading boost."
 downloadAndUntarGZ $boost_url $boost_path
 cd $boost_path/boost_1_78_0
-./bootstrap.sh --prefix=/usr/local
+./bootstrap.sh --prefix="$libpath/boost_dest"
 if [ "$OSTYPE" = "msys" ]; then
-    ./b2 install --prefix=/usr/local
+    ./b2 install --prefix="$libpath/boost_dest"
 else
-    sudo ./b2 install --prefix=/usr/local
+    sudo ./b2 install --prefix="$libpath/boost_dest"
 fi
 
 echo "* Downloading PhysFS."
 git clone $physfs_url $physfs_path
 cd $physfs_path
 echo "* Building."
-cmake -B build/ -G "Unix Makefiles"
+cmake -B "$libpath/physfs_dest" -G "Unix Makefiles"
 cd build
 make
 makeinstall
@@ -134,7 +127,7 @@ git clone $pixman_url $pixman_path
 cd $pixman_path
 echo "* Building pixman."
 ./autogen.sh
-./configure
+./configure --prefix="$libpath/pixman_dest"
 make
 makeinstall
 
@@ -143,20 +136,15 @@ downloadAndUntarGZ $sigc_url $sigc_path
 cd $sigc_path/libsigcplusplus-2.10.7
 echo "* Building sigc++."
 ./autogen.sh
-./configure --prefix=/usr/local
+./configure --prefix="$libpath/sigcpp_dest"
 make 
 makeinstall
-if [ "$OSTYPE" = "msys" ]; then
-cp sigc++config.h /usr/local/include/sigc++-2.0
-else
-sudo cp sigc++config.h /usr/local/include/sigc++-2.0/
-fi
 
 echo "* Downloading libpng."
-downloadAndUntarGZ $libpng_url $libpng_path
+git clone $libpng_url $libpng_path
 echo "* Building libpng."
 cd $libpng_path
-./configure
+./configure --prefix="$libpath/libpng_dest"
 make check
 makeinstall
 
@@ -164,15 +152,15 @@ echo "* Downloading libnsgif."
 git clone $libnsgif_url $libnsgif_path
 cd $libnsgif_path
 echo "* Building libnsgif."
-make
-makeinstall
+make PREFIX="$libpath/libnsgif_dest"
+make install PREFIX="$libpath/libnsgif_dest"
 
 echo "* Downloading SDL2."
 git clone $sdl2_url $sdl2_path
 cd $sdl2_path
 mkdir build
 cd build
-../configure 
+../configure --prefix="$libpath/sdl2_dest"
 make
 makeinstall
 
@@ -181,7 +169,7 @@ git clone $vorbis_url $vorbis_path
 echo "* Building vorbis."
 cd $vorbis_path
 ./autogen.sh
-./configure
+./configure --prefix="$libpath/vorbis_dest"
 make
 
 echo "* Downloading OpenAL Soft."
@@ -190,7 +178,7 @@ echo "* Building and installing OpenAL Soft."
 cd $openal_path
 mkdir build
 cd build
-cmake .. -G "Unix Makefiles"
+cmake .. -G "Unix Makefiles" -B "$libpath/openal_dest"
 make
 makeinstall
 
@@ -199,7 +187,7 @@ git clone $sdlsound_url $sdlsound_path
 cd $sdlsound_path
 echo "* Building and installing SDL_Sound."
 ./bootstrap
-./configure
+./configure --prefix="$libpath/sdlsound_dest"
 make 
 makeinstall
 
@@ -207,7 +195,7 @@ echo "* Downloading SDL_Image."
 git clone $sdl2_image_url $sdl2_image_path
 cd $sdl2_image_path
 echo "* Building SDL_Image."
-./configure
+./configure --prefix="$libpath/sdl2_image_dest"
 make 
 makeinstall
 
@@ -215,16 +203,18 @@ echo "* Downloading SDL_ttf."
 git clone $sdl2_ttf_url $sdl2_ttf_path
 cd $sdl2_ttf_path
 echo "* Building SDL_ttf"
-./configure
+./configure --prefix="$libpath/sdl2_ttf_dest"
 make
 makeinstall
 
 echo "* Now, final boss... Downloading ruby."
 git clone $ruby_url $ruby_path
+mkdir "$libpath/ruby_dest"
 cd $ruby_path
+git checkout tags/v3_1_0
 echo "* Building"
 ./autogen.sh
-./configure
+./configure --enable-shared  --prefix="$libpath/ruby_dest" --disable-install-doc
 make
 makeinstall
 
