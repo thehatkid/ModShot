@@ -27,7 +27,7 @@ export zlib_url="https://github.com/zlib-ng/zlib-ng"
 export zlib_path="$libpath/zlib-ng"
 export bzip2_url="git://sourceware.org/git/bzip2.git"
 export bzip2_path="$libpath/bzip2"
-export libnsgif_url="git://git.netsurf-browser.org/libnsgif.git"
+export libnsgif_url="https://github.com/lukaso/libnsgif-autotools/"
 export libnsgif_path="$libpath/libnsgif"
 export ruby_url="https://github.com/ruby/ruby.git"
 export ruby_path="$libpath/ruby"
@@ -153,8 +153,10 @@ echo "* Downloading libnsgif."
 git clone $libnsgif_url $libnsgif_path
 cd $libnsgif_path
 echo "* Building libnsgif."
-make PREFIX="$libpath/libnsgif_dest"
-make install PREFIX="$libpath/libnsgif_dest"
+./autogen.sh
+./configure --prefix="$libpath/libnsgif_dest"
+make
+makeinstall
 
 echo "* Downloading SDL2."
 git clone $sdl2_url $sdl2_path
