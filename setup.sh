@@ -86,8 +86,9 @@ makeinstall() {
 echo "* Downloading zlib."
 git clone $zlib_url $zlib_path
 cd $zlib_path
-cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWITH_FUZZERS=ON -DWITH_CODE_COVERAGE=ON -DWITH_MAINTAINER_WARNINGS=ON -B "$libpath/zlib_dest"
-cmake --build . --config Release
+cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWITH_FUZZERS=ON -DWITH_CODE_COVERAGE=ON -DWITH_MAINTAINER_WARNINGS=ON -DCMAKE_INSTALL_PREFIX="$libpath/zlib_dest"
+make
+makeinstall
 
 echo "* Downloading bzip2."
 git clone $bzip2_url $bzip2_path
@@ -117,7 +118,7 @@ echo "* Downloading PhysFS."
 git clone $physfs_url $physfs_path
 cd $physfs_path
 echo "* Building."
-cmake -B "$libpath/physfs_dest" -G "Unix Makefiles"
+cmake -DCMAKE_INSTALL_PREFIX="$libpath/physfs_dest" -G "Unix Makefiles"
 cd build
 make
 makeinstall
@@ -178,7 +179,7 @@ echo "* Building and installing OpenAL Soft."
 cd $openal_path
 mkdir build
 cd build
-cmake .. -G "Unix Makefiles" -B "$libpath/openal_dest"
+cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/openal_dest"
 make
 makeinstall
 
