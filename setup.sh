@@ -213,7 +213,6 @@ makeinstall
 
 echo "* Now, final boss... Downloading ruby."
 git clone $ruby_url $ruby_path
-mkdir "$libpath/ruby_dest"
 cd $ruby_path
 git checkout tags/v3_1_0
 echo "* Building"
