@@ -217,8 +217,8 @@ cd $ruby_path
 git checkout tags/v3_1_0
 echo "* Building"
 ./autogen.sh
-./configure --enable-shared  --prefix="$libpath/ruby_dest" --disable-install-doc
+./configure --enable-shared --disable-install-doc
 make
-makeinstall
+make install DESTDIR="$libpath/ruby_dest"
 
 echo "* All done! Now, you can build ModShot."
