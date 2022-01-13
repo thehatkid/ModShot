@@ -180,9 +180,8 @@ echo "* Downloading OpenAL Soft."
 git clone $openal_url $openal_path
 echo "* Building and installing OpenAL Soft."
 cd $openal_path
-mkdir build
-cd build
-cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/openal_dest"
+git checkout tags/1.21.1
+cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/openal_dest"
 make
 makeinstall
 

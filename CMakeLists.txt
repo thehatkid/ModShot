@@ -337,25 +337,28 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 	${EMBEDDED_SOURCE}
 )
 
-target_link_libraries($(PROJECT_NAME) -Lbuild/exlibs/ruby/libx64-msvcrt-ruby310.dll.a)
+# target_link_libraries($(PROJECT_NAME) -Lbuild/exlibs/ruby/libx64-msvcrt-ruby310.dll.a)
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINES})
 target_include_directories(${PROJECT_NAME} PRIVATE src ${SRC_STEAM_PATH} ${SRC_AUDIO_HEADER_PATH} ${SRC_GRAPHICS_HEADER_PATH} ${SRC_OPENGL_HEADER_PATH} ${SRC_INPUT_HEADER_PATH} ${SRC_FS_HEADER_PATH})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
-	build/exlibs/boost/boost_1_78_0
-	build/exlibs/bzip2
-	build/exlibs/libnsgif
-	build/exlibs/libsigcplusplus-2.10.7/libsigcplusplus-2.10.7/
+	build/exlibs/boost_dest/include/boost-1_78
+	build/bzip2_dest/include
+	build/exlibs/libnsgif_dest/include
+	build/exlibs/sigcpp_dest/include/sigc++-2.0
+	build/exlibs/libsigcplusplus-2.10.7/libsigcplusplus-2.10.7
 	build/exlibs/openal-soft/include/AL
-	build/exlibs/sdl/include
-	build/exlibs/SDL_sound
-	build/exlibs/vorbis/include
-	build/exlibs/libogg/include
-	build/exlibs/SDL_Image
-	build/exlibs/SDL_ttf
-	build/exlibs/pixman/pixman
-	build/exlibs/physfs/src
-	build/exlibs/ruby/include
+	build/exlibs/sdl2_dest/include
+	build/exlibs/sdl2_dest/include/SDL2
+	build/exlibs/vorbis_dest/include
+	build/exlibs/libogg_dest/include
+	build/exlibs/sdl2_image_dest/include/SDL2
+	build/exlibs/sdl2_ttf_dest/include/SDL2
+	build/exlibs/sdl_sound_dest/include/SDL2
+	build/exlibs/pixman_dest/include/pixman-1
+	build/exlibs/physfs_dest/include
+	build/exlibs/ruby_dest/mingw64/include/ruby-3.1.0
+	build/exlibs/ruby_dest/mingw64/include/ruby-3.1.0/x64-mingw32
 )
 
 if(WIN32 AND NOT STEAM)
