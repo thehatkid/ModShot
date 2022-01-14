@@ -337,7 +337,62 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 	${EMBEDDED_SOURCE}
 )
 
-# target_link_libraries($(PROJECT_NAME) -Lbuild/exlibs/ruby/libx64-msvcrt-ruby310.dll.a)
+target_link_libraries(${PROJECT_NAME}
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/mingw64/lib/libx64-msvcrt-ruby310.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2main.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2_test.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_ttf_dest/lib/libSDL2_ttf.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_image_dest/lib/libSDL2_image.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl_sound_dest/lib/libSDL_sound.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/zlib_dest/lib/libzlib.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/pixman_dest/lib/libpixman-1.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/physfs_dest/lib/libphysfs.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbis.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisfile.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisenc.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sigcpp_dest/lib/libsigc-2.0.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/openal_dest/lib/libopenal.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libpng_dest/lib/libpng.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libogg_dest/lib/libogg.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libnsgif_dest/lib/libnsgif.dll.a
+
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_atomic-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_chrono-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_container-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_context-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_contract-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_coroutine-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_date_time-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_exception-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_filesystem-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_graph-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_iostreams-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_json-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_locale-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log_setup-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99f-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99l-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1f-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1l-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_nowide-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_program_options-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_random-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_regex-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_serialization-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_system-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_thread-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_timer-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_type_erasure-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wave-mgw11-mt-x64-1_78.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wserialization-mgw11-mt-x64-1_78.a
+
+	${PLATFORM_LIBRARIES}
+)
+
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINES})
 target_include_directories(${PROJECT_NAME} PRIVATE src ${SRC_STEAM_PATH} ${SRC_AUDIO_HEADER_PATH} ${SRC_GRAPHICS_HEADER_PATH} ${SRC_OPENGL_HEADER_PATH} ${SRC_INPUT_HEADER_PATH} ${SRC_FS_HEADER_PATH})
 
