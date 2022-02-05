@@ -216,7 +216,7 @@ public:
 			GrayShader &shader = shState->shaders().gray;
 			shader.bind();
 			shader.setGray(t.w);
-			/* shader.applyViewportProj(); */
+			shader.applyViewportProj();
 			shader.setTexSize(screenRect.size());
 
 			TEX::bind(pp.backBuffer().tex);
