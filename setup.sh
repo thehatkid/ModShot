@@ -101,6 +101,7 @@ git clone $ogg_url $ogg_path
 cd $ogg_path
 ./autogen.sh
 ./configure --prefix="$libpath/libogg_dest"
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$libpath/libogg_dest/lib/pkgconfig
 make
 makeinstall
 
@@ -164,6 +165,8 @@ cd $sdl2_path
 mkdir build
 cd build
 ../configure --prefix="$libpath/sdl2_dest"
+export SDL_LIBS="$libpath/sdl2_dest/lib"
+PATH="$PATH:$libpath/sdl2_dest/bin"
 make
 makeinstall
 
@@ -172,7 +175,7 @@ git clone $vorbis_url $vorbis_path
 echo "* Building vorbis."
 cd $vorbis_path
 ./autogen.sh
-./configure --prefix="$libpath/vorbis_dest"
+./configure --prefix="$libpath/vorbis_dest" --with-ogg-libraries=$libpath/libogg_dest/lib --with-ogg-includes=$libpath/libogg_dest/include
 make
 make install
 
@@ -186,19 +189,17 @@ make
 makeinstall
 
 echo "* Downloading SDL Sound from Ancurio."
-git clone $sdlsound_url $sdlsound_path
+git clone https://github.com/icculus/SDL_sound $sdlsound_path
 cd $sdlsound_path
 echo "* Building and installing SDL_Sound."
-./bootstrap
-./configure --prefix="$libpath/sdl_sound_dest"
-make 
-makeinstall
+cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest"
+LIBRARY_PATH=$libpath/sdl2_dest/lib make install
 
 echo "* Downloading SDL_Image."
 git clone $sdl2_image_url $sdl2_image_path
 cd $sdl2_image_path
 echo "* Building SDL_Image."
-./configure --prefix="$libpath/sdl2_image_dest"
+./configure  --prefix="$libpath/sdl2_image_dest"
 make 
 makeinstall
 
