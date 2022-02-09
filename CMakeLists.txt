@@ -172,7 +172,9 @@ elseif(APPLE)
 	list(APPEND MAIN_SOURCE src/mac-desktop.mm)
 else()
 	find_package(PkgConfig REQUIRED)
-	#pkg_check_modules(LINUXPKGS REQUIRED gtk+-2.0 libxfconf-0)
+	if(NOT MSYS2)
+        pkg_check_modules(LINUXPKGS REQUIRED gtk+-2.0 libxfconf-0)
+    endif()
 	include_directories(${LINUXPKGS_INCLUDE_DIRS})
 	add_compile_options(${LINUXPKGS_CFLAGS_OTHER} -g)
 	list(APPEND PLATFORM_LIBRARIES ${LINUXPKGS_LDFLAGS})
@@ -336,7 +338,7 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 	${BINDING_SOURCE}
 	${EMBEDDED_SOURCE}
 )
-
+if(WIN32)
 target_link_libraries(${PROJECT_NAME}
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/mingw64/lib/libx64-msvcrt-ruby310.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2.dll.a
@@ -392,6 +394,60 @@ target_link_libraries(${PROJECT_NAME}
 
 	${PLATFORM_LIBRARIES}
 )
+else()
+target_link_libraries(${PROJECT_NAME}    
+    -lpthread
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/usr/local/lib/libruby.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/zlib_dest/lib/libz.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/pixman_dest/lib/libpixman-1.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/openal_dest/lib/libopenal.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_ttf_dest/lib/libSDL2_ttf.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_image_dest/lib/libSDL2_image.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl_sound_dest/lib/libSDL2_sound.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/physfs_dest/lib/libphysfs.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sigcpp_dest/lib/libsigc-2.0.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbis.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisenc.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisfile.so
+    
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_atomic.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_chrono.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_container.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_context.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_contract.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_coroutine.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_date_time.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_filesystem.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_graph.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_iostreams.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_json.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_locale.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log_setup.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99f.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99l.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1f.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1l.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_nowide.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_prg_exec_monitor.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_program_options.so
+    # ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_python27.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_random.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_regex.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_serialization.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_system.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_thread.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_timer.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_type_erasure.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_unit_test_framework.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wave.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wserialization.so
+    
+    ${PLATFORM_LIBRARIES}
+)
+endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINES})
 target_include_directories(${PROJECT_NAME} PRIVATE src ${SRC_STEAM_PATH} ${SRC_AUDIO_HEADER_PATH} ${SRC_GRAPHICS_HEADER_PATH} ${SRC_OPENGL_HEADER_PATH} ${SRC_INPUT_HEADER_PATH} ${SRC_FS_HEADER_PATH})
@@ -407,13 +463,18 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/sdl2_dest/include/SDL2
 	build/exlibs/vorbis_dest/include
 	build/exlibs/libogg_dest/include
+	build/exlibs/sdl2_image_dest/include/
 	build/exlibs/sdl2_image_dest/include/SDL2
+	build/exlibs/sdl2_ttf_dest/include/
 	build/exlibs/sdl2_ttf_dest/include/SDL2
+	build/exlibs/sdl_sound_dest/include/
 	build/exlibs/sdl_sound_dest/include/SDL2
 	build/exlibs/pixman_dest/include/pixman-1
 	build/exlibs/physfs_dest/include
 	build/exlibs/ruby_dest/mingw64/include/ruby-3.1.0
 	build/exlibs/ruby_dest/mingw64/include/ruby-3.1.0/x64-mingw32
+	build/exlibs/ruby_dest/usr/local/include/ruby-3.1.0
+	build/exlibs/ruby_dest/usr/local/include/ruby-3.1.0/x86_64-linux
 )
 
 if(WIN32 AND NOT STEAM)
