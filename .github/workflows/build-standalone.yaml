@@ -20,10 +20,10 @@ jobs:
         - name: Install packages with pacman
           shell: msys2 {0}
           run: |
-            pacman -S --noconfirm  mm-common mingw-w64-${{matrix.env}}-doxygen mingw-w64-${{matrix.env}}-graphviz 
-            mingw-w64-${{matrix.env}}-libffi mingw-w64-${{matrix.env}}-openssl mingw-w64-${{matrix.env}}-ninja 
-            mingw-w64-${{matrix.env}}-cmake mingw-w64-${{matrix.env}}-make mingw-w64-${{matrix.env}}-ruby 
-            mingw-w64-${{matrix.env}}-freetype git autotools mingw-w64-${{matrix.env}}-toolchain 
+            pacman -S --noconfirm  mm-common mingw-w64-${{matrix.env}}-doxygen mingw-w64-${{matrix.env}}-graphviz \
+            mingw-w64-${{matrix.env}}-libffi mingw-w64-${{matrix.env}}-openssl mingw-w64-${{matrix.env}}-ninja \
+            mingw-w64-${{matrix.env}}-cmake mingw-w64-${{matrix.env}}-make mingw-w64-${{matrix.env}}-ruby \
+            mingw-w64-${{matrix.env}}-freetype git autotools mingw-w64-${{matrix.env}}-toolchain \
             mingw-w64-${{matrix.env}}-gcc bison
         - name: Run setup.sh
           working-directory: ${{ github.workspace }}
