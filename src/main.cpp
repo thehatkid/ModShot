@@ -234,9 +234,14 @@ static void setGamePathInRegistry() {
 #endif
 	//TODO handle this for Linux/Mac
 }
-
-int main(int argc, char *argv[])
-{
+#ifdef _WIN32
+#include <windows.h>
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+	auto argc = __argc;
+	auto argv = __argv;
+#elif
+int main(int argc, char *argv[]) {
+#endif
 	Debug() << "ModShot version" << MODSHOT_VERSION;
 	SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
 	SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
