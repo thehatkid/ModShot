@@ -179,6 +179,23 @@ echo "* Building libtiff"
 make -j $job_count
 makeinstall
 
+echo "* Downloading libwebp"
+git clone $libwebp_url $libwebp_path
+cd $libwebp_path
+echo "* Building libwebp"
+./autogen.sh
+./configure --prefix="$libpath/libwebp_dest"
+make  -j $job_count
+makeinstall
+
+echo "* Downloading libjpg"
+downloadAndUntarGZ $libjpg_url $libjpg_path
+cd $libjpg_path
+echo "* Building libjpg"
+./configure --prefix="$libpath/libjpg_dest"
+make -j $job_count
+makeinstall
+
 echo "* Downloading SDL2."
 git clone $sdl2_url $sdl2_path
 cd $sdl2_path
