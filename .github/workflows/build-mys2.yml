@@ -44,9 +44,6 @@ jobs:
         run: |
           conan install mingw_installer/1.0@conan/stable --profile=msys2;
           conan install msys2/cci.latest@ --profile=msys2
-      - name: Install gems
-        run: |
-          gem install pathname
       - name: Append to msys2 profile
         run: |
           echo [build_requires] >> C:\.conan\.conan\profiles\msys2;
@@ -57,24 +54,18 @@ jobs:
           echo 'export PATH="$PATH:C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64"' >> C:\msys64\home\runneradmin\.bashrc;
           echo 'export PATH="$PATH:C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0\x64"' >> C:\msys64\home\packer\.bashrc;
           type C:\msys64\home\packer\.bashrc
-      - name: Cache conan dependenciesa
-        uses: actions/cache@v2
-        with:
-          path: C:\.conan
-          key: ${{ runner.os }}-cached-conan-modules-${{ hashFiles('conanfile.py') }}
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6
-      - name: where check
+#      - name: Cache conan dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: C:\.conan
+#          key: ${{ runner.os }}-cached-conan-modules-${{ hashFiles('conanfile.py') }}
+      - name: Setup rubyinstaller
         run: |
-          # show where
-          Write-Host
-          $where = 'gcc.exe', 'ragel.exe', 'make.exe', 'bison.exe', 'libcrypto-1_1-x64.dll', 'libssl-1_1-x64.dll'
-          foreach ($e in $where) {
-            $rslt = where.exe $e 2>&1 | Out-String
-            if ($rslt.contains($e)) { Write-Host $rslt }
-            else { Write-Host "`nCan't find $e" }
-          }
+          Invoke-WebRequest -uri https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-3.0.2-1/rubyinstaller-devkit-3.0.2-1-x64.exe -OutFile C:\rubyinstaller.exe;
+          C:\rubyinstaller.exe /silent /dir=C:\ruby | Out-Null;
+          C:\ruby\bin\ridk.cmd install 1 2 3;
+          C:\ruby\bin\ridk.cmd use 1;
+          C:\ruby\bin\ridk.cmd enable;
       - name: Build dependencies using conan
         run: conan install ${{ github.workspace }} --build=missing -o msys2=True --profile=msys2
         working-directory: ${{ runner.temp }}\build
