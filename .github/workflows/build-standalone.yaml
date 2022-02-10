@@ -17,11 +17,7 @@ jobs:
           uses: msys2/setup-msys2@v2
           with:
             msystem: ${{matrix.sys}}
-        - name: Install dependencies
-          shell: msys2 {0}
-          run: |
-              pacman -S pactoys  --noconfirm
-              pacboy -S doxygen:m graphviz:m libffi:m freetype:m \ 
+            pactoys: doxygen:m graphviz:m libffi:m freetype:m \ 
               openssl:m ninja:m cmake:m make:m ruby:m git:m \ 
               autotools:m toolchain:m gcc:m bison:m --noconfirm
         - name: Run setup.sh
