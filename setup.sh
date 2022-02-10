@@ -190,6 +190,7 @@ makeinstall
 
 echo "* Downloading libjpg"
 downloadAndUntarGZ $libjpg_url $libjpg_path
+mv $libjpg_path/jpeg-9e/* $libjpg_path
 cd $libjpg_path
 echo "* Building libjpg"
 ./configure --prefix="$libpath/libjpg_dest"
