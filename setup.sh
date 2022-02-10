@@ -203,7 +203,7 @@ cd $sdl2_path
 mkdir build
 cd build
 ../configure --prefix="$libpath/sdl2_dest/"
-export SDL_LIBS="$libpath/sdl2_dest/lib/"
+export SDL2_LIBS="$libpath/sdl2_dest/lib/"
 export SDL2_CONFIG="$libpath/sdl2_dest/bin/sdl2-config"
 export SDL2_INCLUDE_DIR="$libpath/sdl2_dest/include"
 PATH="$PATH:$libpath/sdl2_dest/bin"
