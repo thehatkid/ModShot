@@ -24,6 +24,7 @@ jobs:
           shell: msys2 {0}
           run: |
               export REPO_ROOT=${{ github.workspace//\\/\/}}
+              cd $REPO_ROOT
               sh setup.sh
         
         - name: Build
