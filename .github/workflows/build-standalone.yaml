@@ -18,6 +18,7 @@ jobs:
           with:
             msystem: ${{matrix.sys}}
         - name: Install pacakges with pacboy
+          shell: msys2 {0}
           run: |
             pacman -S pactoys --noconfirm
             pacboy -S doxygen:x graphviz:x libffi:x freetype:x 
