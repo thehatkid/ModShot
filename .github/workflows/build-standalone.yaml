@@ -18,8 +18,7 @@ jobs:
           with:
             msystem: ${{matrix.sys}}
             pacboy: |
-              pacman -S pactoys --noconfirm
-              pacboy -S doxygen:x graphviz:x libffi:x freetype:x 
+              doxygen:x graphviz:x libffi:x freetype:x 
               openssl:x ninja:x cmake:x make:x ruby:x git:
               autotools:x toolchain:x gcc: bison:
         - name: Run setup.sh
