@@ -43,6 +43,15 @@ export boost_path="$libpath/boost"
 # libpng (required for SDL_Image)
 export libpng_url="https://github.com/glennrp/libpng"
 export libpng_path="$libpath/libpng"
+# libjpg
+export libjpg_url="http://www.ijg.org/files/jpegsrc.v9e.tar.gz"
+export libjpg_path="$libpath/libjpg"
+# libwebp
+export libwebp_url="https://chromium.googlesource.com/webm/libwebp"
+export libwebp_path="$libpath/libwebp"
+# libtiff
+export libtiff_url="https://gitlab.com/libtiff/libtiff"
+export libtiff_path="$libpath/libtiff"
 
 export job_count=$(nproc --all)
 
@@ -158,6 +167,15 @@ cd $libnsgif_path
 echo "* Building libnsgif."
 ./autogen.sh
 ./configure --prefix="$libpath/libnsgif_dest"
+make -j $job_count
+makeinstall
+
+echo "* Downloading libtiff"
+git clone $libtiff_url $libtiff_path
+cd $libtiff_path
+echo "* Building libtiff"
+./autogen.sh
+./configure --prefix="$libpath/libtiff_dest"
 make -j $job_count
 makeinstall
 
