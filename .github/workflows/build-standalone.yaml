@@ -21,8 +21,8 @@ jobs:
           shell: msys2 {0}
           run: |
               pacman -S pactoys  --noconfirm
-              pacboy -S mm-common:m doxygen:m graphviz:m libffi:m \ 
-              openssl:m ninja:m cmake:m make:m ruby:m freetype:m git:m \ 
+              pacboy -S doxygen:m graphviz:m libffi:m freetype:m \ 
+              openssl:m ninja:m cmake:m make:m ruby:m git:m \ 
               autotools:m toolchain:m gcc:m bison:m --noconfirm
         - name: Run setup.sh
           shell: msys2 {0}
