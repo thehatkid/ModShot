@@ -23,7 +23,8 @@ jobs:
         - name: Run setup.sh
           shell: msys2 {0}
           run: |
-              sh ${{ github.workspace }}/setup.sh
+              export REPO_ROOT=${{ github.workspace//\\/\/}}
+              sh setup.sh
         
         - name: Build
           shell: msys2 {0}
