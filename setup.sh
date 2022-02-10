@@ -147,7 +147,7 @@ git clone $libpng_url $libpng_path
 echo "* Building libpng."
 cd $libpng_path
 ./configure --prefix="$libpath/libpng_dest"
-make check
+make
 makeinstall
 
 echo "* Downloading libnsgif."
@@ -166,6 +166,7 @@ mkdir build
 cd build
 ../configure --prefix="$libpath/sdl2_dest"
 export SDL_LIBS="$libpath/sdl2_dest/lib"
+export SDL2_CONFIG="$libpath/sdl2_dest/bin/sdl2-config"
 PATH="$PATH:$libpath/sdl2_dest/bin"
 make
 makeinstall
@@ -199,7 +200,7 @@ echo "* Downloading SDL_Image."
 git clone $sdl2_image_url $sdl2_image_path
 cd $sdl2_image_path
 echo "* Building SDL_Image."
-./configure  --prefix="$libpath/sdl2_image_dest"
+./configure  --prefix="$libpath/sdl2_image_dest" --with-sdl-prefix="$libpath/sdl2_dest"
 make 
 makeinstall
 
