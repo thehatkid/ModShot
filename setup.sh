@@ -44,6 +44,8 @@ export boost_path="$libpath/boost"
 export libpng_url="https://github.com/glennrp/libpng"
 export libpng_path="$libpath/libpng"
 
+export job_count=$(nproc --all)
+
 # Functions.
 downloadAndUntarGZ() {
     if [ ! -f $2.tar.gz ]
@@ -87,13 +89,13 @@ echo "* Downloading zlib."
 git clone $zlib_url $zlib_path
 cd $zlib_path
 cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWITH_FUZZERS=ON -DWITH_CODE_COVERAGE=ON -DWITH_MAINTAINER_WARNINGS=ON -DCMAKE_INSTALL_PREFIX="$libpath/zlib_dest"
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading bzip2."
 git clone $bzip2_url $bzip2_path
 cd $bzip2_path
-make PREFIX="$libpath/bzip2_dest"
+make -j $job_count PREFIX="$libpath/bzip2_dest"
 make install PREFIX="$libpath/bzip2_dest"
 
 echo "* Downloading libogg"
@@ -102,7 +104,7 @@ cd $ogg_path
 ./autogen.sh
 ./configure --prefix="$libpath/libogg_dest"
 PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$libpath/libogg_dest/lib/pkgconfig
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading boost."
@@ -110,9 +112,9 @@ downloadAndUntarGZ $boost_url $boost_path
 cd $boost_path/boost_1_78_0
 ./bootstrap.sh --prefix="$libpath/boost_dest"
 if [ "$OSTYPE" = "msys" ]; then
-    ./b2 install --prefix="$libpath/boost_dest"
+    ./b2 install -j $job_count --prefix="$libpath/boost_dest"
 else
-    sudo ./b2 install --prefix="$libpath/boost_dest"
+    sudo ./b2 install -j $job_count --prefix="$libpath/boost_dest"
 fi
 
 echo "* Downloading PhysFS."
@@ -121,7 +123,7 @@ cd $physfs_path
 echo "* Building."
 cmake -DCMAKE_INSTALL_PREFIX="$libpath/physfs_dest" -G "Unix Makefiles"
 cd build
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading pixman."
@@ -130,7 +132,7 @@ cd $pixman_path
 echo "* Building pixman."
 ./autogen.sh
 ./configure --prefix="$libpath/pixman_dest"
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading sigc++"
@@ -139,7 +141,7 @@ cd $sigc_path/libsigcplusplus-2.10.7
 echo "* Building sigc++."
 ./autogen.sh
 ./configure --prefix="$libpath/sigcpp_dest"
-make 
+make -j $job_count
 makeinstall
 
 echo "* Downloading libpng."
@@ -147,6 +149,7 @@ git clone $libpng_url $libpng_path
 echo "* Building libpng."
 cd $libpng_path
 ./configure --prefix="$libpath/libpng_dest"
+make -j $job_count
 make check
 makeinstall
 
@@ -156,7 +159,7 @@ cd $libnsgif_path
 echo "* Building libnsgif."
 ./autogen.sh
 ./configure --prefix="$libpath/libnsgif_dest"
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading SDL2."
@@ -166,8 +169,9 @@ mkdir build
 cd build
 ../configure --prefix="$libpath/sdl2_dest"
 export SDL_LIBS="$libpath/sdl2_dest/lib"
+export SDL2_INCLUDE_DIR="$libpath/sdl2_dest/include"
 PATH="$PATH:$libpath/sdl2_dest/bin"
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading vorbis."
@@ -176,7 +180,7 @@ echo "* Building vorbis."
 cd $vorbis_path
 ./autogen.sh
 ./configure --prefix="$libpath/vorbis_dest" --with-ogg-libraries=$libpath/libogg_dest/lib --with-ogg-includes=$libpath/libogg_dest/include
-make
+make -j $job_count
 make install
 
 echo "* Downloading OpenAL Soft."
@@ -185,7 +189,7 @@ echo "* Building and installing OpenAL Soft."
 cd $openal_path
 git checkout tags/1.21.1
 cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/openal_dest"
-make
+make -j $job_count
 makeinstall
 
 echo "* Downloading SDL Sound from Ancurio."
@@ -193,14 +197,16 @@ git clone https://github.com/icculus/SDL_sound $sdlsound_path
 cd $sdlsound_path
 echo "* Building and installing SDL_Sound."
 cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest"
-LIBRARY_PATH=$libpath/sdl2_dest/lib make install
+LIBRARY_PATH=$libpath/sdl2_dest/lib 
+make -j $job_count
+make install
 
 echo "* Downloading SDL_Image."
 git clone $sdl2_image_url $sdl2_image_path
 cd $sdl2_image_path
 echo "* Building SDL_Image."
 ./configure  --prefix="$libpath/sdl2_image_dest"
-make 
+make -j $job_count
 makeinstall
 
 echo "* Downloading SDL_ttf."
@@ -208,7 +214,7 @@ git clone $sdl2_ttf_url $sdl2_ttf_path
 cd $sdl2_ttf_path
 echo "* Building SDL_ttf"
 ./configure --prefix="$libpath/sdl2_ttf_dest"
-make
+make -j $job_count
 makeinstall
 
 echo "* Now, final boss... Downloading ruby."
@@ -218,7 +224,7 @@ git checkout tags/v3_1_0
 echo "* Building"
 ./autogen.sh
 ./configure --enable-shared --disable-install-doc
-make
+make -j $job_count
 make install DESTDIR="$libpath/ruby_dest"
 
 echo "* All done! Now, you can build ModShot."
