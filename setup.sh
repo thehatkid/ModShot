@@ -241,6 +241,7 @@ git clone $sdl2_image_url $sdl2_image_path
 cd $sdl2_image_path
 echo "* Building SDL_Image."
 ./configure  --prefix="$libpath/sdl2_image_dest" --with-sdl-prefix="$libpath/sdl2_dest"
+LDFLAGS="-L$libpath/libjpg_dest/lib -L$libpath/libpng_dest/lib -I$libpath/libwebp_dest/lib -L$libpath/libtiff_dest/lib" CPPFLAGS="-I$libpath/libjpg_dest/include -I$libpath/libpng_dest/include -I$libpath/libwebp_dest/include -I$libpath/libtiff_dest/include"
 make -j $job_count
 makeinstall
 
