@@ -340,13 +340,15 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 )
 if(WIN32)
 target_link_libraries(${PROJECT_NAME}
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/mingw64/lib/libx64-msvcrt-ruby310.dll.a
+	wsock32 ws2_32 winmm.lib
+
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/ucrt64/lib/libx64-ucrt-ruby310.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_ttf_dest/lib/libSDL2_ttf.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_image_dest/lib/libSDL2_image.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl_sound_dest/lib/libSDL2_sound.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2main.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2_test.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_ttf_dest/lib/libSDL2_ttf.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_image_dest/lib/libSDL2_image.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl_sound_dest/lib/libSDL_sound.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/zlib_dest/lib/libzlib.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/pixman_dest/lib/libpixman-1.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/physfs_dest/lib/libphysfs.dll.a
@@ -471,8 +473,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	build/exlibs/sdl_sound_dest/include/SDL2
 	build/exlibs/pixman_dest/include/pixman-1
 	build/exlibs/physfs_dest/include
-	build/exlibs/ruby_dest/mingw64/include/ruby-3.1.0
-	build/exlibs/ruby_dest/mingw64/include/ruby-3.1.0/x64-mingw32
+	build/exlibs/ruby_dest/ucrt64/include/ruby-3.1.0
+	build/exlibs/ruby_dest/ucrt64/include/ruby-3.1.0/x64-mingw-ucrt
 	build/exlibs/ruby_dest/usr/local/include/ruby-3.1.0
 	build/exlibs/ruby_dest/usr/local/include/ruby-3.1.0/x86_64-linux
 )

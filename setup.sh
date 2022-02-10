@@ -196,7 +196,7 @@ echo "* Downloading SDL Sound from Ancurio."
 git clone https://github.com/icculus/SDL_sound $sdlsound_path
 cd $sdlsound_path
 echo "* Building and installing SDL_Sound."
-cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest"
+cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest" -DSDL2_INCLUDE_DIR="$libpath/sdl2_dest/include/SDL2"
 LIBRARY_PATH=$libpath/sdl2_dest/lib 
 make -j $job_count
 make install
