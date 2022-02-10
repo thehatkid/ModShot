@@ -19,19 +19,19 @@ jobs:
             msystem: ${{matrix.sys}}
         - name: Install dependencies
           shell: msys2 {0}
-            run: |
+          run: |
               pacman -S pactoys  --noconfirm
               pacboy -S mm-common:m doxygen:m graphviz:m libffi:m \ 
               openssl:m ninja:m cmake:m make:m ruby:m freetype:m git:m \ 
               autotools:m toolchain:m gcc:m bison:m --noconfirm
         - name: Run setup.sh
           shell: msys2 {0}
-            run: |
+          run: |
               sh ${{ github.workspace }}/setup.sh
         
         - name: Build
           shell: msys2 {0}
-            run: |
+          run: |
               cmake -B ${{ github.workspace }}/build -G "Unix Makefiles"
               cd ${{ github.workspace }}/build
               make
