@@ -21,16 +21,14 @@ jobs:
               openssl:m ninja:m cmake:m make:m ruby:m git:m \ 
               autotools:m toolchain:m gcc:m bison:m
         - name: Run setup.sh
+          working-directory: ${{ github.workspace }}
           shell: msys2 {0}
           run: |
-              export WORKSPACE=${{ github.workspace }}
-              export REPO_ROOT=${WORKSPACE//\//}
-              cd $REPO_ROOT
               sh setup.sh
         
         - name: Build
+          working-directory: ${{ github.workspace }}/build
           shell: msys2 {0}
           run: |
-              cmake -B ${{ github.workspace }}/build -G "Unix Makefiles"
-              cd ${{ github.workspace }}/build
+              cmake .. -G "Unix Makefiles"
               make
