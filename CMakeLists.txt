@@ -356,7 +356,7 @@ target_link_libraries(${PROJECT_NAME}
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisfile.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisenc.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sigcpp_dest/lib/libsigc-2.0.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/openal_dest/lib/libopenal.dll.a
+	${CMAKE_CURRENT_BINARY_DIR}/exlibs/openal_dest/lib/libOpenAL32.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libpng_dest/lib/libpng.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libogg_dest/lib/libogg.dll.a
 	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libnsgif_dest/lib/libnsgif.dll.a
