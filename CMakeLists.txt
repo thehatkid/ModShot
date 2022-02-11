@@ -420,11 +420,13 @@ target_link_libraries(${PROJECT_NAME}
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_contract.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_coroutine.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_date_time.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_exception.a
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_filesystem.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_graph.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_iostreams.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_json.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_locale.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log_setup.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99f.so
@@ -439,6 +441,7 @@ target_link_libraries(${PROJECT_NAME}
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_random.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_regex.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_serialization.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_test_exec_monitor.a
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_thread.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_timer.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_type_erasure.so
