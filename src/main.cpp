@@ -239,7 +239,7 @@ static void setGamePathInRegistry() {
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
 	auto argc = __argc;
 	auto argv = __argv;
-#elif
+#else
 int main(int argc, char *argv[]) {
 #endif
 	Debug() << "ModShot version" << MODSHOT_VERSION;
