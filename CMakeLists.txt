@@ -439,13 +439,13 @@ target_link_libraries(${PROJECT_NAME}
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_random.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_regex.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_serialization.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_system.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_thread.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_timer.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_type_erasure.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_unit_test_framework.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wave.so
     ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wserialization.so
+    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_system.so
     
     ${PLATFORM_LIBRARIES}
 )
