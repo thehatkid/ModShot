@@ -203,7 +203,7 @@ cd $sdl2_path
 mkdir build
 cd build
 ../configure --prefix="$libpath/sdl2_dest/"
-export SDL2_LIBS="$libpath/sdl2_dest/lib/libSDL2.a; $libpath/sdl2_dest/lib/libSDL2main.a"
+export SDL2_LIBRARIES="$libpath/sdl2_dest/lib/libSDL2.a; $libpath/sdl2_dest/lib/libSDL2main.a"
 export SDL2_CONFIG="$libpath/sdl2_dest/bin/sdl2-config"
 export SDL2_INCLUDE_DIR="$libpath/sdl2_dest/include"
 PATH="$PATH:$libpath/sdl2_dest/bin"
@@ -232,7 +232,7 @@ echo "* Downloading SDL Sound from Ancurio."
 git clone https://github.com/icculus/SDL_sound $sdlsound_path
 cd $sdlsound_path
 echo "* Building and installing SDL_Sound."
-cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest" -DSDL2_INCLUDE_DIR="$libpath/sdl2_dest/include/SDL2"
+cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest" -DSDL2_INCLUDE_DIR="$libpath/sdl2_dest/include/SDL2" -DSDL2_LIBRARIES=$SDL2_LIBRARIES
 LIBRARY_PATH=$libpath/sdl2_dest/lib 
 make -j $job_count
 make install
