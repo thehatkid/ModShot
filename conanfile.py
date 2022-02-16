@@ -179,6 +179,6 @@ class MkxpConan(ConanFile):
 	# but this makes distributing mods easier, and also makes sure windows and linux are mostly the same
         copy("*",
             dst="bin/lib/ruby/",
-            src="lib/ruby/3.0.2/",
+            src="lib/ruby/3.0.0/",
             root_package="ruby",
             keep_path=True)
