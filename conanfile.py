@@ -23,7 +23,7 @@ class MkxpConan(ConanFile):
         "boost/1.77.0",
         #"openal/1.18.2@bincrafters/stable",
         "openal/1.21.1",
-	"physfs/3.0.1@astrabit/testing",
+	    "physfs/3.0.1@astrabit/testing",
         "pixman/0.34.0@astrabit/testing",
         "ruby/3.0.2@astrabit/testing",
         "sdl2_image/2.0.5@bincrafters/stable",
@@ -35,7 +35,8 @@ class MkxpConan(ConanFile):
         "zlib/1.2.11",
         "bzip2/1.0.8",
         "giflib/5.2.1",
-        "libffi/3.4.2"
+        "libffi/3.4.2",
+        "zmqpp/4.2.0"
     )
     build_requires = ("ruby_installer/3.0.2@astrabit/testing")
     options = {
