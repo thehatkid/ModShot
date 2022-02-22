@@ -21,6 +21,8 @@ OtherViewMessager::OtherViewMessager(const Config &c):
     otherview_socket = new zmqpp::socket (otherview_context, otherview_socket_type);
     normal_socket = new zmqpp::socket (normal_context, normal_socket_type);
 
+    Debug() << "Attempting to connect to otherview at " << otherViewEndpoint;
+    Debug() << "Attempting to connect to normal at " << normalEndpoint;
     if (isOtherView) {
         otherview_socket->connect(otherViewEndpoint);
         normal_socket->connect(normalEndpoint);
@@ -30,7 +32,7 @@ OtherViewMessager::OtherViewMessager(const Config &c):
     }
 }
 
-void OtherViewMessager::sendMsg(const char* string)
+bool OtherViewMessager::sendMsg(const char* string)
 {
     zmqpp::message message;
     message << string;
@@ -43,6 +45,8 @@ void OtherViewMessager::sendMsg(const char* string)
     Debug() << "Sent message: ";
     Debug() << string;
     Debug() << ret;
+
+    return ret;
 }
 
 std::string OtherViewMessager::getMsg()
@@ -55,8 +59,12 @@ std::string OtherViewMessager::getMsg()
     } else {
         ret = otherview_socket->receive(message, true);
     }
+    if (ret) {
+        message >> response;
+    } else {
+        response = "";
+    }
     Debug() << "Received message: ";
-    message >> response;
     Debug() << response;
     Debug() << ret;
     return response;
@@ -64,6 +72,10 @@ std::string OtherViewMessager::getMsg()
 
 void OtherViewMessager::close() 
 {
+    Debug() << "Closing sockets";
     otherview_socket->close();
     normal_socket->close();
+    Debug() << "Deleting sockets";
+    delete(otherview_socket);
+    delete(normal_socket);
 }

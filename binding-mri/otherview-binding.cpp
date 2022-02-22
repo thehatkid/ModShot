@@ -13,9 +13,9 @@ RB_METHOD(sendMessage)
     rb_get_args(argc, argv, "z", &message RB_ARG_END);
     Debug() << "Sending message: " << message;
 
-    messager.sendMsg(message);
+    bool ret = messager.sendMsg(message);
 
-    return Qnil;
+    return rb_bool_new(ret);
 }
 RB_METHOD(readMessage) 
 {

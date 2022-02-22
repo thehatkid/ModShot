@@ -348,6 +348,7 @@ void EventThread::process(RGSSThreadData &rtData)
 				break;
 			}
 
+			/*
 			if (event.key.keysym.scancode == SDL_SCANCODE_F3 && rtData.allowForceQuit) {
 				// ModShot addition: force quit the game, no prompting or saving
 				Debug() << "Force terminating ModShot";
@@ -355,6 +356,7 @@ void EventThread::process(RGSSThreadData &rtData)
 				EventThread::forceTerminate = true;
 				break;
 			}
+			*/
 
 			if (event.key.keysym.scancode == SDL_SCANCODE_F12)
 			{
