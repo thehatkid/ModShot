@@ -7,8 +7,8 @@ OtherViewMessager::OtherViewMessager(const Config &c):
     conf(c)
 {
     isOtherView = c.isOtherView;
-    otherViewEndpoint = "tcp://localhost:9697";
-    normalEndpoint = "tcp://localhost:7536";
+    otherViewEndpoint = "tcp://127.0.0.1:9697";
+    normalEndpoint = "tcp://127.0.0.1:7536";
 
     if (isOtherView) {
         otherview_socket_type = zmqpp::socket_type::push;
@@ -21,30 +21,49 @@ OtherViewMessager::OtherViewMessager(const Config &c):
     otherview_socket = new zmqpp::socket (otherview_context, otherview_socket_type);
     normal_socket = new zmqpp::socket (normal_context, normal_socket_type);
 
-    Debug() << "Connecting to " + otherViewEndpoint;
-    otherview_socket->connect(otherViewEndpoint);
-    Debug() << "Connecting to " + normalEndpoint;
-    normal_socket->connect(normalEndpoint);
+    if (isOtherView) {
+        otherview_socket->connect(otherViewEndpoint);
+        normal_socket->connect(normalEndpoint);
+    } else {
+        otherview_socket->bind(otherViewEndpoint);
+        normal_socket->bind(normalEndpoint);
+    }
 }
 
-void OtherViewMessager::sendMsg(const std::string &message)
+void OtherViewMessager::sendMsg(const std::string &string)
 {
+    zmqpp::message message;
+    message << string;
+    bool ret;
     if (isOtherView) {
-        otherview_socket->send(message);
+        ret = otherview_socket->send(message, true);
     } else {
-        normal_socket->send(message);
+        ret = normal_socket->send(message, true);
     }
-    Debug() << "Sent message: " << message;
+    Debug() << "Sent message: ";
+    Debug() << string;
+    Debug() << ret;
 }
 
 std::string OtherViewMessager::getMsg()
 {
-    std::string message;
-    if (!isOtherView) {
-        otherview_socket->receive(message);
+    zmqpp::message message;
+    std::string response;
+    bool ret;
+    if (isOtherView) {
+        ret = normal_socket->receive(message, true);
     } else {
-        normal_socket->receive(message);
+        ret = otherview_socket->receive(message, true);
     }
-    Debug() << "Received message: " << message;
-    return message;
+    Debug() << "Received message: ";
+    message >> response;
+    Debug() << response;
+    Debug() << ret;
+    return response;
+}
+
+void OtherViewMessager::close() 
+{
+    otherview_socket->close();
+    normal_socket->close();
 }

@@ -32,6 +32,8 @@
 #include "boost-hash.h"
 #include "version.h"
 
+#include "otherview-message.h"
+
 #include <ruby.h>
 #include <ruby/encoding.h>
 #undef inline
@@ -671,6 +673,7 @@ static void mriBindingTerminate()
 #ifdef __linux__
 	wallpaperBindingTerminate();
 #endif
+	shState->otherView().close();
 }
 
 static void mriBindingReset()

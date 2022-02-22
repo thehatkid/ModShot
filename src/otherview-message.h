@@ -21,4 +21,5 @@ public:
     OtherViewMessager(const Config &c);
     void sendMsg(const std::string &message);
     std::string getMsg();
+    void close();
 };

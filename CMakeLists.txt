@@ -364,7 +364,7 @@ target_link_libraries(${PROJECT_NAME}
 	CONAN_PKG::sdl_sound-mkxp
 	CONAN_PKG::sigc++
 	CONAN_PKG::zmqpp
-	${PLATFORM_LIBRARIES})
+	${PLATFORM_LIBRARIES} sndio)
 
 IF(APPLE)
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cmake -P "${CMAKE_SOURCE_DIR}/patches/mac/CompleteBundle.cmake" VERBATIM)
