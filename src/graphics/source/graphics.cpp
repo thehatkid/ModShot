@@ -224,7 +224,6 @@ public:
 			glState.blend.pushSet(false);
 			screenQuad.draw();
 			glState.blend.pop();
-			Debug() << "Gray";
 		}
 
 		if (binaryEffect)
