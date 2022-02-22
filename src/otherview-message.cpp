@@ -6,10 +6,12 @@
 OtherViewMessager::OtherViewMessager(const Config &c):
     conf(c)
 {
+    Debug() << "Setting up otheview";
     isOtherView = c.isOtherView;
     otherViewEndpoint = "tcp://127.0.0.1:9697";
     normalEndpoint = "tcp://127.0.0.1:7536";
 
+    Debug() << "Setting up contexts";
     if (isOtherView) {
         otherview_socket_type = zmqpp::socket_type::push;
         normal_socket_type = zmqpp::socket_type::pull;
