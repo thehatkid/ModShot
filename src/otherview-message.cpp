@@ -30,7 +30,7 @@ OtherViewMessager::OtherViewMessager(const Config &c):
     }
 }
 
-void OtherViewMessager::sendMsg(const std::string &string)
+void OtherViewMessager::sendMsg(const char* string)
 {
     zmqpp::message message;
     message << string;

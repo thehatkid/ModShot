@@ -9,8 +9,9 @@ RB_METHOD(sendMessage)
 {
     OtherViewMessager &messager = shState->otherView();
 
-    std::string message;
+    const char* message;
     rb_get_args(argc, argv, "z", &message RB_ARG_END);
+    Debug() << "Sending message: " << message;
 
     messager.sendMsg(message);
 
