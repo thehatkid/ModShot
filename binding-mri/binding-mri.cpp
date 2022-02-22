@@ -673,7 +673,6 @@ static void mriBindingTerminate()
 #ifdef __linux__
 	wallpaperBindingTerminate();
 #endif
-	shState->otherView().close();
 }
 
 static void mriBindingReset()

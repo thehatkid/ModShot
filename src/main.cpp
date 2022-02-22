@@ -425,6 +425,7 @@ int main(int argc, char *argv[])
 			SDL_Delay(10);
 		}
 
+		Debug() << "Waiting for shutdown";
 		/* If RGSS thread ack'd request, wait for it to shutdown,
 		* otherwise abandon hope and just end the process as is. */
 		if (rtData.rqTermAck)
@@ -440,6 +441,8 @@ int main(int argc, char *argv[])
 									rtData.rgssErrorMsg.c_str(), win);
 		}
 	}
+
+	Debug() << "Cleaning up events";
 
 	/* Clean up any remainin events */
 	eventThread.cleanup();

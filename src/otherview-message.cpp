@@ -42,9 +42,9 @@ bool OtherViewMessager::sendMsg(const char* string)
     } else {
         ret = normal_socket->send(message, true);
     }
-    Debug() << "Sent message: ";
-    Debug() << string;
-    Debug() << ret;
+    //Debug() << "Sent message: ";
+    //Debug() << string;
+    //Debug() << ret;
 
     return ret;
 }
@@ -64,9 +64,9 @@ std::string OtherViewMessager::getMsg()
     } else {
         response = "";
     }
-    Debug() << "Received message: ";
-    Debug() << response;
-    Debug() << ret;
+    //Debug() << "Received message: ";
+    //Debug() << response;
+    //Debug() << ret;
     return response;
 }
 
