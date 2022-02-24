@@ -31,7 +31,7 @@ jobs:
         run: conan install ${{ github.workspace }} --build=missing -s build_type=Debug
         working-directory: ${{ runner.temp }}\build
       - name: Build ModShot
-        run: conan build ${{ github.workspace }} -s build_type=Debug
+        run: conan build ${{ github.workspace }}
         working-directory: ${{ runner.temp }}\build
       - name: Create dist folder
         run: |
@@ -78,7 +78,7 @@ jobs:
         run: conan install ${{ github.workspace }} --build=missing -s build_type=Debug
         working-directory: ${{ runner.temp }}/build
       - name: Build ModShot
-        run: conan build ${{ github.workspace }} -s build_type=Debug
+        run: conan build ${{ github.workspace }}
         working-directory: ${{ runner.temp }}/build
       - name: Create dist folder
         run: |
