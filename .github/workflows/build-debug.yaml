@@ -40,13 +40,12 @@ jobs:
           copy ${{ runner.temp }}\build\bin\* ${{ runner.temp }}\built_artifact\lib;
           move ${{ runner.temp }}\built_artifact\lib\oneshot-shim.exe ${{ runner.temp }}\built_artifact\oneshot.exe;
           copy ${{ runner.temp }}\build ${{ runner.temp }}\built_artifact\build;
-          copy C:\.conan ${{ runner.temp }}\built_artifact\.conan;
-          dir ${{ runner.temp }}\built_artifact;
+          copy C:\.conan ${{ runner.temp }}\built_artifact\.conan
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: modshot_build_windows_${{ github.sha }}
-          path: ${{ runner.temp }}\built_artifact
+          path: ${{ runner.temp }}\built_artifact\
   build-linux:
     name: Build ModShot for Linux
     runs-on: ubuntu-latest
