@@ -40,7 +40,8 @@ jobs:
           copy ${{ runner.temp }}\build\bin\* ${{ runner.temp }}\built_artifact\lib;
           move ${{ runner.temp }}\built_artifact\lib\oneshot-shim.exe ${{ runner.temp }}\built_artifact\oneshot.exe;
           copy ${{ runner.temp }}\build ${{ runner.temp }}\built_artifact\build;
-          copy C:\.conan ${{ runner.temp }}\built_artifact\.conan
+          copy C:\.conan ${{ runner.temp }}\built_artifact\.conan;
+          dir ${{ runner.temp }}\built_artifact;
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
