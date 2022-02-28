@@ -46,6 +46,10 @@ jobs:
             conan profile update settings.compiler.libcxx=libstdc++11 default;
             setx CONAN_USE_ALWAYS_SHORT_PATHS 1;
             mkdir ~/build
+        - name: Get dependency graph
+          shell: msys2 {0}
+          run: |
+            conan info /d/a/OSFM-Core-Public/OSFM-Core-Public;
         - name: Cache conan dependencies
           uses: actions/cache@v2
           with:
