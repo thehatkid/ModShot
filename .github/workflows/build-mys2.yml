@@ -24,7 +24,8 @@ jobs:
             mingw-w64-${{matrix.env}}-libffi mingw-w64-${{matrix.env}}-openssl mingw-w64-${{matrix.env}}-ninja \
             mingw-w64-${{matrix.env}}-cmake mingw-w64-${{matrix.env}}-make mingw-w64-${{matrix.env}}-ruby \
             mingw-w64-${{matrix.env}}-freetype git autotools mingw-w64-${{matrix.env}}-toolchain \
-            mingw-w64-${{matrix.env}}-gcc bison mingw-w64-${{matrix.env}}-SDL2 python3 python3-pip
+            mingw-w64-${{matrix.env}}-gcc bison mingw-w64-${{matrix.env}}-SDL2 python3 python3-pip \
+            mingw-w64-x86_64-libogg
         - name: Setup env vars
           shell: msys2 {0}
           run: |
