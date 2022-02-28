@@ -49,7 +49,7 @@ class MkxpConan(ConanFile):
         "cygwin_installer:packages=xxd",
         # Avoid dead url bitrot in cygwin_installer
         "cygwin_installer:with_pear=False",
-        "ruby:with_openssl=True",
+        #"ruby:with_openssl=True",
         "msys2=False",
         "sdl_sound:with_flac=False"
     )
@@ -67,10 +67,10 @@ class MkxpConan(ConanFile):
             self.requires("vorbis/1.3.7")
             self.requires("libalsa/1.1.9")
             self.requires("sdl2/2.0.9@bincrafters/stable")
-            self.requires("openssl/1.1.1l")
+            #self.requires("openssl/1.1.1l")
         if tools.os_info.is_windows:
             self.requires("sdl2/2.0.14@bincrafters/stable")
-            self.requires("openssl/1.1.1k")
+            #self.requires("openssl/1.1.1k")
     
     def build_requirements(self):
         if self.options.msys2:
@@ -83,7 +83,7 @@ class MkxpConan(ConanFile):
             self.options["openal"].shared = True
             # Fix linker error in SDL_sound fork with SDL2
             self.options["sdl2"].shared = True
-            self.options["openssl"].shared = True
+            #self.options["openssl"].shared = True
             win_bash = self.settings.compiler != "Visual Studio"
             if win_bash or self.options.msys2:
                 self.win_bash = win_bash           
