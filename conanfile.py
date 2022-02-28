@@ -52,7 +52,7 @@ class MkxpConan(ConanFile):
         "cygwin_installer:with_pear=False",
         "ruby:with_openssl=True",
         "msys2=False",
-        "sdl_sound:with_flac=false"
+        "sdl_sound:with_flac=False"
     )
 
     #def build_requirements(self):
