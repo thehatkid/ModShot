@@ -23,9 +23,9 @@ class MkxpConan(ConanFile):
         "boost/1.77.0",
         #"openal/1.18.2@bincrafters/stable",
         "openal/1.21.1",
-	    "physfs/3.0.1@astrabit/testing",
+	"physfs/3.0.1@astrabit/testing",
         "pixman/0.34.0@astrabit/testing",
-        "ruby/3.0.2@astrabit/testing",
+        "ruby/3.1.0@astrabit/testing",
         "sdl2_image/2.0.5@bincrafters/stable",
         "sdl2_ttf/2.0.15@bincrafters/stable",
         "sdl_sound/1.0.1@astrabit/testing",
@@ -37,7 +37,7 @@ class MkxpConan(ConanFile):
         "giflib/5.2.1",
         "zmqpp/4.2.0"
     )
-    build_requires = ("ruby_installer/3.0.2@astrabit/testing")
+    # build_requires = ("ruby_installer/3.0.2@astrabit/testing")
     options = {
         "platform": ["standalone", "steam"],
         "msys2": [True, False],
@@ -45,7 +45,7 @@ class MkxpConan(ConanFile):
     default_options = (
         "platform=standalone",
         "boost:without_test=True",
-	    "boost:without_fiber=True",
+	"boost:without_fiber=True",
         "cygwin_installer:packages=xxd",
         # Avoid dead url bitrot in cygwin_installer
         "cygwin_installer:with_pear=False",
@@ -71,11 +71,6 @@ class MkxpConan(ConanFile):
         if tools.os_info.is_windows:
             self.requires("sdl2/2.0.14@bincrafters/stable")
             #self.requires("openssl/1.1.1k")
-    
-    def build_requirements(self):
-        if self.options.msys2:
-            self.build_requires("msys2/cci.latest")
-            self.build_requires("mingw-w64/8.1")
 
     def configure(self):
         if tools.os_info.is_windows:
