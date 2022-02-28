@@ -40,7 +40,7 @@ jobs:
             conan config set general.revisions_enabled=1;
             conan config set general.cmake_generator="Unix Makefiles";
             setx CONAN_USE_ALWAYS_SHORT_PATHS 1;
-            mkdir ${{ runner.temp }}\build
+            mkdir ~/build
         - name: Cache conan dependencies
           uses: actions/cache@v2
           with:
@@ -48,12 +48,14 @@ jobs:
             key: ${{ runner.os }}-ucrt64-cached-conan-modules-${{ hashFiles('conanfile.py') }}
         - name: Build dependencies using conan
           shell: msys2 {0}
-          run: conan install ${{ github.workspace }} --build=missing
-          working-directory: ${{ runner.temp }}/build
+          run: |
+            cd ~/build;
+            conan install ${{ github.workspace }} --build=missing;
         - name: Build ModShot
           shell: msys2 {0}
-          run: conan build ${{ github.workspace }}
-          working-directory: ${{ runner.temp }}/build
+          run: |
+            cd ~/build;
+            conan build ${{ github.workspace }}
         - name: Create dist folder
           shell: msys2 {0}
           run: |
