@@ -35,6 +35,10 @@ export vorbis_url="https://github.com/xiph/vorbis"
 export vorbis_path="$libpath/vorbis"
 export ogg_url="https://github.com/gcp/libogg"
 export ogg_path="$libpath/libogg"
+export zmqpp_url="https://github.com/zeromq/zmqpp"
+export zmqpp_path="$libpath/zmqpp"
+export libzmq_url="https://github.com/zeromq/libzmq"
+export libzmq_path="$libpath/libzmq"
 
 # Non-git
 # Boost C++ Libraries
@@ -254,6 +258,24 @@ echo "* Building SDL_ttf"
 make -j $job_count
 makeinstall
 
+echo "* Downloading libzmq."
+git clone $libzmq_url $libzmq_path
+cd $libzmq_path
+echo "* Building libzmq."
+./autogen.sh
+./configure --prefix="$libpath/libzmq_dest"
+make -j $job_count
+makeinstall
+
+echo "* Downloading zmqpp."
+git clone $zmqpp_url $zmqpp_path
+cd $zmqpp_path
+echo "* Building zmqpp."
+if [ "$OSTYPE" = "msys" ]; then
+    cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/zmqpp_dest" -DZEROMQ_INCLUDE_DIR="$libpath/libzmq_dest/include" -DZEROMQ_LIBRARY_STATIC="$libpath/libzmq_dest/lib/libzmq.a" -DZEROMQ_LIBRARY_SHARED="$libpath/libzmq_dest/bin/libzmq.dll"
+else
+    cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/zmqpp_dest" -DZEROMQ_INCLUDE_DIR="$libpath/libzmq_dest/include" -DZEROMQ_LIBRARY_STATIC="$libpath/libzmq_dest/lib/libzmq.a" -DZEROMQ_LIBRARY_SHARED="$libpath/libzmq_dest/bin/libzmq.so"
+fi
 echo "* Now, final boss... Downloading ruby."
 git clone $ruby_url $ruby_path
 cd $ruby_path
