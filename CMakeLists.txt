@@ -233,6 +233,7 @@ set(EMBEDDED_INPUT
 	shader/cubic_lens.frag
 	shader/water.frag
 	shader/zoom.vert
+	shader/binary_glitch.frag
 	assets/icon.png
 	assets/gamecontrollerdb.txt
 )
@@ -323,6 +324,7 @@ set(BINDING_SOURCE
 	binding-mri/modshot-window-binding.cpp
 	binding-mri/aleffect-binding.cpp
 	binding-mri/otherview-binding.cpp
+	binding-mri/screen-binding.cpp
 )
 
 source_group("Binding Source" FILES ${BINDING_SOURCE} ${BINDING_HEADERS})

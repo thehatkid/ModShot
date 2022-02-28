@@ -314,7 +314,8 @@ BINDING_MRI {
 	binding-mri/wallpaper-binding.cpp \
 	binding-mri/journal-binding.cpp \
 	binding-mri/chroma-binding.cpp \
-	binding-mri/niko-binding.cpp
+	binding-mri/niko-binding.cpp \
+	binding-mri/screen-binding.cpp
 }
 
 OTHER_FILES += $$EMBED

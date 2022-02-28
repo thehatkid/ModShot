@@ -1,8 +1,8 @@
-name: Build Modshot with Steam support
-on: push
+name: Build Modshot with debug symbols
+on: [push, workflow_dispatch]
 jobs:
   build-windows:
-    name: Build ModShot for Windows (Steam support)
+    name: Build ModShot for Windows
     runs-on: windows-2019
     env:
       CONAN_USER_HOME: C:\.conan
@@ -26,9 +26,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: C:\.conan
-          key: ${{ runner.os }}-cached-conan-modules-${{ hashFiles('conanfile.py') }}-steam
+          key: ${{ runner.os }}-cached-conan-modules-${{ hashFiles('conanfile.py') }}
       - name: Build dependencies using conan
-        run: conan install ${{ github.workspace }} --build=missing -o platform=steam
+        run: conan install ${{ github.workspace }} --build=missing -s build_type=Debug
         working-directory: ${{ runner.temp }}\build
       - name: Build ModShot
         run: conan build ${{ github.workspace }}
@@ -36,15 +36,18 @@ jobs:
       - name: Create dist folder
         run: |
           mkdir ${{ runner.temp }}\built_artifact;
-          move ${{ runner.temp }}\build\bin\lib ${{ runner.temp }}\built_artifact\lib;
-          move ${{ runner.temp }}\build\bin\* ${{ runner.temp }}\built_artifact\lib;
+          copy ${{ runner.temp }}\build\bin\lib ${{ runner.temp }}\built_artifact\lib;
+          copy ${{ runner.temp }}\build\bin\* ${{ runner.temp }}\built_artifact\lib;
+          move ${{ runner.temp }}\built_artifact\lib\oneshot-shim.exe ${{ runner.temp }}\built_artifact\oneshot.exe;
+          copy ${{ runner.temp }}\build ${{ runner.temp }}\built_artifact\build;
+          copy C:\.conan ${{ runner.temp }}\built_artifact\.conan
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: modshot_build_steam_windows_${{ github.sha }}
-          path: ${{ runner.temp }}\built_artifact
+          name: modshot_build_windows_${{ github.sha }}
+          path: ${{ runner.temp }}\built_artifact\
   build-linux:
-    name: Build ModShot for Linux (Steam support)
+    name: Build ModShot for Linux
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -70,9 +73,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-cached-conan-modules-${{ hashFiles('conanfile.py') }}-steam
+          key: ${{ runner.os }}-cached-conan-modules-${{ hashFiles('conanfile.py') }}
       - name: Build dependencies using conan
-        run: conan install ${{ github.workspace }} --build=missing -o platform=steam
+        run: conan install ${{ github.workspace }} --build=missing -s build_type=Debug
         working-directory: ${{ runner.temp }}/build
       - name: Build ModShot
         run: conan build ${{ github.workspace }}
@@ -82,10 +85,9 @@ jobs:
           mkdir ${{ runner.temp }}/dist &&
           ${{ github.workspace }}/scripts/shell/make-linux-dist.sh ${{ runner.temp }}/build ${{ runner.temp }}/dist &&
           cd ${{ runner.temp }}/dist &&
-          rm oneshot &&
           tar czf ${{ runner.temp }}/modshot_${{ github.sha }}.tar.gz .
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: modshot_build_steam_linux_${{ github.sha }}
+          name: modshot_build_linux_${{ github.sha }}
           path: ${{ runner.temp }}/modshot_${{ github.sha }}.tar.gz

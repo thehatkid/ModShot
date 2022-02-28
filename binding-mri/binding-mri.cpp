@@ -32,6 +32,8 @@
 #include "boost-hash.h"
 #include "version.h"
 
+#include "otherview-message.h"
+
 #include <ruby.h>
 #include <ruby/encoding.h>
 #undef inline
@@ -87,6 +89,7 @@ void chromaBindingInit();
 void modshotwindowBindingInit();
 void aleffectBindingInit();
 void otherviewBindingInit();
+void screenBindingInit();
 RB_METHOD(mriPrint);
 RB_METHOD(mriP);
 RB_METHOD(mkxpDataDirectory);
@@ -126,6 +129,7 @@ static void mriBindingInit()
 	modshotwindowBindingInit();
 	aleffectBindingInit();
 	otherviewBindingInit();
+	screenBindingInit();
 	rb_define_global_const("MODSHOT_VERSION", rb_str_new_cstr(MODSHOT_VERSION));
 	if (rgssVer >= 3)
 	{
