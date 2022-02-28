@@ -54,7 +54,7 @@ jobs:
           shell: msys2 {0}
           run: |
             cd ~/build;
-            export CXX=g++;
+            export CXX=D:\a\_temp\msys64\ucrt64\bin\g++.exe;
             conan install /d/a/OSFM-Core-Public/OSFM-Core-Public --build=missing;
         - name: Build ModShot
           shell: msys2 {0}
