@@ -22,8 +22,8 @@ class MkxpConan(ConanFile):
     requires = (
         "boost/1.77.0",
         "openal/1.21.1",
-	"physfs/3.0.1@astrabit/testing",
-        "pixman/0.34.0@astrabit/testing",
+	    "physfs/3.0.1@astrabit/testing",
+        "pixman/0.40.0",
         "ruby/3.1.1@astrabit/testing",
         "sdl2_image/2.0.5@bincrafters/stable",
         "sdl2_ttf/2.0.15@bincrafters/stable",
@@ -44,7 +44,7 @@ class MkxpConan(ConanFile):
     default_options = (
         "platform=standalone",
         "boost:without_test=True",
-	"boost:without_fiber=True",
+	    "boost:without_fiber=True",
         "cygwin_installer:packages=xxd",
         # Avoid dead url bitrot in cygwin_installer
         "cygwin_installer:with_pear=False",
