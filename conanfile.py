@@ -36,7 +36,7 @@ class MkxpConan(ConanFile):
         "giflib/5.2.1",
         "zmqpp/4.2.0"
     )
-    build_requires = ("ruby_installer/3.0.2@astrabit/testing")
+    # build_requires = ("ruby_installer/3.0.2@astrabit/testing")
     options = {
         "platform": ["standalone", "steam"],
         "msys2": [True, False],
