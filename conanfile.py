@@ -20,9 +20,10 @@ class MkxpConan(ConanFile):
     generators = "cmake"
     exports_sources = "*"
     requires = (
+	"lzma/5.2.4@bincrafters/stable",
         "boost/1.77.0",
         "openal/1.21.1",
-	    "physfs/3.0.1@astrabit/testing",
+	"physfs/3.0.1@astrabit/testing",
         "pixman/0.40.0",
         "ruby/3.1.1@astrabit/testing",
         "sdl2_image/2.0.5@bincrafters/stable",
