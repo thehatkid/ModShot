@@ -29,7 +29,7 @@ jobs:
         - name: Setup env vars
           shell: msys2 {0}
           run: |
-                export CONAN_USER_HOM=/c/.conan
+                export CONAN_USER_HOME=/c/.conan
                 export CONAN_USER_HOME_SHORT=/c/.conan
         - name: Configure conan
           shell: msys2 {0}
