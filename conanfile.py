@@ -52,7 +52,8 @@ class MkxpConan(ConanFile):
         #"ruby:with_openssl=True",
         "msys2=False",
         "sdl_sound:with_flac=False",
-	"libtiff:lzma=False"
+	"libtiff:lzma=False",
+	"sdl2:directx=False",
     )
 
     #def build_requirements(self):
