@@ -34,6 +34,7 @@ class MkxpConan(ConanFile):
         "zlib/1.2.11",
         "bzip2/1.0.8",
         "giflib/5.2.1",
+	"ogg/1.3.5",
         "zmqpp/4.2.0"
     )
     # build_requires = ("ruby_installer/3.0.2@astrabit/testing")
@@ -63,7 +64,6 @@ class MkxpConan(ConanFile):
             # Overrides
             self.requires("sqlite3/3.29.0")
             self.requires("flac/1.3.3")
-            self.requires("ogg/1.3.5")
             self.requires("vorbis/1.3.7")
             self.requires("libalsa/1.1.9")
             self.requires("sdl2/2.0.9@bincrafters/stable")
