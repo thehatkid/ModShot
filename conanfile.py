@@ -53,7 +53,7 @@ class MkxpConan(ConanFile):
         "msys2=False",
         "sdl_sound:with_flac=False",
 	"libtiff:lzma=False",
-	"sdl2:directx=False",
+	#"sdl2:directx=False",
     )
 
     #def build_requirements(self):
@@ -70,6 +70,9 @@ class MkxpConan(ConanFile):
             self.requires("sdl2/2.0.9@bincrafters/stable")
             #self.requires("openssl/1.1.1l")
         if tools.os_info.is_windows:
+            temp = list(self.default_options)
+            temp.insert("sdl2:directx=False")
+            self.default_options = tuple(temp)
             self.requires("sdl2/2.0.14@bincrafters/stable")
             #self.requires("openssl/1.1.1k")
 
