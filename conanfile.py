@@ -71,7 +71,7 @@ class MkxpConan(ConanFile):
             #self.requires("openssl/1.1.1l")
         if tools.os_info.is_windows:
             temp = list(self.default_options)
-            temp.insert("sdl2:directx=False")
+            temp.insert(len(self.default_options) + 1, "sdl2:directx=False")
             self.default_options = tuple(temp)
             self.requires("sdl2/2.0.14@bincrafters/stable")
             #self.requires("openssl/1.1.1k")
