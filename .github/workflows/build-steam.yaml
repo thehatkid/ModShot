@@ -3,7 +3,7 @@ on: push
 jobs:
   build-windows:
     name: Build ModShot for Windows (Steam support)
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
       CONAN_USER_HOME: C:\.conan
       CONAN_USER_HOME_SHORT: C:\.conan

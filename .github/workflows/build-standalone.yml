@@ -3,7 +3,7 @@ on: [push, workflow_dispatch]
 jobs:
   build-windows:
     name: Build ModShot for Windows
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
       CONAN_USER_HOME: C:\.conan
       CONAN_USER_HOME_SHORT: C:\.conan
