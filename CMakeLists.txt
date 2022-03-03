@@ -83,6 +83,7 @@ set(MAIN_HEADERS
 	${SRC_FS_HEADER_PATH}/filesystem.h
 	${SRC_FS_HEADER_PATH}/rgssad.h
 
+	src/display.h
 	src/binding.h
 	src/etc.h
 	src/etc-internal.h
@@ -154,6 +155,7 @@ set(MAIN_SOURCE
 	${SRC_FS_SOURCE_PATH}/rgssad.cpp
 
 	src/main.cpp
+	src/display.cpp
 	src/eventthread.cpp
 	src/etc.cpp
 	src/config.cpp
@@ -328,6 +330,7 @@ set(BINDING_SOURCE
 	binding-mri/aleffect-binding.cpp
 	binding-mri/otherview-binding.cpp
 	binding-mri/screen-binding.cpp
+	binding-mri/display-binding.cpp
 )
 
 source_group("Binding Source" FILES ${BINDING_SOURCE} ${BINDING_HEADERS})
