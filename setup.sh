@@ -1,289 +1,103 @@
 export libpath=$PWD/build/exlibs
 export projectroot=$PWD
+
 if ! cd $libpath
 then
-mkdir $PWD/build
-mkdir $libpath
+    mkdir $PWD/build
+    mkdir $libpath
 fi
 
-# Git URLs
-export sdl2_url="https://github.com/libsdl-org/SDL.git"
-export sdl2_path="$libpath/sdl"
-export sdl2_image_url="https://github.com/libsdl-org/SDL_image.git"
-export sdl2_image_path="$libpath/SDL_Image"
-export sdl2_ttf_url="https://github.com/libsdl-org/SDL_ttf"
-export sdl2_ttf_path="$libpath/SDL_ttf"
-export openal_url="https://github.com/kcat/openal-soft.git"
-export openal_path="$libpath/openal-soft"
-export physfs_url="https://github.com/icculus/physfs.git"
-export physfs_path="$libpath/physfs"
-export pixman_url="https://github.com/freedesktop/pixman.git"
-export pixman_path="$libpath/pixman"
-export sdlsound_url="https://github.com/Ancurio/SDL_sound.git"
-export sdlsound_path="$libpath/SDL_sound"
-export sigc_url="https://github.com/libsigcplusplus/libsigcplusplus/archive/refs/tags/2.10.7.tar.gz"
-export sigc_path="$libpath/libsigcplusplus-2.10.7"
-export zlib_url="https://github.com/madler/zlib"
-export zlib_path="$libpath/zlib"
-export bzip2_url="git://sourceware.org/git/bzip2.git"
-export bzip2_path="$libpath/bzip2"
-export libnsgif_url="https://github.com/jcupitt/libnsgif-autotools"
-export libnsgif_path="$libpath/libnsgif"
-export ruby_url="https://github.com/ruby/ruby.git"
-export ruby_path="$libpath/ruby"
-export vorbis_url="https://github.com/xiph/vorbis"
-export vorbis_path="$libpath/vorbis"
-export ogg_url="https://github.com/gcp/libogg"
-export ogg_path="$libpath/libogg"
-export zmqpp_url="https://github.com/zeromq/zmqpp"
-export zmqpp_path="$libpath/zmqpp"
-export libzmq_url="https://github.com/zeromq/libzmq"
-export libzmq_path="$libpath/libzmq"
+export proc_count=$(nproc --all)
 
-# Non-git
-# Boost C++ Libraries
-export boost_url="https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz"
-export boost_path="$libpath/boost"
-# libpng (required for SDL_Image)
-export libpng_url="https://github.com/glennrp/libpng"
-export libpng_path="$libpath/libpng"
-# libjpg
-export libjpg_url="http://www.ijg.org/files/jpegsrc.v9e.tar.gz"
-export libjpg_path="$libpath/libjpg"
-# libwebp
-export libwebp_url="https://chromium.googlesource.com/webm/libwebp"
-export libwebp_path="$libpath/libwebp"
-# libtiff
-export libtiff_url="https://gitlab.com/libtiff/libtiff"
-export libtiff_path="$libpath/libtiff"
+if [[ "$(uname)" == MINGW* ]]; then 
+    echo "* MinGW-w64 detected."
+    echo "* Installing dependencies..."
+    pacman -S git gcc make cmake bison doxygen ruby \
+     mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-SDL2_image \
+     mingw-w64-ucrt-x86_64-SDL2_ttf mingw-w64-ucrt-x86_64-openal \
+     mingw-w64-ucrt-x86_64-physfs mingw-w64-ucrt-x86_64-pixman \
+     mingw-w64-ucrt-x86_64-libwebp mingw-w64-ucrt-x86_64-zlib \
+     mingw-w64-ucrt-x86_64-bzip2 mingw-w64-ucrt-x86_64-libvorbis \
+     mingw-w64-ucrt-x86_64-libogg mingw-w64-ucrt-x86_64-zeromq \
+     mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-libpng \
+     mingw-w64-ucrt-x86_64-libjpeg-turbo mingw-w64-ucrt-x86_64-libtiff \
+     
+else 
+    if [[ "$(cat /etc/issue)" == Debian* || "$(cat /etc/issue)" == Ubuntu* ]]; then
+        echo "* Debian Linux detected."
+        echo "* Installing dependencies..."
+        sudo apt install -y gcc make cmake bison doxygen ruby \
+         libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libopenal-dev \
+         libphysfs-dev libpixman-1-dev libwebp-dev libbz2-dev \
+         libvorbis-dev libogg-dev libsodium-dev libboost-dev libpng-dev \
+         libjpeg-dev libtiff-dev 
 
-export job_count=$(nproc --all)
-
-# Functions.
-downloadAndUntarGZ() {
-    if [ ! -f $2.tar.gz ]
-    then
-        wget $1 -O $2.tar.gz
-        mkdir $2
-        tar xvzf $2.tar.gz -C $2
-    else 
-        echo "$2.tar.gz is already downloaded."
-    fi
-}
-downloadAndUntarXZ() {
-    if [ ! -f $2.tar.xz ]
-    then
-        wget $1 -O $2.tar.xz
-        mkdir $2
-        tar xvzf $2.tar.xz -C $2
-    else
-        echo "$2.tar.xz is already downloaded."
-    fi
-}
-downloadAndUnzip() {
-    if [ ! -f $2.zip ]
-    then
-        wget $1 -O $2.zip
-        unzip $2.zip -d $2
-    else
-        echo "$2.zip is already downloaded."
-    fi
-}
-makeinstall() {
-    if [ "$OSTYPE" = "msys" ]; then
-        make install
-    else 
+        echo "* ZeroMQ not found in Debian's repositories. Building from source..."
+        git clone https://github.com/zeromq/libzmq.git $libpath/zmq
+        cd $libpath/zmq
+        ./autogen.sh
+        ./configure --with-libsodium
+        make -j$proc_count
         sudo make install
+        sudo ldconfig
     fi
-}
-# Main code.
-
-echo "* Downloading zlib."
-git clone $zlib_url $zlib_path
-cd $zlib_path
-cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DWITH_FUZZERS=ON -DWITH_CODE_COVERAGE=ON -DWITH_MAINTAINER_WARNINGS=ON -DCMAKE_INSTALL_PREFIX="$libpath/zlib_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading bzip2."
-git clone $bzip2_url $bzip2_path
-cd $bzip2_path
-make -j $job_count PREFIX="$libpath/bzip2_dest"
-make install PREFIX="$libpath/bzip2_dest"
-
-echo "* Downloading libogg"
-git clone $ogg_url $ogg_path
-cd $ogg_path
-./autogen.sh
-./configure --prefix="$libpath/libogg_dest"
-PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$libpath/libogg_dest/lib/pkgconfig
-make -j $job_count
-makeinstall
-
-echo "* Downloading boost."
-downloadAndUntarGZ $boost_url $boost_path
-cd $boost_path/boost_1_78_0
-./bootstrap.sh --prefix="$libpath/boost_dest"
-if [ "$OSTYPE" = "msys" ]; then
-    ./b2 install -j $job_count --prefix="$libpath/boost_dest"
-else
-    sudo ./b2 install -j $job_count --prefix="$libpath/boost_dest"
 fi
 
-echo "* Downloading PhysFS."
-git clone $physfs_url $physfs_path
-cd $physfs_path
-echo "* Building."
-cmake -DCMAKE_INSTALL_PREFIX="$libpath/physfs_dest" -G "Unix Makefiles"
-cd build
-make -j $job_count
-makeinstall
-
-echo "* Downloading pixman."
-git clone $pixman_url $pixman_path
-cd $pixman_path
-echo "* Building pixman."
-./autogen.sh
-./configure --prefix="$libpath/pixman_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading sigc++"
-downloadAndUntarGZ $sigc_url $sigc_path
-cd $sigc_path/libsigcplusplus-2.10.7
-echo "* Building sigc++."
-./autogen.sh
-./configure --prefix="$libpath/sigcpp_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading libpng."
-git clone $libpng_url $libpng_path
-echo "* Building libpng."
-cd $libpng_path
-./configure --prefix="$libpath/libpng_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading libnsgif."
-git clone $libnsgif_url $libnsgif_path
-cd $libnsgif_path
-echo "* Building libnsgif."
-./autogen.sh
-./configure --prefix="$libpath/libnsgif_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading libtiff"
-git clone $libtiff_url $libtiff_path
-cd $libtiff_path
-echo "* Building libtiff"
-./autogen.sh
-./configure --prefix="$libpath/libtiff_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading libwebp"
-git clone $libwebp_url $libwebp_path
-cd $libwebp_path
-echo "* Building libwebp"
-./autogen.sh
-./configure --prefix="$libpath/libwebp_dest"
-make  -j $job_count
-makeinstall
-
-echo "* Downloading libjpg"
-downloadAndUntarGZ $libjpg_url $libjpg_path
-mv $libjpg_path/jpeg-9e/* $libjpg_path
-cd $libjpg_path
-echo "* Building libjpg"
-./configure --prefix="$libpath/libjpg_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading SDL2."
-git clone $sdl2_url $sdl2_path
-cd $sdl2_path
-mkdir build
-cd build
-../configure --prefix="$libpath/sdl2_dest/"
-export SDL2_LIBRARIES="$libpath/sdl2_dest/lib/libSDL2.a; $libpath/sdl2_dest/lib/libSDL2main.a"
-export SDL2_CONFIG="$libpath/sdl2_dest/bin/sdl2-config"
-export SDL2_INCLUDE_DIR="$libpath/sdl2_dest/include"
-PATH="$PATH:$libpath/sdl2_dest/bin"
-make -j $job_count
-makeinstall
-
-echo "* Downloading vorbis."
-git clone $vorbis_url $vorbis_path
-echo "* Building vorbis."
-cd $vorbis_path
-./autogen.sh
-./configure --prefix="$libpath/vorbis_dest" --with-ogg-libraries=$libpath/libogg_dest/lib --with-ogg-includes=$libpath/libogg_dest/include
-make -j $job_count
-make install
-
-echo "* Downloading OpenAL Soft."
-git clone $openal_url $openal_path
-echo "* Building and installing OpenAL Soft."
-cd $openal_path
-git checkout tags/1.21.1
-cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/openal_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading SDL Sound from Ancurio."
-git clone https://github.com/icculus/SDL_sound $sdlsound_path
-cd $sdlsound_path
-echo "* Building and installing SDL_Sound."
-cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/sdl_sound_dest" -DSDL2_INCLUDE_DIR="$libpath/sdl2_dest/include/SDL2"
-export LIBRARY_PATH=$libpath/sdl2_dest/
-make -j $job_count
-make install
-
-echo "* Downloading SDL_Image."
-git clone $sdl2_image_url $sdl2_image_path
-cd $sdl2_image_path
-echo "* Building SDL_Image."
-./configure  --prefix="$libpath/sdl2_image_dest" --with-sdl-prefix="$libpath/sdl2_dest"
-LDFLAGS="-L$libpath/libjpg_dest/lib -L$libpath/libpng_dest/lib -I$libpath/libwebp_dest/lib -L$libpath/libtiff_dest/lib" CPPFLAGS="-I$libpath/libjpg_dest/include -I$libpath/libpng_dest/include -I$libpath/libwebp_dest/include -I$libpath/libtiff_dest/include"
-make -j $job_count
-makeinstall
-
-echo "* Downloading SDL_ttf."
-git clone $sdl2_ttf_url $sdl2_ttf_path
-cd $sdl2_ttf_path
-echo "* Building SDL_ttf"
-./configure --prefix="$libpath/sdl2_ttf_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading libzmq."
-git clone $libzmq_url $libzmq_path
-cd $libzmq_path
-echo "* Building libzmq."
-./autogen.sh
-./configure --prefix="$libpath/libzmq_dest"
-make -j $job_count
-makeinstall
-
-echo "* Downloading zmqpp."
-git clone $zmqpp_url $zmqpp_path
-cd $zmqpp_path
-echo "* Building zmqpp."
-if [ "$OSTYPE" = "msys" ]; then
-    cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/zmqpp_dest" -DZEROMQ_INCLUDE_DIR="$libpath/libzmq_dest/include" -DZEROMQ_LIBRARY_STATIC="$libpath/libzmq_dest/lib/libzmq.a" -DZEROMQ_LIBRARY_SHARED="$libpath/libzmq_dest/bin/libzmq.dll"
-else
-    cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$libpath/zmqpp_dest" -DZEROMQ_INCLUDE_DIR="$libpath/libzmq_dest/include" -DZEROMQ_LIBRARY_STATIC="$libpath/libzmq_dest/lib/libzmq.a" -DZEROMQ_LIBRARY_SHARED="$libpath/libzmq_dest/bin/libzmq.so"
+echo "* Building libsigc++ from source..."
+git clone https://github.com/libsigcplusplus/libsigcplusplus $libpath/sigc
+cd $libpath/sigc
+git checkout libsigc++-2-10
+./autogen.sh --prefix=/ucrt64
+make
+if [[ "$(uname)" == MINGW* ]]; then
+    make install
+else 
+    sudo make install
 fi
-echo "* Now, final boss... Downloading ruby."
-git clone $ruby_url $ruby_path
-cd $ruby_path
-git checkout tags/v3_1_0
-echo "* Building"
-./autogen.sh
-./configure --enable-shared --disable-install-doc
-make -j $job_count
-make install DESTDIR="$libpath/ruby_dest"
 
-echo "* All done! Now, you can build ModShot."
+echo "* Building libnsgif from source..."
+git clone https://github.com/jcupitt/libnsgif-autotools $libpath/libnsgif
+cd $libpath/libnsgif
+./autogen.sh
+./configure
+make -j$proc_count
+if [[ "$(uname)" == MINGW* ]]; then
+    make install
+else 
+    sudo make install
+fi
+
+echo "* Building SDL_Sound from source..."
+git clone https://github.com/icculus/SDL_sound $libpath/SDL_Sound
+cd $libpath/SDL_Sound
+cmake -B build -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/ucrt64"
+cd build
+make -j$proc_count
+if [[ "$(uname)" == MINGW* ]]; then
+    make install
+else 
+    sudo make install
+fi
+
+echo "* Building ZMQPP Binding from source..."
+git clone https://github.com/zeromq/zmqpp $libpath/zmqpp
+cd $libpath/zmqpp
+cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/ucrt64"
+make -j$proc_count
+if [[ "$(uname)" == MINGW* ]]; then
+    make install
+else 
+    sudo make install
+fi
+
+echo "* Building Ruby from source..."
+git clone https://github.com/ruby/ruby $libpath/ruby
+cd $libpath/ruby
+./autogen.sh
+./configure
+make -j$proc_count
+if [[ "$(uname)" == MINGW* ]]; then
+    make install
+else 
+    sudo make install
+fi
