@@ -9,7 +9,7 @@ fi
 
 export proc_count=$(nproc --all)
 
-if [[ "$(uname)" == MINGW* ]]; then 
+if [[ $OSTYPE == msys ]]; then 
     echo "* MinGW-w64 detected."
     echo "* Installing dependencies..."
     pacman -S git gcc make cmake bison doxygen ruby \
@@ -49,7 +49,7 @@ cd $libpath/sigc
 git checkout libsigc++-2-10
 ./autogen.sh --prefix=/ucrt64
 make
-if [[ "$(uname)" == MINGW* ]]; then
+if [[ $OSTYPE == msys ]]; then
     make install
 else 
     sudo make install
@@ -61,7 +61,7 @@ cd $libpath/libnsgif
 ./autogen.sh
 ./configure
 make -j$proc_count
-if [[ "$(uname)" == MINGW* ]]; then
+if [[ $OSTYPE == msys ]]; then
     make install
 else 
     sudo make install
@@ -73,7 +73,7 @@ cd $libpath/SDL_Sound
 cmake -B build -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/ucrt64"
 cd build
 make -j$proc_count
-if [[ "$(uname)" == MINGW* ]]; then
+if [[ $OSTYPE == msys ]]; then
     make install
 else 
     sudo make install
@@ -84,7 +84,7 @@ git clone https://github.com/zeromq/zmqpp $libpath/zmqpp
 cd $libpath/zmqpp
 cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/ucrt64"
 make -j$proc_count
-if [[ "$(uname)" == MINGW* ]]; then
+if [[ $OSTYPE == msys ]]; then
     make install
 else 
     sudo make install
@@ -96,7 +96,7 @@ cd $libpath/ruby
 ./autogen.sh
 ./configure
 make -j$proc_count
-if [[ "$(uname)" == MINGW* ]]; then
+if [[ $OSTYPE == msys ]]; then
     make install
 else 
     sudo make install
