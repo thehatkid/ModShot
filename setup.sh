@@ -41,6 +41,18 @@ else
         sudo make install
         sudo ldconfig
     fi
+
+    if [[ "$(cat /etc/issue)" == Manjaro* ]]; then
+        echo "* Manjaro detected."
+        echo "Installing dependencies..."
+
+        sudo pacman --noconfirm -S gcc make cmake bison doxygen ruby \
+        sdl2 openal pixman libwebp bzip2 libvorbis libogg libsodium \
+        libpng libjpeg libtiff zeromq
+        echo "* Installing dependencies with pamac..."
+        sudo pamac install sdl2_image sdl2_ttf physfs boost boost-libs \
+        libsigc++ sdl_sound m4 --no-confirm
+    fi
 fi
 
 echo "* Building libsigc++ from source..."
