@@ -32,7 +32,8 @@ pkg_check_modules(SDL2          REQUIRED sdl2)
 pkg_check_modules(SDL2_TTF      REQUIRED SDL2_ttf)
 pkg_check_modules(SDL2_IMAGE    REQUIRED SDL2_image)
 pkg_check_modules(SDL_SOUND     REQUIRED SDL_sound)
-pkg_check_modules(MRI REQUIRED ruby-${MRI_VERSION})
+pkg_check_modules(MRI REQUIRED ruby-3.0)
+pkg_check_modules(ZMQPP REQUIRED libzmqpp)
 
 find_package(Boost 1.49 COMPONENTS program_options REQUIRED)
 find_package(OpenAL REQUIRED)
@@ -381,6 +382,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${VORBISFILE_INCLUDE_DIRS}
 	${FLUID_INCLUDE_DIRS}
 	${OPENAL_INCLUDE_DIR}
+    ${ZMQPP_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}

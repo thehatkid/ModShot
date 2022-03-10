@@ -15,7 +15,7 @@ if [[ $OSTYPE == msys ]]; then
     pacman -S pactoys --noconfirm
     pacboy -S git: gcc:p make:p cmake:p bison: doxygen:p ruby:p \
      SDL2:p SDL2_image:p SDL2_ttf:p openal:p \
-     physfs:p pixman:p libwebp:p zlib:p \
+     physfs:p pixman:p libwebp:p zlib:p zeromq:p \
      bzip2:p libvorbis:p libogg:p zeromq:p \
      boost:p libpng:p libjpeg-turbo:p libtiff:p --noconfirm
      
@@ -56,7 +56,7 @@ echo "* Building libsigc++ from source..."
 git clone https://github.com/libsigcplusplus/libsigcplusplus $libpath/sigc
 cd $libpath/sigc
 git checkout libsigc++-2-10
-./autogen.sh --prefix=/ucrt64
+./autogen.sh
 make
 if [[ $OSTYPE == msys ]]; then
     make install
@@ -77,10 +77,10 @@ else
 fi
 
 echo "* Building SDL_Sound from source..."
-git clone https://github.com/icculus/SDL_sound $libpath/SDL_Sound
+git clone https://github.com/Ancurio/SDL_sound $libpath/SDL_Sound
 cd $libpath/SDL_Sound
-cmake -B build -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/ucrt64"
-cd build
+./bootstrap
+./configure
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
@@ -91,7 +91,7 @@ fi
 echo "* Building ZMQPP Binding from source..."
 git clone https://github.com/zeromq/zmqpp $libpath/zmqpp
 cd $libpath/zmqpp
-cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/ucrt64"
+cmake . -G "Unix Makefiles"
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
