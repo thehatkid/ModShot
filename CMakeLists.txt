@@ -3,7 +3,6 @@ Project(modshot)
 
 option(STEAM "Build for Steam" OFF)
 option(DEBUG "Debug mode" OFF)
-option(MRI_VERSION "MRI version" "3.1.0")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -22,6 +21,8 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH ${BIN_RPATH})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
+set(MRI_VERSION "3.0" CACHE STRING "Version of MRI to link with")
+
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(SIGCXX        REQUIRED sigc++-2.0)
@@ -32,8 +33,11 @@ pkg_check_modules(SDL2          REQUIRED sdl2)
 pkg_check_modules(SDL2_TTF      REQUIRED SDL2_ttf)
 pkg_check_modules(SDL2_IMAGE    REQUIRED SDL2_image)
 pkg_check_modules(SDL_SOUND     REQUIRED SDL_sound)
-pkg_check_modules(MRI REQUIRED ruby-3.0)
+pkg_check_modules(MRI REQUIRED ruby-${MRI_VERSION})
 pkg_check_modules(ZMQPP REQUIRED libzmqpp)
+pkg_check_modules(OGG REQUIRED ogg)
+pkg_check_modules(SPEEX REQUIRED speex)
+pkg_check_modules(MODPLUG REQUIRED libmodplug)
 
 find_package(Boost 1.49 COMPONENTS program_options REQUIRED)
 find_package(OpenAL REQUIRED)
@@ -401,8 +405,18 @@ target_link_libraries(${PROJECT_NAME}
 	${ZLIB_LIBRARY}
     ${ZMQPP_LIBRARIES}
 
+    ${OGG_LIBRARIES}
+    ${SPEEX_LIBRARIES}
+    ${MODPLUG_LIBRARIES}
+
 	${PLATFORM_LIBRARIES}
 )
+
+if(WIN32)
+target_link_libraries(${PROJECT_NAME}
+    winmm.lib
+)
+endif()
 
 
 if(WIN32 AND NOT STEAM)
