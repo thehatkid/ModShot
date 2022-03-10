@@ -12,15 +12,12 @@ export proc_count=$(nproc --all)
 if [[ $OSTYPE == msys ]]; then 
     echo "* MinGW-w64 detected."
     echo "* Installing dependencies..."
-    pacman -S git gcc make cmake bison doxygen ruby \
-     mingw-w64-ucrt-x86_64-SDL2 mingw-w64-ucrt-x86_64-SDL2_image \
-     mingw-w64-ucrt-x86_64-SDL2_ttf mingw-w64-ucrt-x86_64-openal \
-     mingw-w64-ucrt-x86_64-physfs mingw-w64-ucrt-x86_64-pixman \
-     mingw-w64-ucrt-x86_64-libwebp mingw-w64-ucrt-x86_64-zlib \
-     mingw-w64-ucrt-x86_64-bzip2 mingw-w64-ucrt-x86_64-libvorbis \
-     mingw-w64-ucrt-x86_64-libogg mingw-w64-ucrt-x86_64-zeromq \
-     mingw-w64-ucrt-x86_64-boost mingw-w64-ucrt-x86_64-libpng \
-     mingw-w64-ucrt-x86_64-libjpeg-turbo mingw-w64-ucrt-x86_64-libtiff \
+    pacman -S pactoys --noconfirm
+    pacboy -S git: gcc:p make:p cmake:p bison: doxygen:p ruby:p \
+     SDL2:p SDL2_image:p SDL2_ttf:p openal:p \
+     physfs:p pixman:p libwebp:p zlib:p \
+     bzip2:p libvorbis:p libogg:p zeromq:p \
+     boost:p libpng:p libjpeg-turbo:p libtiff:p --noconfirm
      
 else 
     if [[ "$(cat /etc/issue)" == Debian* || "$(cat /etc/issue)" == Ubuntu* ]]; then
