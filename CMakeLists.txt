@@ -272,19 +272,20 @@ find_program(XXD_EXE xxd
 	DOC "Location of the xxd executable"
 )
 
-get_filename_component(basefile ${inputfile} NAME)
-set(outputfile ${outdir}/${basefile}.xxd)
-set_source_files_properties(${outputfile} PROPERTIES HEADER_ONLY TRUE)
-add_custom_command(
-    OUTPUT ${outputfile}
-    COMMAND ${XXD_EXE} -i ${inputfile} ${outputfile}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS ${inputfile}
-    COMMENT "Generating XXD for ${inputfile}"
-)
-list(APPEND ${outvar}
-    ${outputfile}
-)
+macro(ProcessWithXXD outvar inputfile outdir)
+	get_filename_component(basefile ${inputfile} NAME)
+	set(outputfile ${outdir}/${basefile}.xxd)
+	set_source_files_properties(${outputfile} PROPERTIES HEADER_ONLY TRUE)
+	add_custom_command(
+		OUTPUT ${outputfile}
+		COMMAND ${XXD_EXE} -i ${inputfile} ${outputfile}
+		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		DEPENDS ${inputfile}
+		COMMENT "Generating XXD for ${inputfile}"
+	)
+	list(APPEND ${outvar}
+		${outputfile}
+	)
 endmacro()
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xxdhack)
