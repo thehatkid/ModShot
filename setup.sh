@@ -102,6 +102,7 @@ fi
 echo "* Building Ruby from source..."
 git clone https://github.com/ruby/ruby $libpath/ruby
 cd $libpath/ruby
+git checkout ruby_3_1
 ./autogen.sh
 ./configure
 make -j$proc_count

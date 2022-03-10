@@ -1,19 +1,42 @@
 cmake_minimum_required(VERSION 2.8.11)
 Project(modshot)
 
-## Setup options ##
-
-# Note this option only adds steamshim_child into oneshot.
-# It's outside this repo's responsibility to compile the parent.
-# Contact rkevin for details.
 option(STEAM "Build for Steam" OFF)
 option(DEBUG "Debug mode" OFF)
-
-## Misc setup ##
+option(MRI_VERSION "MRI version" "3.1.0")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-## Setup main source ##
+IF("${CMAKE_SYSTEM}" MATCHES "Linux")
+	SET(LINUX ON)
+ENDIF()
+
+IF(WORKDIR_CURRENT)
+	list(APPEND DEFINES
+		WORKDIR_CURRENT
+	)
+ENDIF()
+
+set(CMAKE_SKIP_BUILD_RPATH TRUE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH ${BIN_RPATH})
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(SIGCXX        REQUIRED sigc++-2.0)
+pkg_check_modules(PIXMAN        REQUIRED pixman-1)
+pkg_check_modules(PHYSFS        REQUIRED physfs>=2.1)
+pkg_check_modules(VORBISFILE    REQUIRED vorbisfile)
+pkg_check_modules(SDL2          REQUIRED sdl2)
+pkg_check_modules(SDL2_TTF      REQUIRED SDL2_ttf)
+pkg_check_modules(SDL2_IMAGE    REQUIRED SDL2_image)
+pkg_check_modules(SDL_SOUND     REQUIRED SDL_sound)
+pkg_check_modules(MRI REQUIRED ruby-${MRI_VERSION})
+
+find_package(Boost 1.49 COMPONENTS program_options REQUIRED)
+find_package(OpenAL REQUIRED)
+find_package(ZLIB REQUIRED)
 
 set(SRC_AUDIO_HEADER_PATH src/audio/headers)
 set(SRC_GRAPHICS_HEADER_PATH src/graphics/headers)
@@ -167,11 +190,7 @@ if(WIN32)
 	include_directories(
 		${CMAKE_CURRENT_BINARY_DIR}/windows
 	)
-elseif(APPLE)
-	list(APPEND MAIN_HEADERS src/mac-desktop.h)
-	list(APPEND MAIN_SOURCE src/mac-desktop.mm)
 else()
-	find_package(PkgConfig REQUIRED)
 	if(NOT MSYS2)
         pkg_check_modules(LINUXPKGS REQUIRED gtk+-2.0 libxfconf-0)
     endif()
@@ -197,8 +216,6 @@ if (STEAM)
 endif()
 
 source_group("MKXP Source" FILES ${MAIN_SOURCE} ${MAIN_HEADERS})
-
-## Setup embedded source ##
 
 set(EMBEDDED_INPUT
 	shader/common.h
@@ -251,26 +268,23 @@ if (MSVC)
 	)
 endif()
 
-## Process Embeddeds ##
-
 find_program(XXD_EXE xxd
 	DOC "Location of the xxd executable"
 )
 
-macro(ProcessWithXXD outvar inputfile outdir)
-	get_filename_component(basefile ${inputfile} NAME)
-	set(outputfile ${outdir}/${basefile}.xxd)
-	set_source_files_properties(${outputfile} PROPERTIES HEADER_ONLY TRUE)
-	add_custom_command(
-		OUTPUT ${outputfile}
-		COMMAND ${XXD_EXE} -i ${inputfile} ${outputfile}
-		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-		DEPENDS ${inputfile}
-		COMMENT "Generating XXD for ${inputfile}"
-	)
-	list(APPEND ${outvar}
-		${outputfile}
-	)
+get_filename_component(basefile ${inputfile} NAME)
+set(outputfile ${outdir}/${basefile}.xxd)
+set_source_files_properties(${outputfile} PROPERTIES HEADER_ONLY TRUE)
+add_custom_command(
+    OUTPUT ${outputfile}
+    COMMAND ${XXD_EXE} -i ${inputfile} ${outputfile}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS ${inputfile}
+    COMMENT "Generating XXD for ${inputfile}"
+)
+list(APPEND ${outvar}
+    ${outputfile}
+)
 endmacro()
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xxdhack)
@@ -283,8 +297,6 @@ foreach(item ${EMBEDDED_INPUT})
 endforeach()
 
 source_group("Embedded Source" FILES ${EMBEDDED_INPUT} ${EMBEDDED_SOURCE})
-
-## Setup binding source ##
 
 list(APPEND DEFINES
 	BINDING_MRI
@@ -329,9 +341,14 @@ set(BINDING_SOURCE
 
 source_group("Binding Source" FILES ${BINDING_SOURCE} ${BINDING_HEADERS})
 
-## Setup main executable ##
-
-set(CMAKE_CXX_STANDARD 11)
+link_directories(
+	${SIGCXX_LIBRARY_DIRS}
+	${PIXMAN_LIBRARY_DIRS}
+	${PHYSFS_LIBRARY_DIRS}
+	${SDL2_LIBRARY_DIRS} # Blindly assume other SDL bits are in same directory
+	${Boost_LIBRARY_DIR}
+	${MRI_LIBDIR}
+)
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 	${MAIN_HEADERS}
@@ -340,154 +357,52 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE WIN32
 	${BINDING_SOURCE}
 	${EMBEDDED_SOURCE}
 )
-if(WIN32)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE 
+    ${DEFINES}
+)
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    src 
+    ${SRC_STEAM_PATH} 
+    ${SRC_AUDIO_HEADER_PATH} 
+    ${SRC_GRAPHICS_HEADER_PATH} 
+    ${SRC_OPENGL_HEADER_PATH} 
+    ${SRC_INPUT_HEADER_PATH} 
+    ${SRC_FS_HEADER_PATH}
+
+    ${SIGCXX_INCLUDE_DIRS}
+	${PIXMAN_INCLUDE_DIRS}
+	${PHYSFS_INCLUDE_DIRS}
+	${SDL2_INCLUDE_DIRS} # Blindly assume other SDL bits are in same directory
+	${SDL_SOUND_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIR}
+	${MRI_INCLUDE_DIRS}
+	${VORBISFILE_INCLUDE_DIRS}
+	${FLUID_INCLUDE_DIRS}
+	${OPENAL_INCLUDE_DIR}
+)
+
 target_link_libraries(${PROJECT_NAME}
-	wsock32 ws2_32 winmm.lib
-
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/ucrt64/lib/libx64-ucrt-ruby310.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_ttf_dest/lib/libSDL2_ttf.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_image_dest/lib/libSDL2_image.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl_sound_dest/lib/libSDL2_sound.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2main.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2_test.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/zlib_dest/lib/libzlib.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/pixman_dest/lib/libpixman-1.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/physfs_dest/lib/libphysfs.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbis.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisfile.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisenc.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/sigcpp_dest/lib/libsigc-2.0.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/openal_dest/lib/libOpenAL32.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libpng_dest/lib/libpng.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libogg_dest/lib/libogg.dll.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/libnsgif_dest/lib/libnsgif.dll.a
-
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_atomic-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_chrono-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_container-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_context-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_contract-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_coroutine-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_date_time-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_exception-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_filesystem-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_graph-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_iostreams-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_json-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_locale-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log_setup-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99f-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99l-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1f-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1l-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_nowide-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_program_options-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_random-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_regex-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_serialization-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_system-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_thread-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_timer-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_type_erasure-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wave-mgw11-mt-x64-1_78.a
-	${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wserialization-mgw11-mt-x64-1_78.a
+	${SIGCXX_LIBRARIES}
+	${SDL2_LIBRARIES}
+	${SDL2_IMAGE_LIBRARIES}
+	${SDL2_TTF_LIBRARIES}
+	${SDL_SOUND_LIBRARIES}
+	${PHYSFS_LIBRARIES}
+	${PIXMAN_LIBRARIES}
+	${Boost_LIBRARIES}
+	${MRI_LIBRARIES}
+	${VORBISFILE_LIBRARIES}
+	${FLUID_LIBRARIES}
+	${OPENAL_LIBRARY}
+	${ZLIB_LIBRARY}
 
 	${PLATFORM_LIBRARIES}
 )
-else()
-target_link_libraries(${PROJECT_NAME}    
-    -lpthread
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/ruby_dest/usr/local/lib/libruby.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/zlib_dest/lib/libz.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/pixman_dest/lib/libpixman-1.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/openal_dest/lib/libopenal.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_dest/lib/libSDL2.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_ttf_dest/lib/libSDL2_ttf.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl2_image_dest/lib/libSDL2_image.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sdl_sound_dest/lib/libSDL2_sound.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/physfs_dest/lib/libphysfs.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/sigcpp_dest/lib/libsigc-2.0.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbis.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisenc.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/vorbis_dest/lib/libvorbisfile.so
-    
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_atomic.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_chrono.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_container.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_context.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_contract.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_coroutine.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_date_time.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_exception.a
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_filesystem.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_graph.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_iostreams.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_json.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_locale.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_log_setup.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99f.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_c99l.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1f.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_math_tr1l.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_nowide.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_prg_exec_monitor.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_program_options.so
-    # ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_python27.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_random.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_regex.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_serialization.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_test_exec_monitor.a
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_thread.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_timer.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_type_erasure.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_unit_test_framework.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wave.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_wserialization.so
-    ${CMAKE_CURRENT_BINARY_DIR}/exlibs/boost_dest/lib/libboost_system.so
-    
-    ${PLATFORM_LIBRARIES}
-)
-endif()
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE ${DEFINES})
-target_include_directories(${PROJECT_NAME} PRIVATE src ${SRC_STEAM_PATH} ${SRC_AUDIO_HEADER_PATH} ${SRC_GRAPHICS_HEADER_PATH} ${SRC_OPENGL_HEADER_PATH} ${SRC_INPUT_HEADER_PATH} ${SRC_FS_HEADER_PATH})
-
-target_include_directories(${PROJECT_NAME} PRIVATE 
-	build/exlibs/boost_dest/include/boost-1_78
-	build/bzip2_dest/include
-	build/exlibs/libnsgif_dest/include
-	build/exlibs/sigcpp_dest/include/sigc++-2.0
-	build/exlibs/libsigcplusplus-2.10.7/libsigcplusplus-2.10.7
-	build/exlibs/openal-soft/include/AL
-	build/exlibs/sdl2_dest/include
-	build/exlibs/sdl2_dest/include/SDL2
-	build/exlibs/vorbis_dest/include
-	build/exlibs/libogg_dest/include
-	build/exlibs/sdl2_image_dest/include/
-	build/exlibs/sdl2_image_dest/include/SDL2
-	build/exlibs/sdl2_ttf_dest/include/
-	build/exlibs/sdl2_ttf_dest/include/SDL2
-	build/exlibs/sdl_sound_dest/include/
-	build/exlibs/sdl_sound_dest/include/SDL2
-	build/exlibs/pixman_dest/include/pixman-1
-	build/exlibs/physfs_dest/include
-	build/exlibs/ruby_dest/ucrt64/include/ruby-3.1.0
-	build/exlibs/ruby_dest/ucrt64/include/ruby-3.1.0/x64-mingw-ucrt
-	build/exlibs/ruby_dest/usr/local/include/ruby-3.1.0
-	build/exlibs/ruby_dest/usr/local/include/ruby-3.1.0/x86_64-linux
-)
 
 if(WIN32 AND NOT STEAM)
 	add_executable("oneshot-shim" WIN32
 	"${CMAKE_SOURCE_DIR}/windows/shim.c"
 	"${CMAKE_SOURCE_DIR}/assets/resources.rc")
 endif()
-
-#add_subdirectory(scripts)
