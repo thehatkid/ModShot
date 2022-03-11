@@ -20,7 +20,7 @@ jobs:
         - name: Install packages with pacman
           shell: msys2 {0}
           run: |
-            pacman -S --noconfirm  mm-common autoconf automake gcc make cmake
+            pacman -S --noconfirm  mm-common autoconf automake gcc make cmake libtool
         - name: Run setup.sh
           working-directory: ${{ github.workspace }}
           shell: msys2 {0}
