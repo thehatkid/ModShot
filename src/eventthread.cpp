@@ -190,6 +190,7 @@ void EventThread::process(RGSSThreadData &rtData)
 
 	while (true)
 	{
+		SDL_PollEvent(&event);
 		if (!SDL_WaitEvent(&event))
 		{
 			Debug() << "EventThread: Event error";
