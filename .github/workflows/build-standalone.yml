@@ -21,7 +21,6 @@ jobs:
           shell: msys2 {0}
           run: |
             pacman -S --noconfirm  mm-common autoconf automake gcc make cmake
-            PKG_CONFIG_PATH
         - name: Run setup.sh
           working-directory: ${{ github.workspace }}
           shell: msys2 {0}
