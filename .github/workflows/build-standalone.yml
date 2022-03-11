@@ -27,7 +27,7 @@ jobs:
           shell: msys2 {0}
           run: |
               sh setup.sh
-              PKG_CONFIG_PATH=$PWD/build/exlibs/zmqpp/src
+              export PKG_CONFIG_PATH=$PWD/build/exlibs/zmqpp/src
         - name: Build
           working-directory: ${{ github.workspace }}/build
           shell: msys2 {0}
