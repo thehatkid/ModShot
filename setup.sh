@@ -41,7 +41,7 @@ else
 
     if [[ "$(cat /etc/issue)" == Manjaro* ]]; then
         echo "* Manjaro detected."
-        echo "Installing dependencies..."
+        echo "* Installing dependencies..."
 
         sudo pacman --noconfirm -S gcc make cmake bison doxygen ruby \
         sdl2 openal pixman libwebp bzip2 libvorbis libogg libsodium \
@@ -50,6 +50,34 @@ else
         sudo pamac install sdl2_image sdl2_ttf physfs boost boost-libs \
         libsigc++ sdl_sound m4 --no-confirm
     fi
+
+    if cat /etc/redhat-release; then
+        echo "* RedHat/Fedora Linux detected."
+        echo "* Installing dependencies..."
+        sudo dnf install gcc make m4 cmake bison doxygen ruby mm-common \
+	    SDL2 SDL2-devel SDL2_image SDL2_image-devel \
+        bzip2-devel libwebp libwebp-devel libvorbis libvorbis-devel \
+        libpng libpng-devel libjpeg-turbo libjpeg-turbo-devel libogg \
+	    libogg-devel libtiff libtiff-devel libsodium libsodium-devel \
+	    zeromq zeromq-devel physfs physfs-devel pixman pixman-devel \
+        bzip2 openal-soft speex speex-devel libmodplug libmodplug-devel \
+        boost boost-devel openal-soft-devel xfconf xfconf-devel gtk2 gtk2-devel \
+        vim
+
+        echo "* Building SDL2_ttf."
+        git clone https://github.com/libsdl-org/SDL_ttf $libpath/SDL_ttf
+        cd $libpath/SDL_ttf
+        if [[ $OSTYPE == msys ]]; then
+            ./configure --prefix=/ucrt64
+        else
+            ./configure --prefix=/usr
+        fi
+        if [[ $OSTYPE == msys ]]; then
+            make install
+        else 
+            sudo make install
+        fi
+    fi
 fi
 
 echo "* Building libsigc++ from source..."
@@ -57,6 +85,7 @@ git clone https://github.com/libsigcplusplus/libsigcplusplus $libpath/sigc
 cd $libpath/sigc
 git checkout libsigc++-2-10
 ./autogen.sh
+./configure --prefix=/usr
 make
 if [[ $OSTYPE == msys ]]; then
     make install
@@ -80,7 +109,7 @@ echo "* Building SDL_Sound from source..."
 git clone https://github.com/Ancurio/SDL_sound $libpath/SDL_Sound
 cd $libpath/SDL_Sound
 ./bootstrap
-./configure
+./configure --prefix=/usr
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
@@ -91,7 +120,7 @@ fi
 echo "* Building ZMQPP Binding from source..."
 git clone https://github.com/zeromq/zmqpp $libpath/zmqpp
 cd $libpath/zmqpp
-cmake . -G "Unix Makefiles"
+cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
@@ -102,12 +131,13 @@ fi
 echo "* Building Ruby from source..."
 git clone https://github.com/ruby/ruby $libpath/ruby
 cd $libpath/ruby
-git checkout ruby_3_1
+git checkout ruby_3_0
 ./autogen.sh
-./configure
+./configure --enable-shared --prefix=/usr
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
 else 
     sudo make install
 fi
+
