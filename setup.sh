@@ -106,10 +106,9 @@ else
 fi
 
 echo "* Building SDL_Sound from source..."
-git clone https://github.com/Ancurio/SDL_sound $libpath/SDL_Sound
+git clone https://github.com/icculus/SDL_sound $libpath/SDL_Sound
 cd $libpath/SDL_Sound
-./bootstrap
-./configure --prefix=/usr
+cmake . -DCMAKE_INSTALL_PREFIX=/usr
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
