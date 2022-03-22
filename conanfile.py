@@ -33,7 +33,6 @@ class MkxpConan(ConanFile):
         "libpng/1.6.37",
         "zlib/1.2.11",
         "bzip2/1.0.8",
-        "giflib/5.2.1",
 	"ogg/1.3.5",
         "zmqpp/4.2.0"
     )
