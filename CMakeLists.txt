@@ -17,6 +17,7 @@ option(DEBUG "Debug mode" OFF)
 ## Misc setup ##
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_BUILD_RPATH "lib")
 
 ## Setup main source ##
 
