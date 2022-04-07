@@ -67,7 +67,6 @@ class MkxpConan(ConanFile):
             self.requires("vorbis/1.3.7")
             self.requires("libalsa/1.1.9")
             self.requires("sdl2/2.0.9@bincrafters/stable")
-	    self.requires("glib/2.72.0")
             #self.requires("openssl/1.1.1l")
         if tools.os_info.is_windows:
             temp = list(self.default_options)
