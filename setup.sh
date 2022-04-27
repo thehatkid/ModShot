@@ -1,14 +1,3 @@
-export libpath=$PWD/build/exlibs
-export projectroot=$PWD
-
-if ! cd $libpath
-then
-    mkdir $PWD/build
-    mkdir $libpath
-fi
-
-export proc_count=$(nproc --all)
-
 if [[ $OSTYPE == msys ]]; then 
     echo "* MinGW-w64 detected."
     echo "* Installing dependencies..."
@@ -29,20 +18,11 @@ else
          libvorbis-dev libogg-dev libsodium-dev libboost-dev libpng-dev \
          libjpeg-dev libtiff-dev libsigc++-dev meson vim
 
-        echo "* ZeroMQ not found in Debian's repositories. Building from source..."
-        git clone https://github.com/zeromq/libzmq.git $libpath/zmq
-        cd $libpath/zmq
-        ./autogen.sh
-        ./configure --with-libsodium
-        make -j$proc_count
-        sudo make install
-        sudo ldconfig
     fi
 
     if [[ "$(cat /etc/issue)" == Manjaro* ]]; then
         echo "* Manjaro detected."
         echo "* Installing dependencies..."
-
         sudo pacman --noconfirm -S gcc make cmake bison doxygen ruby \
         sdl2 openal pixman libwebp bzip2 libvorbis libogg libsodium \
         libpng libjpeg libtiff zeromq mm-common base-devel vim gtk2
@@ -55,7 +35,7 @@ else
         echo "* RedHat/Fedora Linux detected."
         echo "* Installing dependencies..."
         sudo dnf install gcc make m4 cmake bison doxygen ruby mm-common \
-	    SDL2 SDL2-devel SDL2_image SDL2_image-devel \
+	    SDL2 SDL2-devel SDL2_image SDL2_tff SDL2_ttf-devel SDL2_image-devel \
         bzip2-devel libwebp libwebp-devel libvorbis libvorbis-devel \
         libpng libpng-devel libjpeg-turbo libjpeg-turbo-devel libogg \
 	    libogg-devel libtiff libtiff-devel libsodium libsodium-devel \
@@ -63,68 +43,18 @@ else
         bzip2 openal-soft speex speex-devel libmodplug libmodplug-devel \
         boost boost-devel openal-soft-devel xfconf xfconf-devel gtk2 gtk2-devel \
         vim meson libsigc++-devel
-
-        echo "* Building SDL2_ttf."
-        git clone https://github.com/libsdl-org/SDL_ttf $libpath/SDL_ttf
-        cd $libpath/SDL_ttf
-        if [[ $OSTYPE == msys ]]; then
-            ./configure --prefix=/ucrt64
-        else
-            ./configure --prefix=/usr
-        fi
-        if [[ $OSTYPE == msys ]]; then
-            make install
-        else 
-            sudo make install
-        fi
     fi
 fi
 
-echo "* Building libnsgif from source..."
-git clone https://github.com/jcupitt/libnsgif-autotools $libpath/libnsgif
-cd $libpath/libnsgif
-./autogen.sh
-./configure
-make -j$proc_count
-if [[ $OSTYPE == msys ]]; then
-    make install
-else 
-    sudo make install
+echo "* Building other dependencies..."
+if [[ $OSTYPE == msys ]]; then 
+    cd windows
+else
+    cd linux
 fi
 
-echo "* Building SDL_Sound from source..."
-git clone https://github.com/icculus/SDL_sound $libpath/SDL_Sound
-cd $libpath/SDL_Sound
-cmake . -DCMAKE_INSTALL_PREFIX=/usr -G "Unix Makefiles"
-make -j$proc_count
-if [[ $OSTYPE == msys ]]; then
-    make install
-else 
-    sudo make install
-fi
-
-echo "* Building ZMQPP Binding from source..."
-git clone https://github.com/zeromq/zmqpp $libpath/zmqpp
-cd $libpath/zmqpp
-cmake . -G "Unix Makefiles"
-make -j$proc_count
-if [[ $OSTYPE == msys ]]; then
-    make install
-else 
-    sudo make install
-fi
-
-#
-#echo "* Building Ruby from source..."
-#git clone https://github.com/ruby/ruby $libpath/ruby
-#cd $libpath/ruby
-#git checkout ruby_3_1
-#./autogen.sh
-#./configure --enable-shared --prefix=/usr
-#make -j$proc_count
-#if [[ $OSTYPE == msys ]]; then
-#    make install
-#else 
-#    sudo make install
-#fi
-
+make
+echo "* Setting up environment..."
+source ./vars.sh
+cd ..
+echo "* You're ready to build ModShot!"

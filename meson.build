@@ -58,7 +58,14 @@ subdir('assets')
 
 global_include_dirs += include_directories('src', 'binding-mri')
 
-rpath = '$ORIGIN/lib'
+if host_system == 'windows'
+    subdir('windows')
+    global_sources += windows_resources
+    global_include_dirs += include_directories('windows')
+else
+    subdir('linux')
+    rpath = '$ORIGIN/lib'
+endif
 
 exe_name = meson.project_name()
 
