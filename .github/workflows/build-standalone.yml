@@ -28,7 +28,7 @@ jobs:
               sh setup.sh
               export PKG_CONFIG_PATH="D:/a/OSFM-Core-Public/OSFM-Core-Public/build/exlibs/zmqpp/src"
         - name: Build
-          working-directory: ${{ github.workspace }}/build
+          working-directory: ${{ github.workspace }}
           shell: msys2 {0}
           run: |
             meson build
