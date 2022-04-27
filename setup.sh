@@ -95,7 +95,7 @@ fi
 echo "* Building SDL_Sound from source..."
 git clone https://github.com/icculus/SDL_sound $libpath/SDL_Sound
 cd $libpath/SDL_Sound
-cmake . -DCMAKE_INSTALL_PREFIX=/usr
+cmake . -DCMAKE_INSTALL_PREFIX=/usr -G "Unix Makefiles"
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
