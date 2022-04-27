@@ -70,9 +70,9 @@ $(DOWNLOADS)/ruby/configure: $(DOWNLOADS)/ruby/*.c
 $(DOWNLOADS)/ruby/*.c:
 	$(CLONE) $(GITHUB)/ruby/ruby $(DOWNLOADS)/ruby -b ruby_3_1;
 
-libzmq: init_dirs $(LIBDIR)/libzmq.so
+libzmq: init_dirs $(LIBDIR)/libzmq.dll
 
-$(LIBDIR)/libzmq.so: $(DOWNLOADS)/libzmq/Makefile
+$(LIBDIR)/libzmq.dll: $(DOWNLOADS)/libzmq/Makefile
 	cd $(DOWNLOADS)/libzmq; \
 	make -j$(NPROC); make install
 
@@ -88,7 +88,7 @@ $(DOWNLOADS)/libzmq/autogen.sh:
 
 zmqpp: init_dirs libzmq $(LIBDIR)/libzmqpp.dll
 
-$(LIBDIR)/libzmqpp.so: ${DOWNLOADS}/zmqpp/cmakebuild/Makefile
+$(LIBDIR)/libzmqpp.dll: ${DOWNLOADS}/zmqpp/cmakebuild/Makefile
 	cd ${DOWNLOADS}/zmqpp/cmakebuild; \
 	make -j${NPROC}; make install
 
@@ -101,7 +101,7 @@ $(DOWNLOADS)/zmqpp/CMakeLists.txt:
 
 libnsgif: init_dirs ${LIBDIR}/libnsgif.dll
 
-$(LIBDIR)/libnsgif.so: $(DOWNLOADS)/libnsgif/Makefile
+$(LIBDIR)/libnsgif.dll: $(DOWNLOADS)/libnsgif/Makefile
 	cd $(DOWNLOADS)/libnsgif; \
 	make -j$(NPROC); make install
 
