@@ -26,7 +26,7 @@ jobs:
           shell: msys2 {0}
           run: |
               sh setup.sh
-              export PKG_CONFIG_PATH="D:/a/OSFM-Core-Public/OSFM-Core-Public/build/exlibs/zmqpp/src"
+              export PKG_CONFIG_PATH="/d/a/OSFM-Core-Public/OSFM-Core-Public/build/exlibs/zmqpp/src:/d/a/_temp/msys64/usr/lib/pkgconfig"
         - name: Build
           working-directory: ${{ github.workspace }}
           shell: msys2 {0}
