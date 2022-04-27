@@ -21,17 +21,13 @@ jobs:
           shell: msys2 {0}
           run: |
             pacman -S --noconfirm  mm-common autoconf automake gcc make cmake libtool
-        - name: Run setup.sh
-          working-directory: ${{ github.workspace }}
-          shell: msys2 {0}
-          run: |
-              sh setup.sh
         - name: Build
           working-directory: ${{ github.workspace }}
           shell: msys2 {0}
           run: |
-            meson build
-            cd build && ninja
+              sh setup.sh
+              meson build
+              cd build && ninja
         - name: Create dist folder
           run: |
             mkdir ${{ runner.temp }}\built_artifact;
