@@ -33,7 +33,7 @@ pkg_check_modules(SDL2          REQUIRED sdl2)
 pkg_check_modules(SDL2_TTF      REQUIRED SDL2_ttf)
 pkg_check_modules(SDL2_IMAGE    REQUIRED SDL2_image)
 pkg_check_modules(SDL_SOUND     REQUIRED SDL_sound)
-pkg_check_modules(MRI REQUIRED ruby-${MRI_VERSION})
+pkg_check_modules(MRI REQUIRED ruby-3.0)
 pkg_check_modules(ZMQPP REQUIRED libzmqpp)
 pkg_check_modules(OGG REQUIRED ogg)
 pkg_check_modules(SPEEX REQUIRED speex)
@@ -124,10 +124,6 @@ set(MAIN_HEADERS
 	src/debugwriter.h
 	src/oneshot.h
 	src/pipe.h
-	chromasdk/RzChromaSDKDefines.h
-	chromasdk/RzChromaSDKTypes.h
-	chromasdk/RzErrors.h
-	chromasdk/ChromaApi.h
 	src/i18n.h
 	src/otherview-message.h
 	src/crash-handler.h
@@ -337,7 +333,6 @@ set(BINDING_SOURCE
 	binding-mri/steam-binding.cpp
 	binding-mri/wallpaper-binding.cpp
 	binding-mri/journal-binding.cpp
-	binding-mri/chroma-binding.cpp
 	binding-mri/niko-binding.cpp
 	binding-mri/modshot-window-binding.cpp
 	binding-mri/aleffect-binding.cpp

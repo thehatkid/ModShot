@@ -45,7 +45,7 @@ else
 
         sudo pacman --noconfirm -S gcc make cmake bison doxygen ruby \
         sdl2 openal pixman libwebp bzip2 libvorbis libogg libsodium \
-        libpng libjpeg libtiff zeromq
+        libpng libjpeg libtiff zeromq mm-common base-devel vim gtk2
         echo "* Installing dependencies with pamac..."
         sudo pamac install sdl2_image sdl2_ttf physfs boost boost-libs \
         libsigc++ sdl_sound m4 --no-confirm
@@ -119,7 +119,7 @@ fi
 echo "* Building ZMQPP Binding from source..."
 git clone https://github.com/zeromq/zmqpp $libpath/zmqpp
 cd $libpath/zmqpp
-cmake . -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr
+cmake . -G "Unix Makefiles"
 make -j$proc_count
 if [[ $OSTYPE == msys ]]; then
     make install
@@ -130,7 +130,7 @@ fi
 echo "* Building Ruby from source..."
 git clone https://github.com/ruby/ruby $libpath/ruby
 cd $libpath/ruby
-git checkout ruby_3_0
+git checkout ruby_3_1
 ./autogen.sh
 ./configure --enable-shared --prefix=/usr
 make -j$proc_count

@@ -85,7 +85,6 @@ void wallpaperBindingTerminate();
 void nikoBindingInit();
 void oneshotBindingInit();
 void steamBindingInit();
-void chromaBindingInit();
 void modshotwindowBindingInit();
 void aleffectBindingInit();
 void otherviewBindingInit();
@@ -125,7 +124,6 @@ static void mriBindingInit()
 	nikoBindingInit();
 	oneshotBindingInit();
 	steamBindingInit();
-	chromaBindingInit();
 	modshotwindowBindingInit();
 	aleffectBindingInit();
 	otherviewBindingInit();
