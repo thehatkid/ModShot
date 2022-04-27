@@ -24,6 +24,8 @@ else
 	iconv = compilers['cpp'].find_library('iconv')
     gtk = dependency('gtk+-2.0')
     xfconf = dependency('libxfconf-0')
+
+	global_dependencies += [gtk, xfconf]
 endif
 
 # Windows needs to be treated like a special needs child here
@@ -47,7 +49,7 @@ global_include_dirs += include_directories('.',
     'opengl/headers'
 )
 
-global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, zmqpp, gtk, xfconf, nsgif]
+global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, zmqpp, nsgif]
 if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('wsock32')
     global_dependencies += compilers['cpp'].find_library('winmm.lib')
