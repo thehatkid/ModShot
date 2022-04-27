@@ -14,10 +14,10 @@ if [[ $OSTYPE == msys ]]; then
     echo "* Installing dependencies..."
     pacman -S pactoys --noconfirm
     pacboy -S git: gcc:p make:p cmake:p bison: doxygen:p ruby:p \
-     SDL2:p SDL2_image:p SDL2_ttf:p openal:p \
-     physfs:p pixman:p libwebp:p zlib:p meson:p\
-     bzip2:p libvorbis:p libogg:p zeromq:p  \
-     boost:p libpng:p libjpeg-turbo:p libtiff:p --noconfirm
+    SDL2:p SDL2_image:p SDL2_ttf:p openal:p \
+    physfs:p pixman:p libwebp:p zlib:p meson:p\
+    bzip2:p libvorbis:p libogg:p zeromq:p libsigc++:p \
+    boost:p libpng:p libjpeg-turbo:p libtiff:p --noconfirm
      
 else 
     if [[ "$(cat /etc/issue)" == Debian* || "$(cat /etc/issue)" == Ubuntu* ]]; then
@@ -27,7 +27,7 @@ else
          libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libopenal-dev \
          libphysfs-dev libpixman-1-dev libwebp-dev libbz2-dev \
          libvorbis-dev libogg-dev libsodium-dev libboost-dev libpng-dev \
-         libjpeg-dev libtiff-dev meson
+         libjpeg-dev libtiff-dev libsigc++-dev meson
 
         echo "* ZeroMQ not found in Debian's repositories. Building from source..."
         git clone https://github.com/zeromq/libzmq.git $libpath/zmq
@@ -62,7 +62,7 @@ else
 	    zeromq zeromq-devel physfs physfs-devel pixman pixman-devel \
         bzip2 openal-soft speex speex-devel libmodplug libmodplug-devel \
         boost boost-devel openal-soft-devel xfconf xfconf-devel gtk2 gtk2-devel \
-        vim meson
+        vim meson libsigc++-devel
 
         echo "* Building SDL2_ttf."
         git clone https://github.com/libsdl-org/SDL_ttf $libpath/SDL_ttf
@@ -78,19 +78,6 @@ else
             sudo make install
         fi
     fi
-fi
-
-echo "* Building libsigc++ from source..."
-git clone https://github.com/libsigcplusplus/libsigcplusplus $libpath/sigc
-cd $libpath/sigc
-git checkout libsigc++-2-10
-./autogen.sh
-./configure --prefix=/usr
-make
-if [[ $OSTYPE == msys ]]; then
-    make install
-else 
-    sudo make install
 fi
 
 echo "* Building libnsgif from source..."
