@@ -26,7 +26,9 @@ jobs:
           shell: msys2 {0}
           run: |
               sh setup.sh
-              export PKG_CONFIG_PATH="/d/a/OSFM-Core-Public/OSFM-Core-Public/build/exlibs/zmqpp/src:/d/a/_temp/msys64/usr/lib/pkgconfig"
+              DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+              export OLD_PC=$(pkg-config --variable pc_path pkg-config)
+              export PKG_CONFIG_LIBDIR="$DIR/build/exlibs/zmqpp/src:${OLD_PC}"
         - name: Build
           working-directory: ${{ github.workspace }}
           shell: msys2 {0}
