@@ -14,8 +14,8 @@ if [[ $OSTYPE == msys ]]; then
     echo "* Installing dependencies..."
     pacman -S pactoys --noconfirm
     pacboy -S git: gcc:p make:p cmake:p bison: doxygen:p ruby:p \
-    SDL2:p SDL2_image:p SDL2_ttf:p openal:p \
-    physfs:p pixman:p libwebp:p zlib:p meson:p\
+    SDL2:p SDL2_image:p SDL2_ttf:p openal:p vim: \
+    physfs:p pixman:p libwebp:p zlib:p meson:p \
     bzip2:p libvorbis:p libogg:p zeromq:p libsigc++:p \
     boost:p libpng:p libjpeg-turbo:p libtiff:p --noconfirm
      
@@ -27,7 +27,7 @@ else
          libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libopenal-dev \
          libphysfs-dev libpixman-1-dev libwebp-dev libbz2-dev \
          libvorbis-dev libogg-dev libsodium-dev libboost-dev libpng-dev \
-         libjpeg-dev libtiff-dev libsigc++-dev meson
+         libjpeg-dev libtiff-dev libsigc++-dev meson vim
 
         echo "* ZeroMQ not found in Debian's repositories. Building from source..."
         git clone https://github.com/zeromq/libzmq.git $libpath/zmq
@@ -114,16 +114,17 @@ else
     sudo make install
 fi
 
-echo "* Building Ruby from source..."
-git clone https://github.com/ruby/ruby $libpath/ruby
-cd $libpath/ruby
-git checkout ruby_3_1
-./autogen.sh
-./configure --enable-shared --prefix=/usr
-make -j$proc_count
-if [[ $OSTYPE == msys ]]; then
-    make install
-else 
-    sudo make install
-fi
+#
+#echo "* Building Ruby from source..."
+#git clone https://github.com/ruby/ruby $libpath/ruby
+#cd $libpath/ruby
+#git checkout ruby_3_1
+#./autogen.sh
+#./configure --enable-shared --prefix=/usr
+#make -j$proc_count
+#if [[ $OSTYPE == msys ]]; then
+#    make install
+#else 
+#    sudo make install
+#fi
 
