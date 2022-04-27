@@ -26,6 +26,10 @@ jobs:
           shell: msys2 {0}
           run: |
               sh setup.sh
+              cd windows
+              make 
+              source vars.sh
+              cd ..
               meson build
               cd build && ninja
         - name: Create dist folder

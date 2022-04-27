@@ -45,16 +45,3 @@ else
         vim meson libsigc++-devel
     fi
 fi
-
-echo "* Building other dependencies..."
-if [[ $OSTYPE == msys ]]; then 
-    cd windows
-else
-    cd linux
-fi
-
-make
-echo "* Setting up environment..."
-source ./vars.sh
-cd ..
-echo "* You're ready to build ModShot!"
