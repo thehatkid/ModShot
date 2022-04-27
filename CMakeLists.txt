@@ -21,7 +21,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_INSTALL_RPATH ${BIN_RPATH})
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
-set(MRI_VERSION "3.0" CACHE STRING "Version of MRI to link with")
+set(MRI_VERSION "3.1" CACHE STRING "Version of MRI to link with")
 
 find_package(PkgConfig REQUIRED)
 
@@ -33,7 +33,7 @@ pkg_check_modules(SDL2          REQUIRED sdl2)
 pkg_check_modules(SDL2_TTF      REQUIRED SDL2_ttf)
 pkg_check_modules(SDL2_IMAGE    REQUIRED SDL2_image)
 pkg_check_modules(SDL_SOUND     REQUIRED SDL_sound)
-pkg_check_modules(MRI REQUIRED ruby-3.0)
+pkg_check_modules(MRI REQUIRED ruby-3.1)
 pkg_check_modules(ZMQPP REQUIRED libzmqpp)
 pkg_check_modules(OGG REQUIRED ogg)
 pkg_check_modules(SPEEX REQUIRED speex)
