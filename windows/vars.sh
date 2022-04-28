@@ -1,7 +1,6 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-MODSHOT_HOST=$(gcc -dumpmachine)
-MODSHOT_PREFIX=$(ruby -e "printf ('${MODSHOT_HOST}'[/i686/].nil?) ? 'mingw64' : 'mingw'")
+MODSHOT_PREFIX=$(ruby -e "puts ENV[\"MSYSTEM\"].downcase")
 export LDFLAGS="-L$DIR/build-${MODSHOT_PREFIX}/lib -L$DIR/build-${MODSHOT_PREFIX}/bin"
 export CFLAGS="-I$DIR/build-${MODSHOT_PREFIX}/include"
 export PATH="$DIR/build-${MODSHOT_PREFIX}/bin:$PATH"

@@ -1,5 +1,15 @@
-ARCH := $(shell ruby -e "puts (\`gcc -dumpmachine\`[/i686/].nil?) ? 'mingw64' : 'mingw'")
-RB_PREFIX := $(shell ruby -e "puts ('$(ARCH)' == 'mingw64') ? 'x64-msvcrt' : 'msvcrt'")
+ARCH := $(shell ruby -e "puts ENV[\"MSYSTEM\"].downcase")
+RB_PREFIX := $(shell ruby -e "case '$(ARCH)'; \
+							  when 'mingw64'; \
+							  	puts 'x64-msvcrt'; \
+							  when 'mingw32'; \
+							    puts 'msvcrt'; \
+							  when 'ucrt64', 'clang64'; \
+							  	puts 'x64-ucrt'; \
+							  when 'clang32'; \
+							  	puts 'ucrt'; \
+							  end \
+							")
 
 RUBY_FLAGS := ${RUBY_FLAGS}
 
