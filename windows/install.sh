@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BINARY=$1
+SHIM_BINARY=$2
 MODSHOT_PREFIX=$(ruby -e "puts ENV[\"MSYSTEM\"].downcase")
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 RUBY_LIB_DIR="$DIR/build-${MODSHOT_PREFIX}/lib/ruby"
@@ -19,6 +20,7 @@ function copy_dependencies() {
     if [[ -f "$DESTDIR/$1" ]]; then
         return
     fi
+    echo "Copying $1..."
 
     [[ ! $1 =~ ^[a-zA-Z0-9+\._-]*$ ]] && fail "The library $1 has weird characters!"
 
@@ -41,4 +43,6 @@ echo "Copying standard library..."
 cp -ar "$RUBY_LIB_DIR/3.1.0" "$DESTDIR/ruby"
 echo "Downloading cacert.pem..."
 curl -o "$DESTDIR/cacert.pem" https://curl.haxx.se/ca/cacert.pem
+echo "Moving shim..."
+cp $SHIM_BINARY "$DESTDIR/../$BINARY"
 echo "Done!"

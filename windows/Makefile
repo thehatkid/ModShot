@@ -11,16 +11,6 @@ RB_PREFIX := $(shell ruby -e "case '$(ARCH)'; \
 							  end \
 							")
 
-ifeq (ARCH, 'clang64')
-CC := clang
-CXX := clang++
-endif
-
-ifeq (ARCH, 'clang32')
-CC := clang
-CXX := clang++
-endif
-
 
 RUBY_FLAGS := ${RUBY_FLAGS}
 

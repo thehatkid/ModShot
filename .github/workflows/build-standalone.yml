@@ -10,7 +10,7 @@ jobs:
         include:
           - { sys: mingw64, env: x86_64 }
           - { sys: ucrt64,  env: ucrt-x86_64 }  # Experimental!
-          - { sys: clang64, env: clang-x86_64 }
+          # - { sys: clang64, env: clang-x86_64 }
     steps:
         - name: Checkout code
           uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
         - name: Create dist folder
           run: |
             mkdir ${{ runner.temp }}\built_artifact;
-            move ${{ runner.temp }}\build\* {{ runner.temp }}\built_artifact\;
+            move ${{ runner.temp }}\build\* ${{ runner.temp }}\built_artifact\;
         - name: Upload artifact
           uses: actions/upload-artifact@v2
           with:
