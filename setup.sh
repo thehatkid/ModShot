@@ -31,7 +31,7 @@ else
         libsigc++ sdl_sound m4 meson --no-confirm
     fi
 
-    if cat /etc/redhat-release; then
+    if [[ $(cat /etc/redhat-release) ]]; then
         echo "* RedHat/Fedora Linux detected."
         echo "* Installing dependencies..."
         sudo dnf install gcc make m4 cmake bison doxygen ruby mm-common \
