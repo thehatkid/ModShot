@@ -65,7 +65,7 @@ if host_system == 'windows'
     global_include_dirs += include_directories('windows')
 else
     subdir('linux')
-    rpath = '$ORIGIN/lib'
+    rpath = '$ORIGIN'
 endif
 
 exe_name = meson.project_name()
