@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ $OSTYPE == msys ]]; then 
     echo "* MinGW-w64 detected."
     echo "* Installing dependencies..."
