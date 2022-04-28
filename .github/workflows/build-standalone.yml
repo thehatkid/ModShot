@@ -40,9 +40,10 @@ jobs:
             meson configure --bindir=. --prefix=$PWD
             ninja install
         - name: Create dist folder
+          shell: msys2 {0}
           run: |
-            mkdir ${{ runner.temp }}\built_artifact;
-            move ${{ runner.temp }}\build\* ${{ runner.temp }}\built_artifact\;
+            mkdir ${{ runner.temp }}/built_artifact;
+            mv ${{ github.workspace }}/build/* ${{ runner.temp }}/built_artifact/;
         - name: Upload artifact
           uses: actions/upload-artifact@v2
           with:
@@ -76,7 +77,7 @@ jobs:
         - name: Create dist folder
           run: |
             mkdir ${{ runner.temp }}/built_artifact;
-            move ${{ runner.temp }}/build/* {${ runner.temp }}/built_artifact/;
+            mv ${{ github.workspace }}/build/* {${ runner.temp }}/built_artifact/;
         - name: Upload artifact
           uses: actions/upload-artifact@v2
           with:

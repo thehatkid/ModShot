@@ -18,7 +18,8 @@ else
          libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libopenal-dev \
          libphysfs-dev libpixman-1-dev libwebp-dev libbz2-dev \
          libvorbis-dev libogg-dev libsodium-dev libboost-dev libpng-dev \
-         libjpeg-dev libtiff-dev libsigc++-2.0-dev meson vim
+         libjpeg-dev libtiff-dev libsigc++-2.0-dev meson vim libgtk2.0-dev \
+         libxfconf-0-dev
 
     fi
 
