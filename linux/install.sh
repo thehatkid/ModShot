@@ -37,7 +37,7 @@ function copy_dependencies() {
 
 shopt -s dotglob
 
-DESTDIR="${MESON_INSTALL_PREFIX}/bin/lib"
+DESTDIR="${MESON_INSTALL_PREFIX}/lib"
 mkdir -p $DESTDIR
 copy_dependencies $BINARY $BINARY
 
@@ -45,4 +45,6 @@ echo "Copying standard library..."
 cp -ar "$RUBY_LIB_DIR/3.1.0" "$DESTDIR/ruby"
 echo "Downloading cacert.pem..."
 curl -o "$DESTDIR/cacert.pem" https://curl.haxx.se/ca/cacert.pem
+echo "Sym-linking modshot..."
+ln -sf "$DESTDIR/lmodshot" $BINARY
 echo "Done!"

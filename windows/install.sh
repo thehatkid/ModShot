@@ -35,7 +35,7 @@ function copy_dependencies() {
 shopt -s dotglob
 
 echo "Relocating dependencies..."
-DESTDIR="${MESON_INSTALL_PREFIX}/bin/lib"
+DESTDIR="${MESON_INSTALL_PREFIX}/lib"
 mkdir -p $DESTDIR
 copy_dependencies $BINARY $BINARY
 
