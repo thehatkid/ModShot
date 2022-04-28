@@ -34,7 +34,7 @@ jobs:
               meson build
               cd build && ninja
         - name: Bundle libraries
-          working_directory: ${{ github.workspace }}\build
+          working-directory: ${{ github.workspace }}\build
           shell: msys2 {0}
           run: |
             meson configure --bindir=. --prefix=$PWD/local
