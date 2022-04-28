@@ -55,10 +55,13 @@ jobs:
     steps:
         - name: Checkout code
           uses: actions/checkout@v2
+        - name: Setup Python
+          uses: actions/setup-python@v2
         - name: Build
           working-directory: ${{ github.workspace }}
           run: |
               bash setup.sh
+              pip3 install meson ninja
               cd linux
               make 
               source vars.sh
