@@ -49,33 +49,33 @@ jobs:
             name: modshot_build_windows_${{ github.sha }}
             path: ${{ runner.temp }}\built_artifact
   
-#  build-ubuntu:
-#    name: Build ModShot for Linux
-#    runs-on: ubuntu-latest
-#    steps:
-#        - name: Checkout code
-#          uses: actions/checkout@v2
-#        - name: Build
-#          working-directory: ${{ github.workspace }}
-#          run: |
-#              sh setup.sh
-#              cd linux
-#              make 
-#              source vars.sh
-#              cd ..
-#              meson build
-#              cd build && ninja
-#        - name: Configure distribution folders
-#          working-directory: ${{ github.workspace }}/build
-#          run: |
-#            meson configure --bindir=. --prefix=$PWD/local
-#            ninja install
-#        - name: Create dist folder
-#          run: |
-#            mkdir ${{ runner.temp }}/built_artifact;
-#            move ${{ runner.temp }}/build/* {{ runner.temp }}/built_artifact/;
-#        - name: Upload artifact
-#          uses: actions/upload-artifact@v2
-#          with:
-#            name: modshot_build_ubuntu_${{ github.sha }}
-#            path: ${{ runner.temp }}/built_artifact
+  build-ubuntu:
+    name: Build ModShot for Linux
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+        - name: Build
+          working-directory: ${{ github.workspace }}
+          run: |
+              sh setup.sh
+              cd linux
+              make 
+              source vars.sh
+              cd ..
+              meson build
+              cd build && ninja
+        - name: Configure distribution folders
+          working-directory: ${{ github.workspace }}/build
+          run: |
+            meson configure --bindir=. --prefix=$PWD
+            ninja install
+        - name: Create dist folder
+          run: |
+            mkdir ${{ runner.temp }}/built_artifact;
+            move ${{ runner.temp }}/build/* {${ runner.temp }}/built_artifact/;
+        - name: Upload artifact
+          uses: actions/upload-artifact@v2
+          with:
+            name: modshot_build_ubuntu_${{ github.sha }}
+            path: ${{ runner.temp }}/built_artifact
