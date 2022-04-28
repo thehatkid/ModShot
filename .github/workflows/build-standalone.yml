@@ -37,7 +37,7 @@ jobs:
           working-directory: ${{ github.workspace }}\build
           shell: msys2 {0}
           run: |
-            meson configure --bindir=. --prefix=$PWD/local
+            meson configure --bindir=. --prefix=$PWD
             ninja install
         - name: Create dist folder
           run: |

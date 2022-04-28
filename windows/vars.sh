@@ -1,6 +1,12 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 MODSHOT_PREFIX=$(ruby -e "puts ENV[\"MSYSTEM\"].downcase")
+
+if [[ MODSHOT_PREFIX = clang* ]]; then
+    export CC=clang
+    export CXX=clang++
+fi
+
 export LDFLAGS="-L$DIR/build-${MODSHOT_PREFIX}/lib -L$DIR/build-${MODSHOT_PREFIX}/bin"
 export CFLAGS="-I$DIR/build-${MODSHOT_PREFIX}/include"
 export PATH="$DIR/build-${MODSHOT_PREFIX}/bin:$PATH"
