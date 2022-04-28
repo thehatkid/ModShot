@@ -1,6 +1,6 @@
-#include <SDL.h>
-#include <SDL_shape.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_shape.h>
+#include <SDL2/SDL_image.h>
 
 #define FPS 60
 #define DEFAULT_WIDTH 320
