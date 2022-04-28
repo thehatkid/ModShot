@@ -4,7 +4,7 @@ if [[ $OSTYPE == msys ]]; then
     echo "* MinGW-w64 detected."
     echo "* Installing dependencies..."
     pacman -S pactoys --noconfirm
-    pacboy -S git: gcc:p make:p cmake:p bison: doxygen:p ruby:p \
+    pacboy -S libtool: autoconf: automake: git: gcc:p make:p cmake:p bison: doxygen:p ruby:p \
     SDL2:p SDL2_image:p SDL2_ttf:p openal:p vim: \
     physfs:p pixman:p libwebp:p zlib:p meson:p clang:p \
     bzip2:p libvorbis:p libogg:p zeromq:p libsigc++:p \
