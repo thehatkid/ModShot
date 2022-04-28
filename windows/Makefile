@@ -10,7 +10,9 @@ RB_PREFIX := $(shell ruby -e "case '$(ARCH)'; \
 							  	puts 'ucrt'; \
 							  end \
 							")
-
+RUBY_VER ?= "3.1"
+RUBY_BRANCH = $(subst .,_,$(RUBY_VER))
+RUBY_DLL_VER = $(subst .,,$(RUBY_VER))
 
 RUBY_FLAGS := ${RUBY_FLAGS}
 
@@ -65,9 +67,9 @@ $(DOWNLOADS)/sdl_sound/CMakeLists.txt:
 	$(CLONE) $(GITHUB)/icculus/SDL_sound $(DOWNLOADS)/sdl_sound
 
 # Standard ruby
-ruby: init_dirs $(BUILD_PREFIX)/$(RB_PREFIX)-ruby310.dll
+ruby: init_dirs $(BUILD_PREFIX)/$(RB_PREFIX)-ruby$(RUBY_DLL_VER).dll
 
-$(BUILD_PREFIX)/$(RB_PREFIX)-ruby310.dll: $(DOWNLOADS)/ruby/Makefile
+$(BUILD_PREFIX)/$(RB_PREFIX)-ruby$(RUBY_DLL_VER).dll: $(DOWNLOADS)/ruby/Makefile
 	cd $(DOWNLOADS)/ruby; \
 	make -j$(NPROC); make install
 
@@ -79,7 +81,7 @@ $(DOWNLOADS)/ruby/configure: $(DOWNLOADS)/ruby/*.c
 	cd $(DOWNLOADS)/ruby; autoreconf -i
 
 $(DOWNLOADS)/ruby/*.c:
-	$(CLONE) $(GITHUB)/ruby/ruby $(DOWNLOADS)/ruby -b ruby_3_1;
+	$(CLONE) $(GITHUB)/ruby/ruby $(DOWNLOADS)/ruby -b ruby_$(RUBY_BRANCH);
 
 libzmq: init_dirs $(LIBDIR)/libzmq.dll
 
