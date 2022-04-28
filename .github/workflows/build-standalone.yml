@@ -76,7 +76,7 @@ jobs:
         - name: Create dist folder
           run: |
             mkdir ${{ runner.temp }}/built_artifact;
-            mv ${{ github.workspace }}/build/* {${ runner.temp }}/built_artifact/;
+            mv ${{ github.workspace }}/build/* ${{ runner.temp }}/built_artifact/;
         - name: Upload artifact
           uses: actions/upload-artifact@v2
           with:
