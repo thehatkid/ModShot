@@ -26,7 +26,7 @@ jobs:
           working-directory: ${{ github.workspace }}
           shell: msys2 {0}
           run: |
-              sh setup.sh
+              bash setup.sh
               cd windows
               make 
               source vars.sh
@@ -58,7 +58,7 @@ jobs:
         - name: Build
           working-directory: ${{ github.workspace }}
           run: |
-              sh setup.sh
+              bash setup.sh
               cd linux
               make 
               source vars.sh
