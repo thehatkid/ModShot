@@ -1,8 +1,11 @@
 #!/bin/bash
 BINARY=$1
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+RUBY_VER=$2
 
 MODSHOT_PREFIX=$(uname -m)
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+RUBY_LIB_DIR="$DIR/build-${MODSHOT_PREFIX}/lib/ruby"
+
 EXCLUDELIST=https://raw.githubusercontent.com/AppImage/pkg2appimage/master/excludelist
 SO_BLACKLIST="$(curl -sL $EXCLUDELIST | grep -o '^[^ #]*')"
 SO_PROCESSED=""
@@ -42,7 +45,7 @@ mkdir -p $DESTDIR
 copy_dependencies $BINARY $BINARY
 
 echo "Copying standard library..."
-cp -ar "$RUBY_LIB_DIR/3.1.0" "$DESTDIR/ruby"
+cp -ar "$RUBY_LIB_DIR/$RUBY_VER.0" "$DESTDIR/ruby"
 echo "Downloading cacert.pem..."
 curl -o "$DESTDIR/cacert.pem" https://curl.haxx.se/ca/cacert.pem
 echo "Sym-linking modshot..."

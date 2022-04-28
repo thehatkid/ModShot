@@ -79,7 +79,18 @@ This should create a folder called `out` with your build of ModShot all ready to
 
 ## Sepecific ruby versions
 
-#TODO this
+When running `make` in the second step, you'll want to pass in an argument telling make what Ruby version to use:
+```sh
+make RUBY_VER='3.0'
+```
+This is a blunt method however and will not let you use a specific exact version, just a specific version with a major number.
+
+Then, in the meson step, pass in an argument to specify the Ruby version:
+```sh
+meson build build --prefix="$PWD/build.out" --bindir=. -Dmri_version="3.0"
+```
+
+ModShot should handle the rest.
 
 ## Configuration
 

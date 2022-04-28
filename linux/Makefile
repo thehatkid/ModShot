@@ -1,6 +1,8 @@
 ARCH := $(shell uname -m)
 
 RUBY_FLAGS := ${RUBY_FLAGS}
+RUBY_VER ?= "3.1"
+RUBY_BRANCH = $(subst .,_,$(RUBY_VER))
 
 BUILD_PREFIX := ${PWD}/build-$(ARCH)
 LIBDIR := $(BUILD_PREFIX)/lib
@@ -69,9 +71,9 @@ $(DOWNLOADS)/sdl_sound/CMakeLists.txt:
 	$(CLONE) $(GITHUB)/icculus/SDL_sound $(DOWNLOADS)/sdl_sound
 
 # Standard ruby
-ruby: init_dirs $(BUILD_PREFIX)/libruby.so.3.1
+ruby: init_dirs $(BUILD_PREFIX)/libruby.so.$(RUBY_VER)
 
-$(BUILD_PREFIX)/libruby.so.3.1: $(DOWNLOADS)/ruby/Makefile
+$(BUILD_PREFIX)/libruby.so.$(RUBY_VER): $(DOWNLOADS)/ruby/Makefile
 	cd $(DOWNLOADS)/ruby; \
 	make -j$(NPROC); make install
 
@@ -83,7 +85,7 @@ $(DOWNLOADS)/ruby/configure: $(DOWNLOADS)/ruby/*.c
 	cd $(DOWNLOADS)/ruby; autoreconf -i
 
 $(DOWNLOADS)/ruby/*.c:
-	$(CLONE) $(GITHUB)/ruby/ruby $(DOWNLOADS)/ruby -b ruby_3_1;
+	$(CLONE) $(GITHUB)/ruby/ruby $(DOWNLOADS)/ruby -b ruby_$(RUBY_BRANCH);
 
 libzmq: init_dirs $(LIBDIR)/libzmq.so
 

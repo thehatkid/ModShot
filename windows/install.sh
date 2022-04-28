@@ -2,10 +2,11 @@
 
 BINARY=$1
 SHIM_BINARY=$2
+RUBY_VER=$3
+
 MODSHOT_PREFIX=$(ruby -e "puts ENV[\"MSYSTEM\"].downcase")
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 RUBY_LIB_DIR="$DIR/build-${MODSHOT_PREFIX}/lib/ruby"
-
 
 function fail() {
     echo "$1"
@@ -40,7 +41,7 @@ mkdir -p $DESTDIR
 copy_dependencies $BINARY $BINARY
 
 echo "Copying standard library..."
-cp -ar "$RUBY_LIB_DIR/3.1.0" "$DESTDIR/ruby"
+cp -ar "$RUBY_LIB_DIR/$RUBY_VER.0" "$DESTDIR/ruby"
 echo "Downloading cacert.pem..."
 curl -o "$DESTDIR/cacert.pem" https://curl.haxx.se/ca/cacert.pem
 echo "Moving shim..."
