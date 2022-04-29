@@ -193,6 +193,7 @@ void EventThread::process(RGSSThreadData &rtData)
 		if (!SDL_WaitEvent(&event))
 		{
 			Debug() << "EventThread: Event error";
+			Debug() << SDL_GetError();
 			break;
 		}
 
