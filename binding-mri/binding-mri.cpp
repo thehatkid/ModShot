@@ -42,7 +42,7 @@
 #include <string>
 #include <zlib.h>
 
-#include <SDL_filesystem.h>
+#include <SDL2/SDL_filesystem.h>
 
 extern const char module_rpg1[];
 
@@ -85,7 +85,6 @@ void wallpaperBindingTerminate();
 void nikoBindingInit();
 void oneshotBindingInit();
 void steamBindingInit();
-void chromaBindingInit();
 void modshotwindowBindingInit();
 void aleffectBindingInit();
 void otherviewBindingInit();
@@ -125,7 +124,6 @@ static void mriBindingInit()
 	nikoBindingInit();
 	oneshotBindingInit();
 	steamBindingInit();
-	chromaBindingInit();
 	modshotwindowBindingInit();
 	aleffectBindingInit();
 	otherviewBindingInit();
