@@ -13,7 +13,6 @@ pixman = dependency('pixman-1')
 png = dependency('libpng')
 jpeg = dependency('libjpeg')
 zlib = dependency('zlib')
-zmqpp = dependency('libzmqpp')
 nsgif = dependency('libnsgif')
 
 if host_system == 'windows'
@@ -49,7 +48,7 @@ global_include_dirs += include_directories('.',
     'opengl/headers'
 )
 
-global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, zmqpp, nsgif]
+global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, nsgif]
 if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('wsock32')
     global_dependencies += compilers['cpp'].find_library('winmm')
@@ -98,7 +97,6 @@ main_source = files(
 	'sharedstate.cpp',
 	'oneshot.cpp',
 	'i18n.cpp',
-	'otherview-message.cpp',
 	'crash-handler.cpp'
 )
 
