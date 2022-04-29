@@ -1,5 +1,5 @@
 # OSFM-Core-Public
-[![Build ModShot Ubuntu (standalone)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-standalone-ubuntu.yml/badge.svg)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-standalone-ubuntu.yml)[![Build ModShot Windows (standalone)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-standalone-windows.yml/badge.svg)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-standalone-windows.yml)
+[![Build ModShot Ubuntu](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-ubuntu.yml)[![Build ModShot Windows](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-windows.yml/badge.svg)](https://github.com/Speak2Erase/OSFM-Core-Public/actions/workflows/build-windows.yml)
 ---
 
 This is a even more MORE specialized fork of a specialized fork of [OSFM-Public-Core by Speak2Erase](https://github.com/Speak2Erase/OSFM-Core-Public) ([mkxp by Ancurio](https://github.com/Ancurio/mkxp) designed for [*OneShot*](http://oneshot-game.com/)) for OneShot mods.
