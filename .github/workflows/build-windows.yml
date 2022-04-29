@@ -7,13 +7,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        ruby_ver: ['3.0', '2.7']
+        sys: ['mingw64']
+        steam: [true, false]
         include: 
-          - sys: 'mingw64'
-            ruby_ver: '2.7'
-          - sys: 'mingw64'
-            ruby_ver: '3.0'
           - sys: 'ucrt64'
             ruby_ver: '3.1'
+            steam: true
+          - sys: 'ucrt64'
+            ruby_ver: '3.1'
+            steam: false
     steps:
         - name: Checkout code
           uses: actions/checkout@v2
@@ -34,7 +37,7 @@ jobs:
               make RUBY_VER=${{ matrix.ruby_ver }}
               source vars.sh
               cd ..
-              meson build -Dmri_version=${{ matrix.ruby_ver }} --prefix=$PWD/out/
+              meson build -Dmri_version=${{ matrix.ruby_ver }} --prefix=$PWD/out/ -Dsteam=${{ steam }}
               cd build && ninja install
         - name: Create dist folder
           run: |
