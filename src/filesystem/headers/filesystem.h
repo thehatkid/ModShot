@@ -22,7 +22,7 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
-#include <SDL_rwops.h>
+#include <SDL2/SDL_rwops.h>
 
 struct FileSystemPrivate;
 class SharedFontState;
