@@ -22,7 +22,7 @@ jobs:
               make RUBY_VER=${{ matrix.ruby_ver }}
               source vars.sh
               cd ..
-              meson build -Dmri_version=${{ matrix.ruby_ver }} --prefix=$PWD/out/ -Dsteam=${{ steam }}
+              meson build -Dmri_version=${{ matrix.ruby_ver }} --prefix=$PWD/out/ -Dsteam=${{ matrix.steam }}
               cd build && ninja install
         - name: Create dist folder
           run: |
