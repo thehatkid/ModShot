@@ -31,5 +31,5 @@ jobs:
         - name: Upload artifact
           uses: actions/upload-artifact@v2
           with:
-            name: modshot_build_ubuntu_${{ github.sha }}_rb-${{ matrix.ruby_ver }}
+            name: modshot_build_ubuntu_rb-${{ matrix.ruby_ver }}_steam-${{ matrix.steam }}
             path: ${{ runner.temp }}/built_artifact
