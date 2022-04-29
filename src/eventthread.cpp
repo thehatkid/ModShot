@@ -21,17 +21,16 @@
 
 #include "eventthread.h"
 
-#include <SDL_events.h>
-#include <SDL_joystick.h>
-#include <SDL_gamecontroller.h>
-#include <SDL_messagebox.h>
-#include <SDL_timer.h>
-#include <SDL_thread.h>
-#include <SDL_touch.h>
-#include <SDL_rect.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_joystick.h>
+#include <SDL2/SDL_gamecontroller.h>
+#include <SDL2/SDL_messagebox.h>
+#include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_thread.h>
+#include <SDL2/SDL_touch.h>
+#include <SDL2/SDL_rect.h>
 
 #include <al.h>
-#include <alc.h>
 
 #include "sharedstate.h"
 #include "graphics.h"
@@ -46,6 +45,8 @@
 #include <map>
 
 #include <iostream>
+
+#include "otherview-message.h"
 
 #define KEYCODE_TO_SCUFFEDCODE(keycode) (((keycode & 0xff) | ((keycode & 0x180) == 0x100 ? 0x180 : 0)) + SDL_NUM_SCANCODES)
 
@@ -189,6 +190,7 @@ void EventThread::process(RGSSThreadData &rtData)
 
 	while (true)
 	{
+		SDL_PollEvent(&event);
 		if (!SDL_WaitEvent(&event))
 		{
 			Debug() << "EventThread: Event error";
@@ -349,6 +351,7 @@ void EventThread::process(RGSSThreadData &rtData)
 				break;
 			}
 
+			
 			if (event.key.keysym.scancode == SDL_SCANCODE_F3 && rtData.allowForceQuit) {
 				// ModShot addition: force quit the game, no prompting or saving
 				Debug() << "Force terminating ModShot";
@@ -669,6 +672,8 @@ void EventThread::cleanup()
 	while (SDL_PollEvent(&event))
 		if ((event.type - usrIdStart) == REQUEST_MESSAGEBOX)
 			free(event.user.data1);
+
+	shState->otherView().close(); // Bad place to do this but I don't care
 }
 
 void EventThread::resetInputStates()

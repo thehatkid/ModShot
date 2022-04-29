@@ -46,7 +46,7 @@
 #include <algorithm>
 #include <vector>
 
-#include <SDL_surface.h>
+#include <SDL2/SDL_surface.h>
 
 #include "debugwriter.h"
 
@@ -343,7 +343,7 @@ struct TilemapPrivate
 		  ySize(argySize),
 		  zlayersMax(argySize + 5)
 	{
-		Debug() << xSize; Debug() << ySize;  
+		// Debug() << xSize; Debug() << ySize;  
 
 		/* ZLayer vertices */
 		zlayerVert = new SVVector[zlayersMax];
