@@ -60,7 +60,7 @@ cd build && ninja install
 # Building on Linux
 
 Building on Linux is fairly easy, as long as you're using one of the supported distros. (Manjaro, Debian/Ubuntu, Fedora/Red Hat)
-Unlinke Windows, you don't have to worry about msys2 environments. Just use gcc and you'll be good to go.
+Unlike Windows, you don't have to worry about msys2 environments. Just use gcc and you'll be good to go.
 If you're not, fear not, as you can usually just install all the dependencies right from your package manager. See `setup.sh`.
 
 ```sh
