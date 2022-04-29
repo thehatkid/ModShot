@@ -394,6 +394,16 @@ private:
 	GLint u_iTime, u_opacity;
 };
 
+class BinaryShader : public ShaderBase
+{
+public:
+	BinaryShader();
+
+	void setStrength(const float value);
+private:
+	GLint u_strength;
+};
+
 
 /* Global object containing all available shaders */
 struct ShaderSet
@@ -423,6 +433,7 @@ struct ShaderSet
 	ZoomShader zoom;
 	CubicShader cubic;
 	WaterShader water;
+	BinaryShader binary;
 };
 
 #endif // SHADER_H

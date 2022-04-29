@@ -32,6 +32,8 @@
 #include "boost-hash.h"
 #include "version.h"
 
+#include "otherview-message.h"
+
 #include <ruby.h>
 #include <ruby/encoding.h>
 #undef inline
@@ -40,7 +42,7 @@
 #include <string>
 #include <zlib.h>
 
-#include <SDL_filesystem.h>
+#include <SDL2/SDL_filesystem.h>
 
 extern const char module_rpg1[];
 
@@ -83,10 +85,10 @@ void wallpaperBindingTerminate();
 void nikoBindingInit();
 void oneshotBindingInit();
 void steamBindingInit();
-void chromaBindingInit();
 void modshotwindowBindingInit();
 void aleffectBindingInit();
 void otherviewBindingInit();
+void screenBindingInit();
 RB_METHOD(mriPrint);
 RB_METHOD(mriP);
 RB_METHOD(mkxpDataDirectory);
@@ -122,10 +124,10 @@ static void mriBindingInit()
 	nikoBindingInit();
 	oneshotBindingInit();
 	steamBindingInit();
-	chromaBindingInit();
 	modshotwindowBindingInit();
 	aleffectBindingInit();
 	otherviewBindingInit();
+	screenBindingInit();
 	rb_define_global_const("MODSHOT_VERSION", rb_str_new_cstr(MODSHOT_VERSION));
 	if (rgssVer >= 3)
 	{
