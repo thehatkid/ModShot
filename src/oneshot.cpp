@@ -231,10 +231,11 @@ Oneshot::Oneshot(RGSSThreadData &threadData) :
 	}
 
 	// Get documents path
-	char* path = new char[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, path);
-	p->docsPath = w32_fromWide((WCHAR*) path);
-	p->gamePath = p->docsPath+"\\My Games";
+	//char* path = new char[MAX_PATH];
+	//SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, path);
+	//p->docsPath = w32_fromWide((WCHAR*) path);
+	p->docsPath = getenv("USERPROFILE") + std::string("\\Documents");
+	p->gamePath = p->docsPath + "\\My Games";
 	p->journal = "_______.exe";
 #else
 	// Get language code
