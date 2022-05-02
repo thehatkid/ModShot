@@ -52,9 +52,12 @@ if get_option('steam') == true
 endif
 
 build_static = false
-if get_option('build_static') == true
-    build_static = true
+if get_option('build_static') == true 
+    if host_system == 'windows'
+        build_static = true
+    endif
 endif
+
 
 subdir('src')
 subdir('binding-mri')
