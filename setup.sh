@@ -8,7 +8,7 @@ if [[ $OSTYPE == msys ]]; then
     SDL2:p SDL2_image:p SDL2_ttf:p openal:p vim: freetype:p \
     physfs:p pixman:p libwebp:p zlib:p meson:p clang:p \
     bzip2:p libvorbis:p libogg:p zeromq:p libsigc++:p \
-    boost:p libpng:p libjpeg-turbo:p libtiff:p --noconfirm
+    boost:p libpng:p libjpeg-turbo:p libtiff:p harfbuzz:p --noconfirm
      
 else 
     if [[ "$(cat /etc/issue)" == Debian* || "$(cat /etc/issue)" == Ubuntu* ]]; then
@@ -19,7 +19,7 @@ else
          libphysfs-dev libpixman-1-dev libwebp-dev libbz2-dev \
          libvorbis-dev libogg-dev libsodium-dev libboost-dev libpng-dev \
          libjpeg-dev libtiff-dev libsigc++-2.0-dev meson vim libgtk2.0-dev \
-         libxfconf-0-dev libfreetype-dev
+         libxfconf-0-dev libfreetype-dev libharfbuzz-dev \
 
     fi
 
@@ -31,7 +31,7 @@ else
         libpng libjpeg libtiff zeromq mm-common base-devel vim gtk2
         echo "* Installing dependencies with pamac..."
         sudo pamac install sdl2_image sdl2_ttf physfs boost boost-libs \
-        libsigc++ sdl_sound m4 meson freetype --no-confirm
+        libsigc++ sdl_sound m4 meson freetype harfbuzz --no-confirm
     fi
 
     if [[ $(cat /etc/redhat-release) ]]; then
@@ -45,6 +45,6 @@ else
 	    zeromq zeromq-devel physfs physfs-devel pixman pixman-devel \
         bzip2 openal-soft speex speex-devel libmodplug libmodplug-devel \
         boost boost-devel openal-soft-devel xfconf xfconf-devel gtk2 gtk2-devel \
-        vim meson libsigc++-devel
+        vim meson libsigc++-devel harfbuzz-devel
     fi
 fi

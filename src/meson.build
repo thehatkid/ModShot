@@ -6,6 +6,7 @@ vorbis = dependency('vorbis', static: build_static)
 ogg = dependency('ogg', static: build_static)
 sdl2 = dependency('SDL2')
 freetype = dependency('freetype', static: build_static)
+harfbuzz = dependency('harfbuzz', static: build_static)
 sdl_sound = dependency('SDL2_sound', static: build_static)
 sdl2_ttf = dependency('SDL2_ttf', static: build_static)
 sdl2_image = dependency('SDL2_image', static: build_static)
@@ -53,7 +54,9 @@ global_include_dirs += include_directories('.',
     'opengl/headers'
 )
 
-global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, libzmq, zmqpp, nsgif, freetype, tiff, webp]
+
+global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, libzmq, zmqpp, nsgif, freetype, tiff, webp, harfbuzz]
+
 if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('wsock32')
     global_dependencies += compilers['cpp'].find_library('winmm')
