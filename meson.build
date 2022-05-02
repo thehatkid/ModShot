@@ -51,6 +51,11 @@ if get_option('steam') == true
     steam = true
 endif
 
+build_static = false
+if get_option('build_static') == true
+    build_static = true
+endif
+
 subdir('src')
 subdir('binding-mri')
 subdir('shader')

@@ -1,20 +1,24 @@
-boost = dependency('boost', version: '>=1.49', modules: ['program_options'])
-physfs = dependency('physfs', version: '>=2.1')
+boost = dependency('boost', version: '>=1.49', modules: ['program_options'], static: build_static)
+physfs = dependency('physfs', version: '>=2.1', static: build_static)
 openal = dependency('openal')
-vorbisfile = dependency('vorbisfile')
-vorbis = dependency('vorbis')
-ogg = dependency('ogg')
+vorbisfile = dependency('vorbisfile', static: build_static)
+vorbis = dependency('vorbis', static: build_static)
+ogg = dependency('ogg', static: build_static)
 sdl2 = dependency('SDL2')
-sdl_sound = compilers['cpp'].find_library('SDL2_sound')
-sdl2_ttf = dependency('SDL2_ttf')
-sdl2_image = dependency('SDL2_image')
-sigcxx = dependency('sigc++-2.0')
-pixman = dependency('pixman-1')
-png = dependency('libpng')
-jpeg = dependency('libjpeg')
-zlib = dependency('zlib')
-zmqpp = dependency('libzmqpp')
-nsgif = dependency('libnsgif')
+freetype = dependency('freetype', static: build_static)
+sdl_sound = dependency('SDL2_sound', static: build_static)
+sdl2_ttf = dependency('SDL2_ttf', static: build_static)
+sdl2_image = dependency('SDL2_image', static: build_static)
+sigcxx = dependency('sigc++-2.0', static: build_static)
+pixman = dependency('pixman-1', static: build_static)
+png = dependency('libpng', static: build_static)
+jpeg = dependency('libjpeg', static: build_static)
+tiff = dependency('libtiff-4', static: build_static)
+webp = dependency('libwebp', static: build_static)
+zlib = dependency('zlib', static: build_static)
+libzmq = dependency('libzmq')
+zmqpp = dependency('libzmqpp', static: build_static)
+nsgif = dependency('libnsgif', static: build_static)
 
 if host_system == 'windows'
     bz2 = dependency('bzip2')
@@ -49,7 +53,7 @@ global_include_dirs += include_directories('.',
     'opengl/headers'
 )
 
-global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, zmqpp, nsgif]
+global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, libzmq, zmqpp, nsgif, freetype, tiff, webp]
 if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('wsock32')
     global_dependencies += compilers['cpp'].find_library('winmm')

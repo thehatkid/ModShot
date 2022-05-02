@@ -28,7 +28,20 @@ The main upshot of this, of course, is remaining on par with ruby in terms of ge
 Previously, C extensions were very jank with ModShot, **however** now you can use a C extension right from your own Ruby install!
 (Provided the version is the same, and the msys2 evironment is the same. I'll get back to this later.)
 
-# Building on Windows
+## Build options
+
+Unfortunately because of the way ModShot is set up, you will need to pass build options to Make **and** Meson, if it pertains to dependencies. (ruby ver, opt level, etc.)
+
+# Options
+
+```
+RUBY_VER && -Dmri_version (default 3.1) sets the ruby version.
+-Dsteam (default false) sets the build to use steam.
+--build-type (default Release) sets the build type.
+-Dbuild_static (default true) sets the build to be static. (True is faster, but with longer startup times.)
+```
+
+## Building on Windows
 
 First, you'll need to download [msys2](https://www.msys2.org/) and install it. 
 Then, you'll want to determine what Ruby version you're using, as this will determine what build environment you'll be using.
@@ -36,9 +49,9 @@ As is, ModShot is set up to use Ruby 3.1, so keep that in mind. Please refer to 
 (You *can* use the wrong environment and it will work fine, just not with C extensions.)
 
 ```
-Ruby >3.1 UCRT64
+Ruby >3.1 UCRT64 (Default)
 Ruby 3.0-2.0 MINGW64
-Ruby <1.9 MINGW32
+Ruby <1.9 MINGW32 (NOT SUPPORTED!)
 ```
 
 Once you've figured out the environment you need to use, pull up an msys2 shell of it.
@@ -57,7 +70,7 @@ cd ..; meson build --prefix="$PWD/build.out" --bindir=.
 cd build && ninja install
 ```
 
-# Building on Linux
+## Building on Linux
 
 Building on Linux is fairly easy, as long as you're using one of the supported distros. (Manjaro, Debian/Ubuntu, Fedora/Red Hat)
 Unlike Windows, you don't have to worry about msys2 environments. Just use gcc and you'll be good to go.
@@ -76,21 +89,6 @@ cd build && ninja install
 ```
 
 This should create a folder called `out` with your build of ModShot all ready to go!
-
-## Sepecific ruby versions
-
-When running `make` in the second step, you'll want to pass in an argument telling make what Ruby version to use:
-```sh
-make RUBY_VER='3.0'
-```
-This is a blunt method however and will not let you use a specific exact version, just a specific version with a major number.
-
-Then, in the meson step, pass in an argument to specify the Ruby version:
-```sh
-meson build build --prefix="$PWD/build.out" --bindir=. -Dmri_version="3.0"
-```
-
-ModShot should handle the rest.
 
 ## Configuration
 
