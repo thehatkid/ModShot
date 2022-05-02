@@ -1,4 +1,10 @@
-boost = dependency('boost', version: '>=1.49', modules: ['program_options'], static: build_static)
+if host_system == 'windows' 
+	boost = dependency('boost', version: '>=1.49', modules: ['program_options'], static: build_static)
+else
+	boost = dependency('boost', version: '>=1.49', modules: ['program_options'])
+endif
+
+
 physfs = dependency('physfs', version: '>=2.1', static: build_static)
 openal = dependency('openal')
 vorbisfile = dependency('vorbisfile', static: build_static)
