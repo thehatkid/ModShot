@@ -35,6 +35,7 @@ pkg_check_modules(SDL2_TTF      REQUIRED SDL2_ttf)
 pkg_check_modules(SDL2_IMAGE    REQUIRED SDL2_image)
 pkg_check_modules(SDL_SOUND     REQUIRED SDL_sound)
 pkg_check_modules(MRI REQUIRED ruby-3.1)
+pkg_check_modules(ZMQPP REQUIRED libzmqpp)
 pkg_check_modules(OGG REQUIRED ogg)
 pkg_check_modules(SPEEX REQUIRED speex)
 pkg_check_modules(MODPLUG REQUIRED libmodplug)
@@ -126,6 +127,8 @@ set(MAIN_HEADERS
 	src/oneshot.h
 	src/pipe.h
 	src/i18n.h
+	src/otherview-message.h
+	src/crash-handler.h
 )
 
 set(MAIN_SOURCE
@@ -180,6 +183,8 @@ set(MAIN_SOURCE
 	src/sharedstate.cpp
 	src/oneshot.cpp
 	src/i18n.cpp
+	src/otherview-message.cpp
+	src/crash-handler.cpp
 )
 
 if(WIN32)
@@ -334,6 +339,7 @@ set(BINDING_SOURCE
 	binding-mri/niko-binding.cpp
 	binding-mri/modshot-window-binding.cpp
 	binding-mri/aleffect-binding.cpp
+	binding-mri/otherview-binding.cpp
 	binding-mri/screen-binding.cpp
 	binding-mri/display-binding.cpp
 )
@@ -379,6 +385,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${VORBISFILE_INCLUDE_DIRS}
 	${FLUID_INCLUDE_DIRS}
 	${OPENAL_INCLUDE_DIR}
+    ${ZMQPP_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -395,6 +402,7 @@ target_link_libraries(${PROJECT_NAME}
 	${FLUID_LIBRARIES}
 	${OPENAL_LIBRARY}
 	${ZLIB_LIBRARY}
+    ${ZMQPP_LIBRARIES}
 
     ${OGG_LIBRARIES}
     ${SPEEX_LIBRARIES}

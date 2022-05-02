@@ -36,6 +36,7 @@ binding_source = [files(
     'viewport-binding.cpp',
     'wallpaper-binding.cpp',
     'window-binding.cpp',
+    'otherview-binding.cpp',
 )]
 
 global_sources += binding_source

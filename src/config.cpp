@@ -97,6 +97,7 @@ void Config::read(int argc, char *argv[])
 	PO_DESC(SE.sourceCount, int, 6) \
 	PO_DESC(audioChannels, int, 30) \
 	PO_DESC(pathCache, bool, true) \
+	PO_DESC(isOtherView, bool, false) \
 
 // Not gonna take your shit boost
 #define GUARD_ALL( exp ) try { exp } catch(...) {}
@@ -178,7 +179,7 @@ void Config::read(int argc, char *argv[])
 
 	SE.sourceCount = clamp(SE.sourceCount, 1, 64);
 
-	commonDataPath = prefPath(".", "OneShot");
+	commonDataPath = prefPath(".", "OSFM");
 
 	//Hardcode some ini/version settings
 	rgssVersion = 1;
