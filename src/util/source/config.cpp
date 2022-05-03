@@ -66,7 +66,7 @@ std::set<T> setFromVec(const std::vector<T> &vec)
 typedef std::vector<std::string> StringVec;
 namespace po = boost::program_options;
 
-#define CONF_FILE "oneshot.conf"
+#define CONF_FILE "../modshot.conf"
 
 Config::Config()
 {}
@@ -97,6 +97,20 @@ void Config::read(int argc, char *argv[])
 	PO_DESC(SE.sourceCount, int, 6) \
 	PO_DESC(audioChannels, int, 30) \
 	PO_DESC(pathCache, bool, true) \
+	PO_DESC(isOtherView, bool, false) \
+	PO_DESC(mjitEnabled, bool, false) \
+	PO_DESC(mjitVerbosity, int, 0) \
+	PO_DESC(mjitMaxCache, int, 100) \
+	PO_DESC(mjitMinCalls, int, 10000) \
+	PO_DESC(jitEnabled, bool, false) \
+	PO_DESC(jitVerbosity, int, 0) \
+	PO_DESC(jitMaxCache, int, 100) \
+	PO_DESC(jitMinCalls, int, 10000) \
+	PO_DESC(yjitEnabled, bool, false) \
+	PO_DESC(yjitCallThreshold, int, 10) \
+	PO_DESC(yjitMaxVersions, int, 4) \
+	PO_DESC(yjitGreedyVersioning, bool, false) \
+	PO_DESC(winConsole, bool, false)
 
 // Not gonna take your shit boost
 #define GUARD_ALL( exp ) try { exp } catch(...) {}
@@ -178,7 +192,7 @@ void Config::read(int argc, char *argv[])
 
 	SE.sourceCount = clamp(SE.sourceCount, 1, 64);
 
-	commonDataPath = prefPath(".", "OneShot");
+	commonDataPath = prefPath(".", "OSFM");
 
 	//Hardcode some ini/version settings
 	rgssVersion = 1;

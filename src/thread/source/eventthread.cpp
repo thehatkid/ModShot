@@ -46,6 +46,7 @@
 
 #include <iostream>
 
+#include "otherview-message.h"
 
 #define KEYCODE_TO_SCUFFEDCODE(keycode) (((keycode & 0xff) | ((keycode & 0x180) == 0x100 ? 0x180 : 0)) + SDL_NUM_SCANCODES)
 
@@ -199,7 +200,7 @@ void EventThread::process(RGSSThreadData &rtData)
 			break;
 		}
 		#endif
-
+		
 		if (sMenu && sMenu->onEvent(event, joysticks))
 		{
 			if (sMenu->destroyReq())
@@ -676,6 +677,7 @@ void EventThread::cleanup()
 		if ((event.type - usrIdStart) == REQUEST_MESSAGEBOX)
 			free(event.user.data1);
 
+	shState->otherView().close(); // Bad place to do this but I don't care
 }
 
 void EventThread::resetInputStates()

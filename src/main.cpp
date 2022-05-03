@@ -56,6 +56,10 @@
 #include "gamecontrollerdb.txt.xxd"
 #endif
 
+#ifdef __WIN32
+#include "win-consoleutils.h"
+#endif
+
 static void
 rgssThreadError(RGSSThreadData *rtData, const std::string &msg)
 {
@@ -297,6 +301,21 @@ int main(int argc, char *argv[]) {
 			showInitError(std::string("Unable to switch into gameFolder ") + conf.gameFolder);
 			return 0;
 		}
+	
+#ifdef __WIN32
+    // Create a debug console in debug mode
+    if (conf.winConsole) {
+      if (setupWindowsConsole()) {
+        reopenWindowsStreams();
+      } else {
+        char buf[200];
+        snprintf(buf, sizeof(buf), "Error allocating console: %lu",
+                GetLastError());
+        showInitError(std::string(buf));
+      }
+    }
+#endif
+
 
 	extern int screenMain(Config &conf);
 	if (conf.screenMode)

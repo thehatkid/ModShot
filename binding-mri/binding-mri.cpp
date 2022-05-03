@@ -32,6 +32,12 @@
 #include "boost-hash.h"
 #include "version.h"
 
+#include "otherview-message.h"
+
+#ifdef __WIN32
+#include "binding-mri-win32.h"
+#endif
+
 #include <ruby.h>
 #include <ruby/encoding.h>
 #undef inline
@@ -85,6 +91,7 @@ void oneshotBindingInit();
 void steamBindingInit();
 void modshotwindowBindingInit();
 void aleffectBindingInit();
+void otherviewBindingInit();
 void screenBindingInit();
 RB_METHOD(mriPrint);
 RB_METHOD(mriP);
@@ -123,6 +130,7 @@ static void mriBindingInit()
 	steamBindingInit();
 	modshotwindowBindingInit();
 	aleffectBindingInit();
+	otherviewBindingInit();
 	screenBindingInit();
 	rb_define_global_const("MODSHOT_VERSION", rb_str_new_cstr(MODSHOT_VERSION));
 	if (rgssVer >= 3)
@@ -171,6 +179,12 @@ static void mriBindingInit()
 		"    ENV['SSL_CERT_FILE'] = './lib/cacert.pem'\n"
 		"end\n"
 	);
+
+#ifdef __WIN32
+    if (shState->config().winConsole)
+        configureWindowsStreams();
+#endif
+
 }
 
 static void
@@ -441,6 +455,7 @@ static void runRMXPScripts(BacktraceData &btData)
 
 	/* Set the debug flag */
 	rb_gv_set("$debug", conf.debugMode ? Qtrue : Qfalse);
+	rb_gv_set("$otherview", conf.isOtherView ? Qtrue : Qfalse);
 
 	rb_gv_set("$RGSS_SCRIPTS", scriptArray);
 
@@ -599,6 +614,8 @@ static void showExc(VALUE exc, const BacktraceData &btData)
 
 static void mriBindingExecute()
 {
+	Config &conf = shState->rtData().config;
+
 	/* Normally only a ruby executable would do a sysinit,
 	 * but not doing it will lead to crashes due to closed
 	 * stdio streams on some platforms (eg. Windows) */
@@ -621,13 +638,53 @@ static void mriBindingExecute()
 	// the three arguments are the executable name, and the '-e ""' is to tell ruby to run an empty file
 	// otherwise (since this parses options for the ruby executable) it's gonna wait on stdin for code
 	// --jit enables the jit i think
-	char options_argv1[] = "oneshot", options_argv2[] = "-e", options_argv3[] = "";
-	char* options_argv[] = {options_argv1, options_argv2, options_argv3, NULL};
-	ruby_options(3, options_argv);
+	std::vector<const char*> rubyArgsC{"oneshot"};
+	rubyArgsC.push_back("-e ");
+	void *node;
+	if (conf.mjitEnabled) {
+		std::string verboseLevel("--mjit-verbose="); verboseLevel += std::to_string(conf.mjitVerbosity);
+        std::string maxCache("--mjit-max-cache="); maxCache += std::to_string(conf.mjitMaxCache);
+        std::string minCalls("--mjit-min-calls="); minCalls += std::to_string(conf.mjitMinCalls);
+        rubyArgsC.push_back("--mjit");
+        rubyArgsC.push_back(verboseLevel.c_str());
+        rubyArgsC.push_back(maxCache.c_str());
+        rubyArgsC.push_back(minCalls.c_str());
+	}
+
+	if (conf.yjitEnabled) {
+		std::string callThreshold("--yjit-call-threshold="); callThreshold += std::to_string(conf.yjitCallThreshold);
+		std::string maxVersions("--yjit-max-versions="); maxVersions += std::to_string(conf.yjitMaxVersions);
+		std::string greedyVersioning("--yjit-greedy-versioning"); greedyVersioning += std::to_string(conf.yjitGreedyVersioning);
+		rubyArgsC.push_back("--yjit");
+		rubyArgsC.push_back(callThreshold.c_str());
+		rubyArgsC.push_back(maxVersions.c_str());
+		rubyArgsC.push_back(greedyVersioning.c_str());
+	}
+
+	if (conf.jitEnabled) {
+		std::string verboseLevel("-jit-verbose="); verboseLevel += std::to_string(conf.jitVerbosity);
+        std::string maxCache("--jit-max-cache="); maxCache += std::to_string(conf.jitMaxCache);
+        std::string minCalls("--jit-min-calls="); minCalls += std::to_string(conf.jitMinCalls);
+        rubyArgsC.push_back("--jit");
+        rubyArgsC.push_back(verboseLevel.c_str());
+        rubyArgsC.push_back(maxCache.c_str());
+        rubyArgsC.push_back(minCalls.c_str());
+	}
+
+	node = ruby_options(rubyArgsC.size(), const_cast<char**>(rubyArgsC.data()));
+
+    int state;
+    bool valid = ruby_executable_node(node, &state);
+    if (valid)
+        state = ruby_exec_node(node);
+    if (state || !valid) {
+        showMsg("An error occurred while initializing Ruby. (Invalid JIT settings?)");
+        ruby_cleanup(state);
+        shState->rtData().rqTermAck.set();
+        return;
+    }
 
 	rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
-
-	Config &conf = shState->rtData().config;
 
 	if (!conf.rubyLoadpaths.empty())
 	{

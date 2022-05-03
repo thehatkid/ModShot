@@ -17,6 +17,8 @@ jpeg = dependency('libjpeg', static: build_static)
 tiff = dependency('libtiff-4', static: build_static)
 webp = dependency('libwebp', static: build_static)
 zlib = dependency('zlib', static: build_static)
+libzmq = dependency('libzmq')
+zmqpp = dependency('libzmqpp', static: build_static)
 nsgif = dependency('libnsgif', static: build_static)
 
 if host_system == 'windows'
@@ -49,11 +51,15 @@ global_include_dirs += include_directories('.',
     'filesystem/headers',
     'graphics/headers',
     'input/headers',
-    'opengl/headers'
+	'modshot/headers',
+	'oneshot/headers',
+    'opengl/headers',
+	'rgss/headers',
+	'thread/headers',
+	'util/headers'
 )
 
-
-global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, nsgif, freetype, tiff, webp, harfbuzz]
+global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, libzmq, zmqpp, nsgif, freetype, tiff, webp, harfbuzz]
 
 if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('wsock32')
@@ -70,6 +76,8 @@ main_source = files(
 	'audio/source/soundemitter.cpp',
 	'audio/source/sdlsoundsource.cpp',
 	'audio/source/vorbissource.cpp',
+	'filesystem/source/filesystem.cpp',
+	'filesystem/source/rgssad.cpp',
 	'graphics/source/autotiles.cpp',
 	'graphics/source/bitmap.cpp',
 	'graphics/source/graphics.cpp',
@@ -78,11 +86,16 @@ main_source = files(
 	'graphics/source/scene.cpp',
 	'graphics/source/tilemap.cpp',
 	'graphics/source/tileatlas.cpp',
+	'graphics/source/window.cpp',
+	'graphics/source/viewport.cpp',
+	'graphics/source/plane.cpp',
+	'input/source/input.cpp',
+	'input/source/keybindings.cpp',
+	'input/source/settingsmenu.cpp',
 	'opengl/source/glstate.cpp',
 	'opengl/source/gl-debug.cpp',
 	'opengl/source/gl-fun.cpp',
 	'opengl/source/gl-meta.cpp',
-	'opengl/source/plane.cpp',
 	'opengl/source/shader.cpp',
 	'opengl/source/texpool.cpp',
 	'opengl/source/vertex.cpp',
@@ -123,5 +136,5 @@ endif
 
 if host_system == 'windows'
 else
-    global_sources += files('xdg-user-dir-lookup.c')
+    global_sources += files('oneshot/source/xdg-user-dir-lookup.c')
 endif
