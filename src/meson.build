@@ -88,7 +88,6 @@ main_source = files(
 	'opengl/source/vertex.cpp',
 	'opengl/source/tilequad.cpp',
 	'opengl/source/window.cpp',
-	'opengl/source/screen.cpp',
 	'opengl/source/viewport.cpp',
 	'opengl/source/table.cpp',
 	'input/source/input.cpp',
@@ -102,6 +101,7 @@ main_source = files(
 	'settingsmenu.cpp',
 	'sharedstate.cpp',
 	'oneshot.cpp',
+	'screen.cpp',
 	'i18n.cpp',
 	'crash-handler.cpp'
 )
