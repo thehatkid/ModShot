@@ -17,8 +17,6 @@ jpeg = dependency('libjpeg', static: build_static)
 tiff = dependency('libtiff-4', static: build_static)
 webp = dependency('libwebp', static: build_static)
 zlib = dependency('zlib', static: build_static)
-libzmq = dependency('libzmq')
-zmqpp = dependency('libzmqpp', static: build_static)
 nsgif = dependency('libnsgif', static: build_static)
 
 if host_system == 'windows'
