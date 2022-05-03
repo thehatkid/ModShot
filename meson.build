@@ -77,6 +77,7 @@ else
 endif
 
 exe_name = meson.project_name()
+
 executable(exe_name,
     sources: global_sources,
     dependencies: global_dependencies,
@@ -86,7 +87,7 @@ executable(exe_name,
     cpp_args: global_args,
     objc_args: global_args,
     objcpp_args: global_args,
-    win_subsystem: get_option('window_subsystem'),
+    win_subsystem: 'windows',
     install: (host_system != 'windows')
 )
 
