@@ -111,6 +111,7 @@ main_source = files(
 	'thread/source/eventthread.cpp',
 	'thread/source/sharedstate.cpp',
 	'util/source/config.cpp',
+	'util/source/win-consoleutils.cpp',
 	'main.cpp'
 )
 

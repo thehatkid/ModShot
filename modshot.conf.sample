@@ -9,12 +9,10 @@
 # relative to gameFolder and ignoring both RTPs and
 # encrypted archives.
 
-
 # Start the game in debug/developer mode
 # (default: disabled)
 #
 # debugMode=false
-
 
 # Continuously print average FPS to console.
 # This setting does not affect the window title
@@ -23,13 +21,11 @@
 #
 # printFPS=false
 
-
 # Start game in fullscreen mode,
 # i.e. Big Picture/console mode.
 # (default: disabled)
 #
 # fullscreen=false
-
 
 # Preserve game screen aspect ratio,
 # as opposed to stretch-to-fill
@@ -37,37 +33,31 @@
 #
 # fixedAspectRatio=true
 
-
 # Apply linear interpolation when game screen
 # is upscaled
 # (default: disabled)
 #
 # smoothScaling=false
 
-
 # Sync screen redraws to the monitor refresh rate
 # (default: enabled)
 #
 # vsync=true
-
 
 # Override the game window title
 # (default: none)
 #
 # windowTitle=Custom Title
 
-
 # Enforce a static frame rate
 # (0 = disabled)
 #
 # fixedFramerate=0
 
-
 # Skip (don't draw) frames when behind
 # (default: enabled)
 #
 # frameSkip=true
-
 
 # Use a fixed framerate that is approx. equal to the
 # native screen refresh rate. This is different from
@@ -79,12 +69,10 @@
 #
 # syncToRefreshrate=false
 
-
 # Don't use alpha blending when rendering text
 # (default: disabled)
 #
 # solidFonts=false
-
 
 # Work around buggy graphics drivers which don't
 # properly synchronize texture access, most
@@ -94,7 +82,6 @@
 #
 # subImageFix=false
 
-
 # Enable framebuffer blitting if the driver is
 # capable of it. Some drivers carry buggy
 # implementations of this functionality, so
@@ -102,7 +89,6 @@
 # (default: enabled)
 #
 # enableBlitting=true
-
 
 # Limit the maximum size (width, height) of
 # most textures mkxp will create (exceptions are
@@ -114,24 +100,20 @@
 #
 # maxTextureSize=0
 
-
 # Set the base path of the game to '/path/to/game'
 # (default: executable directory)
 #
 # gameFolder=/path/to/game
-
 
 # Allow symlinks for game assets to be followed
 # (default: disabled)
 #
 # allowSymlinks=false
 
-
 # Set the game window icon to 'path/to/icon.png'
 # (default: none)
 #
 # iconPath=/path/to/icon.png
-
 
 # Define raw scripts to be executed before the
 # actual Scripts.rxdata execution starts
@@ -140,22 +122,11 @@
 # preloadScript=my_win32_wrapper.rb
 # preloadScript=ruby18_fixes.rb
 
-
 # Index all accesible assets via their lower case path
 # (emulates windows case insensitivity)
 # (default: enabled)
 #
 # pathCache=true
-
-
-# Add 'rtp1', 'rtp2.zip' and 'game.rgssad' to the
-# asset search path (multiple allowed)
-# (default: none)
-#
-# RTP=/path/to/rtp1
-# RTP=/path/to/rtp2.zip
-# RTP=/path/to/game.rgssad
-
 
 # Font substitutions allow drop-in replacements of fonts
 # to be used without changing the RGSS scripts,
@@ -171,7 +142,6 @@
 # fontSub=Arial>Open Sans
 # fontSub=Times New Roman>Liberation Serif
 
-
 # Because mkxp is usually distributed as a stand alone
 # build, no predefined load paths are initialized
 # ($:, $LOAD_PATH) in the MRI backend. With this option,
@@ -182,7 +152,6 @@
 #
 # rubyLoadpath=/usr/lib64/ruby/
 # rubyLoadpath=/usr/local/share/ruby/site_ruby
-
 
 # Number of OpenAL sources to allocate for SE playback.
 # If there are a lot of sounds playing at the same time
