@@ -132,5 +132,5 @@ endif
 
 if host_system == 'windows'
 else
-    global_sources += files('xdg-user-dir-lookup.c')
+    global_sources += files('oneshot/source/xdg-user-dir-lookup.c')
 endif
