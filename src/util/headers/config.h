@@ -57,6 +57,49 @@ struct Config
 	bool allowSymlinks;
 	bool pathCache;
 
+	/*
+	MJIT options (experimental):
+	  --mjit-warnings Enable printing JIT warnings
+	  --mjit-debug    Enable JIT debugging (very slow), or add cflags if specified
+	  --mjit-wait     Wait until JIT compilation finishes every time (for testing)
+	  --mjit-save-temps
+	                  Save JIT temporary files in $TMP or /tmp (for testing)
+	  --mjit-verbose=num
+	                  Print JIT logs of level num or less to stderr (default: 0)
+	  --mjit-max-cache=num
+	                  Max number of methods to be JIT-ed in a cache (default: 10000)
+	  --mjit-min-calls=num
+	                  Number of calls to trigger JIT (for testing, default: 10000)
+
+	YJIT options (experimental):
+	  --yjit-exec-mem-size=num
+	                  Size of executable memory block in MiB (default: 256)
+	  --yjit-call-threshold
+	                  Number of calls to trigger JIT (default: 10)
+	  --yjit-max-versions
+	                  Maximum number of versions per basic block (default: 4)
+	  --yjit-greedy-versioning
+	                  Greedy versioning mode (default: disabled)
+	*/
+
+	bool mjitEnabled;
+	int mjitVerbosity;
+	int mjitMaxCache;
+	int mjitMinCalls;
+
+	bool yjitEnabled;
+	int yjitCallThreshold;
+	int yjitMaxVersions;
+	bool yjitGreedyVersioning;
+
+	// This is for older versions of Ruby (3.0.* and below)
+	bool jitEnabled;
+	int jitVerbosity;
+	int jitMaxCache;
+	int jitMinCalls;
+
+	bool winConsole;
+
 	std::string iconPath;
 
 	struct
