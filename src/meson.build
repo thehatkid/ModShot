@@ -59,7 +59,6 @@ global_include_dirs += include_directories('.',
 	'util/headers'
 )
 
-
 global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, libzmq, zmqpp, nsgif, freetype, tiff, webp, harfbuzz]
 
 if host_system == 'windows'
