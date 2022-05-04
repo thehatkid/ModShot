@@ -58,6 +58,7 @@ if get_option('build_static') == true
     endif
 endif
 
+
 subdir('src')
 subdir('binding-mri')
 subdir('shader')
