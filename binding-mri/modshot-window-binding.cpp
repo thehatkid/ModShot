@@ -16,6 +16,12 @@
 	//#include 
 #endif
 
+RB_METHOD(GetWindowSize) {
+	int w, h;
+	SDL_GetWindowSize(shState->rtData().window, &w, &h);
+	return rb_ary_new3(2, LONG2FIX(w), LONG2FIX(h));
+}
+
 RB_METHOD(GetWindowPosition) {
 	int x, y;
 	SDL_GetWindowPosition(shState->rtData().window, &x, &y);
@@ -85,6 +91,7 @@ RB_METHOD(SetWindowOpacity) {
 void modshotwindowBindingInit()
 {
 	VALUE module = rb_define_module("ModWindow");
+	_rb_define_module_function(module, "GetWindowSize", GetWindowSize);
 	_rb_define_module_function(module, "GetWindowPosition", GetWindowPosition);
 	_rb_define_module_function(module, "SetWindowPosition", SetWindowPosition);
 	_rb_define_module_function(module, "SetTitle", SetTitle);
