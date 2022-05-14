@@ -23,6 +23,7 @@
 	#include <security.h>
 	#include <shlobj.h>
 	#include <SDL2/SDL_syswm.h>
+    #include "resource.h"
 #elif defined __APPLE__ || __linux__
 	#include <stdlib.h>
 	#include <unistd.h>
@@ -63,8 +64,10 @@ struct OneshotPrivate
 	std::string txtYes;
 	std::string txtNo;
 
+    // Booleans
 	bool exiting;
 	bool allowExit;
+    bool trayIcon;
 
 	// Alpha texture data for portions of window obscured by screen edges
 	int winX, winY;
@@ -186,6 +189,7 @@ Oneshot::Oneshot(RGSSThreadData &threadData) :
 	p->winPosChanged = false;
 	p->allowExit = true;
 	p->exiting = false;
+	p->trayIcon = false;
 	#ifdef OS_W32
 		p->os = "windows";
 	#elif defined OS_OSX
@@ -443,6 +447,11 @@ bool Oneshot::exiting() const
 	return p->exiting;
 }
 
+bool Oneshot::hasTrayIcon() const
+{
+	return p->trayIcon;
+}
+
 bool Oneshot::allowExit() const
 {
 	return p->allowExit;
@@ -568,6 +577,100 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 
 	return button ? true : false;
 #endif // #ifdef OS_LINUX
+}
+
+bool Oneshot::addNotifyIcon(const char* tip, const int uID)
+{
+    if (p->trayIcon) {
+        Debug() << "Already added tray icon";
+        return false;
+    }
+
+    // Get window handle
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
+    HWND hWnd = wmInfo.info.win.window;
+
+    // Get Win32 handle
+    HINSTANCE hInst = GetModuleHandle(NULL);
+
+    // Prepare Notify Icon Data
+    NOTIFYICONDATA nid;
+    ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
+    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.hWnd = hWnd;
+    nid.uID = uID;
+
+    // Add notify icon on tray
+    nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+    nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPICON));
+    nid.uCallbackMessage = WM_APP + 1; // WNDPROC uMsg = 32768 + 1
+    strcpy_s(nid.szTip, sizeof(nid.szTip), tip);
+    bool result = Shell_NotifyIcon(NIM_ADD, &nid);
+
+    if (result) {
+        p->trayIcon = true;
+    }
+
+    return result;
+}
+
+bool Oneshot::delNotifyIcon()
+{
+    if (!p->trayIcon) {
+        Debug() << "Already deleted tray icon";
+        return true;
+    }
+
+    // Get window handle
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
+    HWND hWnd = wmInfo.info.win.window;
+
+    // Prepare Notify Icon Data
+    NOTIFYICONDATA nid;
+    ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
+    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.hWnd = hWnd;
+
+    // Delete notify icon from tray
+    nid.uFlags = 0x0;
+    bool result = Shell_NotifyIcon(NIM_DELETE, &nid);
+
+    if (result) {
+        p->trayIcon = false;
+    }
+
+    return true;
+}
+
+bool Oneshot::sendBalloon(const char* info, const char* title)
+{
+    // Get window handle
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
+    HWND hWnd = wmInfo.info.win.window;
+
+    // Get Win32 handle
+    HINSTANCE hInst = GetModuleHandle(NULL);
+
+    // Prepare Notify Icon Data
+    NOTIFYICONDATA nid;
+    ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
+    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.hWnd = hWnd;
+
+    // Modify notify icon data to show balloon
+    nid.uFlags = NIF_INFO;
+    strcpy_s(nid.szInfoTitle, sizeof(nid.szInfoTitle), title);
+    strcpy_s(nid.szInfo, sizeof(nid.szInfo), info);
+
+    bool result = Shell_NotifyIcon(NIM_MODIFY, &nid);
+
+    return result;
 }
 
 std::string Oneshot::textinput(const char* prompt, int char_limit, const char* fontName) {
