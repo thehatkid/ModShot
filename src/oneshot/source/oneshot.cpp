@@ -655,7 +655,7 @@ bool Oneshot::delNotifyIcon()
 	return true;
 }
 
-bool Oneshot::sendBalloon(const char* info, const char* title, const int id)
+bool Oneshot::sendBalloon(const char* info, const char* title, const int id, const int iconid, const char* iconpath)
 {
 #ifdef OS_W32
 	// Convert to wide char strings
@@ -677,6 +677,37 @@ bool Oneshot::sendBalloon(const char* info, const char* title, const int id)
 	nid.uFlags = NIF_INFO;
 	wcscpy_s(nid.szInfo, sizeof(nid.szInfo), wchar_info);
 	wcscpy_s(nid.szInfoTitle, sizeof(nid.szInfoTitle), wchar_title);
+
+	if (iconid > 0 && iconid <= 3)
+	{
+		switch (iconid)
+		{
+			case 1:
+				// An information icon
+				nid.dwInfoFlags = NIIF_INFO;
+				break;
+			case 2:
+				// A warning icon
+				nid.dwInfoFlags = NIIF_WARNING;
+				break;
+			case 3:
+				// An error icon
+				nid.dwInfoFlags = NIIF_ERROR;
+				break;
+			default:
+				// No icon
+				nid.dwInfoFlags = NIIF_NONE;
+				break;
+		}
+	}
+	else if (iconpath)
+	{
+		HINSTANCE hInst = GetModuleHandle(NULL);
+		const wchar_t* wchar_iconpath = w32_toWide(iconpath);
+		HICON hIcon = (HICON)LoadImageW(hInst, wchar_iconpath, IMAGE_ICON, 48, 48, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+		nid.hBalloonIcon = hIcon;
+		nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
+	}
 
 	// Modify notify icon data to show balloon
 	bool result = Shell_NotifyIconW(NIM_MODIFY, &nid);

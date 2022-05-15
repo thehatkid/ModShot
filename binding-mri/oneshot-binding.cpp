@@ -104,20 +104,22 @@ RB_METHOD(oneshotCRC32)
 RB_METHOD(oneshotNotificaion)
 {
 	RB_UNUSED_PARAM;
-    char* title;
-    char* info;
-    int id = 0;
-    rb_get_args(argc, argv, "zz|i", &title, &info, &id);
+	char* title;
+	char* info;
+	int id = 0;
+	int iconid = 0;
+	char* iconpath = NULL;
+	rb_get_args(argc, argv, "zz|iiz", &title, &info, &id, &iconid, &iconpath);
 
 #ifdef _WIN32
-    if (!shState->oneshot().hasTrayIcon()) {
-        shState->oneshot().addNotifyIcon("OneShot", id);
-    }
+	if (!shState->oneshot().hasTrayIcon()) {
+		shState->oneshot().addNotifyIcon("OneShot", id);
+	}
 
-    shState->oneshot().sendBalloon(title, info, id);
+	shState->oneshot().sendBalloon(title, info, id, iconid, iconpath);
 #else
-    // TODO: use GTK notification server!
-    // https://wiki.archlinux.org/title/Desktop_notifications#Notification_servers
+	// TODO: use GTK notification server!
+	// https://wiki.archlinux.org/title/Desktop_notifications#Notification_servers
 #endif
 
 	return Qtrue;
