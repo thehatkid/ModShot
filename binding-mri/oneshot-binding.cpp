@@ -101,6 +101,28 @@ RB_METHOD(oneshotCRC32)
 	return UINT2NUM(result.checksum());
 }
 
+RB_METHOD(oneshotNotificaion)
+{
+	RB_UNUSED_PARAM;
+    char* title;
+    char* info;
+    int uID = 0;
+    rb_get_args(argc, argv, "zz|i", &title, &info, &uID);
+
+#ifdef _WIN32
+    if (!shState->oneshot().hasTrayIcon()) {
+        shState->oneshot().addNotifyIcon("OneShot", uID);
+    }
+
+    shState->oneshot().sendBalloon(title, info);
+#else
+    // TODO: use GTK notification server!
+    // https://wiki.archlinux.org/title/Desktop_notifications#Notification_servers
+#endif
+
+	return Qtrue;
+}
+
 void oneshotBindingInit()
 {
 	VALUE module = rb_define_module("Oneshot");
@@ -132,4 +154,5 @@ void oneshotBindingInit()
 	_rb_define_module_function(module, "exiting", oneshotExiting);
 	_rb_define_module_function(module, "shake", oneshotShake);
 	_rb_define_module_function(module, "crc32", oneshotCRC32);
+	_rb_define_module_function(module, "notify", oneshotNotificaion);
 }

@@ -660,9 +660,6 @@ bool Oneshot::sendBalloon(const char* info, const char* title)
 	SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
 	HWND hWnd = wmInfo.info.win.window;
 
-	// Get Win32 handle
-	HINSTANCE hInst = GetModuleHandle(NULL);
-
 	// Prepare Notify Icon Data
 	NOTIFYICONDATA nid;
 	ZeroMemory(&nid, sizeof(NOTIFYICONDATA));

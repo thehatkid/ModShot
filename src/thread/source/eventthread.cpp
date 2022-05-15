@@ -22,7 +22,6 @@
 #include "eventthread.h"
 
 #include <SDL2/SDL_events.h>
-#include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_joystick.h>
 #include <SDL2/SDL_gamecontroller.h>
 #include <SDL2/SDL_messagebox.h>
@@ -46,7 +45,8 @@
 #include <iostream>
 
 #ifdef _WIN32
-    #include <windows.h>
+	#include <windows.h>
+	#include <SDL2/SDL_syswm.h>
 #endif
 
 #define KEYCODE_TO_SCUFFEDCODE(keycode) (((keycode & 0xff) | ((keycode & 0x180) == 0x100 ? 0x180 : 0)) + SDL_NUM_SCANCODES)
@@ -126,7 +126,10 @@ void EventThread::process(RGSSThreadData &rtData)
 	SDL_Window *win = rtData.window;
 	UnidirMessage<Vec2i> &windowSizeMsg = rtData.windowSizeMsg;
 
+#ifdef _WIN32
+    // receive SDL WM events
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+#endif
 
 	initALCFunctions(rtData.alcDev);
 
@@ -239,42 +242,42 @@ void EventThread::process(RGSSThreadData &rtData)
 		switch (event.type)
 		{
 #ifdef _WIN32
-        case SDL_SYSWMEVENT:
-            if (event.syswm.msg->msg.win.msg == 32769) // from WM_APP + 1 (32769)
-            {
-                int lParam = event.syswm.msg->msg.win.lParam;
-                int uID = event.syswm.msg->msg.win.wParam;
+		case SDL_SYSWMEVENT:
+			if (event.syswm.msg->msg.win.msg == 32769) // from WM_APP + 1 (32769)
+			{
+				int lParam = event.syswm.msg->msg.win.lParam;
+				int uID = event.syswm.msg->msg.win.wParam;
 
-                switch (lParam)
-                {
-                    case WM_LBUTTONUP:
-                        Debug() << "[Tray Icon] was pressed";
+				switch (lParam)
+				{
+					case WM_LBUTTONUP:
+						Debug() << "[Tray Icon] was pressed";
+						Debug() << uID;
+						break;
+					case WM_RBUTTONDOWN:
+					case WM_CONTEXTMENU:
+						Debug() << "[Tray Icon] called context menu";
+						Debug() << uID;
+						break;
+					case WM_USER + 2: // NIN_BALLOONSHOW
+						Debug() << "[Balloon] was shown";
                         Debug() << uID;
-                        break;
-                    case WM_RBUTTONDOWN:
-                    case WM_CONTEXTMENU:
-                        Debug() << "[Tray Icon] called context menu";
-                        Debug() << uID;
-                        break;
-                    case WM_USER + 2: // NIN_BALLOONSHOW
-                        Debug() << "[Balloon] was shown";
-                        Debug() << uID;
-                        break;
-                    case WM_USER + 3: // NIN_BALLOONHIDE
-                        Debug() << "[Balloon] was hidden";
-                        Debug() << uID;
-                        break;
-                    case WM_USER + 4: // NIN_BALLOONTIMEOUT
-                        Debug() << "[Balloon] was timeouted";
-                        Debug() << uID;
-                        break;
-                    case WM_USER + 5: // NIN_BALLOONUSERCLICK
-                        Debug() << "[Balloon] was clicked";
-                        Debug() << uID;
-                        break;
-                }
-            }
-            break;
+						break;
+					case WM_USER + 3: // NIN_BALLOONHIDE
+						Debug() << "[Balloon] was hidden";
+						Debug() << uID;
+						break;
+					case WM_USER + 4: // NIN_BALLOONTIMEOUT
+						Debug() << "[Balloon] was timeouted";
+						Debug() << uID;
+						break;
+					case WM_USER + 5: // NIN_BALLOONUSERCLICK
+						Debug() << "[Balloon] was clicked";
+						Debug() << uID;
+						break;
+				}
+			}
+			break;
 #endif
 		case SDL_WINDOWEVENT :
 			switch (event.window.event)
