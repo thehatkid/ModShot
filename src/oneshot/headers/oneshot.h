@@ -75,9 +75,9 @@ public:
 
 	//Functions
 	bool msgbox(int type, const char *body, const char *title);
-    bool addNotifyIcon(const char* tip, const int uID);
+    bool addNotifyIcon(const char* tip, const int id);
     bool delNotifyIcon();
-    bool sendBalloon(const char* info, const char* title);
+    bool sendBalloon(const char* info, const char* title, const int id);
 	std::string textinput(const char* prompt, int char_limit, const char* fontName);
 
 	//Dirty flag for obscured texture

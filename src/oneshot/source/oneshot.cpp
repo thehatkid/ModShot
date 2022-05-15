@@ -579,7 +579,7 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 #endif // #ifdef OS_LINUX
 }
 
-bool Oneshot::addNotifyIcon(const char* tip, const int uID)
+bool Oneshot::addNotifyIcon(const char* tip, const int id)
 {
 	if (p->trayIcon) {
 		Debug() << "Already added tray icon";
@@ -587,6 +587,9 @@ bool Oneshot::addNotifyIcon(const char* tip, const int uID)
 	}
 
 #ifdef OS_W32
+	// Convert to wide char string
+	const wchar_t* wchar_tip = w32_toWide(tip);
+
 	// Get window handle
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
@@ -597,26 +600,27 @@ bool Oneshot::addNotifyIcon(const char* tip, const int uID)
 	HINSTANCE hInst = GetModuleHandle(NULL);
 
 	// Prepare Notify Icon Data
-	NOTIFYICONDATA nid;
-	ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-	nid.cbSize = sizeof(NOTIFYICONDATA);
+	NOTIFYICONDATAW nid;
+	ZeroMemory(&nid, sizeof(NOTIFYICONDATAW));
+	nid.cbSize = sizeof(NOTIFYICONDATAW);
 	nid.hWnd = hWnd;
-	nid.uID = uID;
+	nid.uID = id;
+	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+	nid.uCallbackMessage = WM_APP + 1; // 32769
+	nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPICON)); // main app icon
+	wcscpy_s(nid.szTip, sizeof(nid.szTip), wchar_tip);
 
 	// Add notify icon on tray
-	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
-	nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPICON));
-	nid.uCallbackMessage = WM_APP + 1; // WNDPROC uMsg = 32768 + 1
-	strcpy_s(nid.szTip, sizeof(nid.szTip), tip);
-	bool result = Shell_NotifyIcon(NIM_ADD, &nid);
+	bool result = Shell_NotifyIconW(NIM_ADD, &nid);
 
 	if (result) {
 		p->trayIcon = true;
 	}
 
 	return result;
-#endif
+#else
 	return false;
+#endif
 }
 
 bool Oneshot::delNotifyIcon()
@@ -638,9 +642,9 @@ bool Oneshot::delNotifyIcon()
 	ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
 	nid.cbSize = sizeof(NOTIFYICONDATA);
 	nid.hWnd = hWnd;
+	nid.uFlags = 0x0;
 
 	// Delete notify icon from tray
-	nid.uFlags = 0x0;
 	bool result = Shell_NotifyIcon(NIM_DELETE, &nid);
 
 	if (result) {
@@ -651,9 +655,13 @@ bool Oneshot::delNotifyIcon()
 	return true;
 }
 
-bool Oneshot::sendBalloon(const char* info, const char* title)
+bool Oneshot::sendBalloon(const char* info, const char* title, const int id)
 {
 #ifdef OS_W32
+	// Convert to wide char strings
+	const wchar_t* wchar_title = w32_toWide(title);
+	const wchar_t* wchar_info = w32_toWide(info);
+
 	// Get window handle
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
@@ -661,21 +669,22 @@ bool Oneshot::sendBalloon(const char* info, const char* title)
 	HWND hWnd = wmInfo.info.win.window;
 
 	// Prepare Notify Icon Data
-	NOTIFYICONDATA nid;
-	ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-	nid.cbSize = sizeof(NOTIFYICONDATA);
+	NOTIFYICONDATAW nid;
+	ZeroMemory(&nid, sizeof(NOTIFYICONDATAW));
+	nid.cbSize = sizeof(NOTIFYICONDATAW);
 	nid.hWnd = hWnd;
+	nid.uID = id;
+	nid.uFlags = NIF_INFO;
+	wcscpy_s(nid.szInfo, sizeof(nid.szInfo), wchar_info);
+	wcscpy_s(nid.szInfoTitle, sizeof(nid.szInfoTitle), wchar_title);
 
 	// Modify notify icon data to show balloon
-	nid.uFlags = NIF_INFO;
-	strcpy_s(nid.szInfoTitle, sizeof(nid.szInfoTitle), title);
-	strcpy_s(nid.szInfo, sizeof(nid.szInfo), info);
-
-	bool result = Shell_NotifyIcon(NIM_MODIFY, &nid);
+	bool result = Shell_NotifyIconW(NIM_MODIFY, &nid);
 
 	return result;
-#endif
+#else
 	return false;
+#endif
 }
 
 std::string Oneshot::textinput(const char* prompt, int char_limit, const char* fontName) {
