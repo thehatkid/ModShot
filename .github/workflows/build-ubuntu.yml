@@ -16,6 +16,7 @@ jobs:
         - name: Build
           working-directory: ${{ github.workspace }}
           run: |
+              sudo apt update
               bash setup.sh
               pip3 install meson ninja
               cd linux
