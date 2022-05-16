@@ -64,6 +64,7 @@ if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('winmm')
     global_dependencies += compilers['cpp'].find_library('Secur32')
     global_dependencies += compilers['cpp'].find_library('Shlwapi')
+    global_dependencies += compilers['cpp'].find_library('gdiplus')
 endif
 
 main_source = files(

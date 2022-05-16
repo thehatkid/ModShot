@@ -20,6 +20,7 @@
 	#define SECURITY_WIN32
 	#include <windows.h>
 	#include <mmsystem.h>
+	#include <gdiplus.h>
 	#include <security.h>
 	#include <shlobj.h>
 	#include <SDL2/SDL_syswm.h>
@@ -702,9 +703,21 @@ bool Oneshot::sendBalloon(const char* info, const char* title, const int id, con
 	}
 	else if (iconpath)
 	{
-		HINSTANCE hInst = GetModuleHandle(NULL);
 		const wchar_t* wchar_iconpath = w32_toWide(iconpath);
-		HICON hIcon = (HICON)LoadImageW(hInst, wchar_iconpath, IMAGE_ICON, 48, 48, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+
+		// Startup GDI+
+		Gdiplus::GdiplusStartupInput gdiStartupInput;
+		ULONG_PTR gdiToken;
+		Gdiplus::GdiplusStartup(&gdiToken, &gdiStartupInput, NULL);
+
+		// Load image and get icon handle
+		Gdiplus::Bitmap* gdiBitmap = Gdiplus::Bitmap::FromFile(wchar_iconpath, false);
+		HICON hIcon;
+		gdiBitmap->GetHICON(&hIcon);
+
+		// Shutdown GDI+
+		Gdiplus::GdiplusShutdown(gdiToken);
+
 		nid.hBalloonIcon = hIcon;
 		nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
 	}
