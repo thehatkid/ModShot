@@ -106,17 +106,32 @@ RB_METHOD(oneshotNotificaion)
 	RB_UNUSED_PARAM;
 	char* title;
 	char* info;
-	int id = 0;
-	int iconid = 0;
-	char* iconpath = NULL;
-	rb_get_args(argc, argv, "zz|iiz", &title, &info, &id, &iconid, &iconpath);
+	VALUE icon = Qnil;
+	rb_get_args(argc, argv, "zz|o", &title, &info, &icon RB_ARG_END);
 
 #ifdef _WIN32
 	if (!shState->oneshot().hasTrayIcon()) {
-		shState->oneshot().addNotifyIcon("OneShot", id);
+		shState->oneshot().addNotifyIcon("OneShot");
 	}
 
-	shState->oneshot().sendBalloon(title, info, id, iconid, iconpath);
+	switch (TYPE(icon))
+	{
+		case T_NIL:
+			shState->oneshot().sendBalloon(title, info, 0, NULL);
+			break;
+		case T_FIXNUM:
+			shState->oneshot().sendBalloon(title, info, NUM2INT(icon), NULL);
+			break;
+		case T_STRING:
+		{
+			std::string iconStr = std::string(RSTRING_PTR(icon), RSTRING_LEN(icon));
+			shState->oneshot().sendBalloon(title, info, 0, iconStr.c_str());
+			break;
+		}
+		default:
+			shState->oneshot().sendBalloon(title, info, 0, NULL);
+			break;
+	}
 #else
 	// TODO: use GTK notification server!
 	// https://wiki.archlinux.org/title/Desktop_notifications#Notification_servers

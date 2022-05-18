@@ -252,28 +252,22 @@ void EventThread::process(RGSSThreadData &rtData)
 				{
 					case WM_LBUTTONUP:
 						Debug() << "[Tray Icon] was pressed";
-						Debug() << uID;
 						break;
 					case WM_RBUTTONDOWN:
 					case WM_CONTEXTMENU:
 						Debug() << "[Tray Icon] called context menu";
-						Debug() << uID;
 						break;
 					case WM_USER + 2: // NIN_BALLOONSHOW
 						Debug() << "[Balloon] was shown";
-                        Debug() << uID;
 						break;
 					case WM_USER + 3: // NIN_BALLOONHIDE
 						Debug() << "[Balloon] was hidden";
-						Debug() << uID;
 						break;
 					case WM_USER + 4: // NIN_BALLOONTIMEOUT
 						Debug() << "[Balloon] was timeouted";
-						Debug() << uID;
 						break;
 					case WM_USER + 5: // NIN_BALLOONUSERCLICK
 						Debug() << "[Balloon] was clicked";
-						Debug() << uID;
 						break;
 				}
 			}

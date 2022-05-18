@@ -580,7 +580,7 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 #endif // #ifdef OS_LINUX
 }
 
-bool Oneshot::addNotifyIcon(const char* tip, const int id)
+bool Oneshot::addNotifyIcon(const char* tip)
 {
 	if (p->trayIcon) {
 		Debug() << "Already added tray icon";
@@ -605,7 +605,7 @@ bool Oneshot::addNotifyIcon(const char* tip, const int id)
 	ZeroMemory(&nid, sizeof(NOTIFYICONDATAW));
 	nid.cbSize = sizeof(NOTIFYICONDATAW);
 	nid.hWnd = hWnd;
-	nid.uID = id;
+	nid.uID = 0;
 	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
 	nid.uCallbackMessage = WM_APP + 1; // 32769
 	nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPICON)); // main app icon
@@ -656,7 +656,7 @@ bool Oneshot::delNotifyIcon()
 	return true;
 }
 
-bool Oneshot::sendBalloon(const char* info, const char* title, const int id, const int iconid, const char* iconpath)
+bool Oneshot::sendBalloon(const char* title, const char* info, const int iconId, const char* iconPath)
 {
 #ifdef OS_W32
 	// Convert to wide char strings
@@ -674,14 +674,14 @@ bool Oneshot::sendBalloon(const char* info, const char* title, const int id, con
 	ZeroMemory(&nid, sizeof(NOTIFYICONDATAW));
 	nid.cbSize = sizeof(NOTIFYICONDATAW);
 	nid.hWnd = hWnd;
-	nid.uID = id;
+	nid.uID = 0;
 	nid.uFlags = NIF_INFO;
 	wcscpy_s(nid.szInfo, sizeof(nid.szInfo), wchar_info);
 	wcscpy_s(nid.szInfoTitle, sizeof(nid.szInfoTitle), wchar_title);
 
-	if (iconid > 0 && iconid <= 3)
+	if (iconId > 0 && iconId <= 4)
 	{
-		switch (iconid)
+		switch (iconId)
 		{
 			case 1:
 				// An information icon
@@ -695,15 +695,19 @@ bool Oneshot::sendBalloon(const char* info, const char* title, const int id, con
 				// An error icon
 				nid.dwInfoFlags = NIIF_ERROR;
 				break;
+			case 4:
+				// An icon from executable
+				nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
+				break;
 			default:
 				// No icon
 				nid.dwInfoFlags = NIIF_NONE;
 				break;
 		}
 	}
-	else if (iconpath)
+	else if (iconPath)
 	{
-		const wchar_t* wchar_iconpath = w32_toWide(iconpath);
+		const wchar_t* wchar_iconPath = w32_toWide(iconPath);
 
 		// Startup GDI+
 		Gdiplus::GdiplusStartupInput gdiStartupInput;
@@ -711,7 +715,7 @@ bool Oneshot::sendBalloon(const char* info, const char* title, const int id, con
 		Gdiplus::GdiplusStartup(&gdiToken, &gdiStartupInput, NULL);
 
 		// Load image and get icon handle
-		Gdiplus::Bitmap* gdiBitmap = Gdiplus::Bitmap::FromFile(wchar_iconpath, false);
+		Gdiplus::Bitmap* gdiBitmap = Gdiplus::Bitmap::FromFile(wchar_iconPath, false);
 		HICON hIcon;
 		gdiBitmap->GetHICON(&hIcon);
 

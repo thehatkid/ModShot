@@ -9,7 +9,7 @@
 #include <string>
 
 #ifdef _WIN32
-    #include <windows.h>
+	#include <windows.h>
 #endif
 
 struct OneshotPrivate;
@@ -75,9 +75,9 @@ public:
 
 	//Functions
 	bool msgbox(int type, const char *body, const char *title);
-	bool addNotifyIcon(const char* tip, const int id);
+	bool addNotifyIcon(const char* tip);
 	bool delNotifyIcon();
-	bool sendBalloon(const char* info, const char* title, const int id, const int iconid, const char* iconpath);
+	bool sendBalloon(const char* title, const char* info, const int iconId, const char* iconPath);
 	std::string textinput(const char* prompt, int char_limit, const char* fontName);
 
 	//Dirty flag for obscured texture
