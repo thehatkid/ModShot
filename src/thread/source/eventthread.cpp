@@ -246,16 +246,20 @@ void EventThread::process(RGSSThreadData &rtData)
 			if (event.syswm.msg->msg.win.msg == 32769) // from WM_APP + 1 (32769)
 			{
 				int lParam = event.syswm.msg->msg.win.lParam;
-				int uID = event.syswm.msg->msg.win.wParam;
+				//int uID = event.syswm.msg->msg.win.wParam;
 
 				switch (lParam)
 				{
 					case WM_LBUTTONUP:
 						Debug() << "[Tray Icon] was pressed";
+						// Switch to OneShot Window
+						SwitchToThisWindow(event.syswm.msg->msg.win.hwnd, true);
 						break;
 					case WM_RBUTTONDOWN:
 					case WM_CONTEXTMENU:
 						Debug() << "[Tray Icon] called context menu";
+						// Switch to OneShot Window
+						SwitchToThisWindow(event.syswm.msg->msg.win.hwnd, true);
 						break;
 					case WM_USER + 2: // NIN_BALLOONSHOW
 						Debug() << "[Balloon] was shown";
@@ -268,6 +272,8 @@ void EventThread::process(RGSSThreadData &rtData)
 						break;
 					case WM_USER + 5: // NIN_BALLOONUSERCLICK
 						Debug() << "[Balloon] was clicked";
+						// Switch to OneShot Window
+						SwitchToThisWindow(event.syswm.msg->msg.win.hwnd, true);
 						break;
 				}
 			}
@@ -336,6 +342,10 @@ void EventThread::process(RGSSThreadData &rtData)
 			if (rtData.allowExit) {
 				terminate = true;
 				Debug() << "EventThread termination requested";
+
+				if (shState->oneshot().hasTrayIcon()) {
+					shState->oneshot().delNotifyIcon();
+				}
 			} else {
 				rtData.triedExit.set();
 			}
