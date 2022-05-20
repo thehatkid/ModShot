@@ -20,15 +20,15 @@ zlib = dependency('zlib', static: build_static)
 nsgif = dependency('libnsgif', static: build_static)
 
 if host_system == 'windows'
-    bz2 = dependency('bzip2')
+	bz2 = dependency('bzip2')
 	iconv = compilers['cpp'].find_library('iconv')
 else
-    bz2 = compilers['cpp'].find_library('bz2')
+	bz2 = compilers['cpp'].find_library('bz2')
 	iconv = compilers['cpp'].find_library('iconv')
-    gtk = dependency('gtk+-2.0')
-    xfconf = dependency('libxfconf-0')
-
-	global_dependencies += [gtk, xfconf]
+	gtk = dependency('gtk+-2.0')
+	giomm = dependency('giomm-2.4')
+	xfconf = dependency('libxfconf-0')
+	global_dependencies += [gtk, giomm, xfconf]
 endif
 
 # Windows needs to be treated like a special needs child here

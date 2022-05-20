@@ -38,6 +38,7 @@
 		#define OS_LINUX
 		#include <gtk/gtk.h>
 		#include <gdk/gdk.h>
+		#include <giomm-2.4/giomm.h>
 		#include "xdg-user-dir-lookup.h"
 	#endif
 #else
@@ -69,6 +70,10 @@ struct OneshotPrivate
 	bool exiting;
 	bool allowExit;
 	bool trayIcon;
+
+#ifdef OS_LINUX
+	Glib::RefPtr<Gio::Application> gioApp;
+#endif
 
 	// Alpha texture data for portions of window obscured by screen edges
 	int winX, winY;
@@ -197,6 +202,10 @@ Oneshot::Oneshot(RGSSThreadData &threadData) :
 		p->os = "macos";
 	#else
 		p->os = "linux";
+
+		// Register Gio application
+		p->gioApp = Gio::Application::create("org.oneshot.notifier", Gio::APPLICATION_FLAGS_NONE);
+		p->gioApp->register_application();
 	#endif
 
 	/********************
@@ -731,7 +740,38 @@ bool Oneshot::sendBalloon(const char* title, const char* info, const int iconId,
 
 	return result;
 #else
-	return false;
+	// Create Gio notification object
+	Glib::RefPtr<Gio::Notification> gioNotifi = Gio::Notification::create(title);
+	gioNotifi->set_body(info);
+
+	// Set notification icon
+	if (iconId > 0 && iconId <= 4)
+	{
+		switch (iconId)
+		{
+			case 1:
+				// An information icon
+				gioNotifi->set_icon(Gio::ThemedIcon::create("dialog-information"));
+				break;
+			case 2:
+				// A warning icon
+				gioNotifi->set_icon(Gio::ThemedIcon::create("dialog-warning"));
+				break;
+			case 3:
+				// An error icon
+				gioNotifi->set_icon(Gio::ThemedIcon::create("dialog-error"));
+				break;
+		}
+	}
+	else if (iconPath)
+	{
+		// TODO: make notification icon from file
+	}
+
+	// Send notification to Gio application
+	p->gioApp->send_notification(gioNotifi);
+
+	return true;
 #endif
 }
 

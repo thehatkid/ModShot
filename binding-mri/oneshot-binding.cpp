@@ -113,6 +113,7 @@ RB_METHOD(oneshotNotificaion)
 	if (!shState->oneshot().hasTrayIcon()) {
 		shState->oneshot().addNotifyIcon("OneShot");
 	}
+#endif
 
 	switch (TYPE(icon))
 	{
@@ -132,12 +133,8 @@ RB_METHOD(oneshotNotificaion)
 			shState->oneshot().sendBalloon(title, info, 0, NULL);
 			break;
 	}
-#else
-	// TODO: use GTK notification server!
-	// https://wiki.archlinux.org/title/Desktop_notifications#Notification_servers
-#endif
 
-	return Qtrue;
+	return Qnil;
 }
 
 void oneshotBindingInit()
