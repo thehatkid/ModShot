@@ -5,13 +5,13 @@
 if [[ $OSTYPE == msys ]]; then 
     echo " * MSYS2 detected"
     echo " * Installing pactoys..."
-    pacman -S pactoys --noconfirm
+    pacman -S pactoys --needed --noconfirm
     echo " * Installing dependencies..."
     pacboy -S git: vim: libtool: autoconf: automake: gcc:p make:p cmake:p \
     ruby:p bison: doxygen:p SDL2:p SDL2_image:p SDL2_ttf:p openal:p \
     freetype:p physfs:p pixman:p libwebp:p zlib:p meson:p clang:p bzip2:p \
     libvorbis:p libogg:p zeromq:p libsigc++:p boost:p libpng:p \
-    libjpeg-turbo:p libtiff:p harfbuzz:p --noconfirm
+    libjpeg-turbo:p libtiff:p harfbuzz:p --needed --noconfirm
 else 
     if [[ "$(cat /etc/issue)" == Debian* || "$(cat /etc/issue)" == Ubuntu* ]];
     then
@@ -29,8 +29,8 @@ else
     then
         echo " * Manjaro detected"
         echo " * Installing dependencies..."
-        sudo pacman --noconfirm -S vim gcc make cmake ruby bison doxygen \
-        sdl2 openal pixman libwebp bzip2 libvorbis libogg libsodium \
+        sudo pacman -S --noconfirm --needed vim gcc make cmake ruby bison \
+        doxygen sdl2 openal pixman libwebp bzip2 libvorbis libogg libsodium \
         libpng libjpeg libtiff zeromq mm-common base-devel gtk3
         echo " * Installing dependencies with pamac..."
         sudo pamac install sdl2_image sdl2_ttf physfs boost boost-libs \
