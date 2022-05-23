@@ -38,7 +38,7 @@
 		#define OS_LINUX
 		#include <gtk/gtk.h>
 		#include <gdk/gdk.h>
-		#include <giomm-2.4/giomm.h>
+		#include <gio/gio.h>
 		#include "xdg-user-dir-lookup.h"
 	#endif
 #else
@@ -72,7 +72,7 @@ struct OneshotPrivate
 	bool trayIcon;
 
 #ifdef OS_LINUX
-	Glib::RefPtr<Gio::Application> gioApp;
+	GApplication *gioApp;
 #endif
 
 	// Alpha texture data for portions of window obscured by screen edges
@@ -202,10 +202,18 @@ Oneshot::Oneshot(RGSSThreadData &threadData) :
 		p->os = "macos";
 	#else
 		p->os = "linux";
+	#endif
 
-		// Register Gio application
-		p->gioApp = Gio::Application::create("org.oneshot.notifier", Gio::APPLICATION_FLAGS_NONE);
-		p->gioApp->register_application();
+	#ifdef OS_LINUX
+		// Create and register Gio application
+		GError **gioErr;
+		p->gioApp = g_application_new("org.OneShot.Notifier", G_APPLICATION_FLAGS_NONE);
+		g_application_register(p->gioApp, nullptr, gioErr);
+
+		if (gioErr)
+		{
+			Debug() << "Failed to register Gio application!";
+		}
 	#endif
 
 	/********************
@@ -739,39 +747,46 @@ bool Oneshot::sendBalloon(const char* title, const char* info, const int iconId,
 	bool result = Shell_NotifyIconW(NIM_MODIFY, &nid);
 
 	return result;
-#else
+#elif defined OS_LINUX
 	// Create Gio notification object
-	Glib::RefPtr<Gio::Notification> gioNotifi = Gio::Notification::create(title);
-	gioNotifi->set_body(info);
+	g_autoptr(GNotification) gioNotify = g_notification_new(title);
+	g_notification_set_body(gioNotify, info);
 
 	// Set notification icon
 	if (iconId > 0 && iconId <= 4)
 	{
+		// Set icon from FreeDesktop defineded
 		switch (iconId)
 		{
 			case 1:
 				// An information icon
-				gioNotifi->set_icon(Gio::ThemedIcon::create("dialog-information"));
+				g_notification_set_icon(gioNotify, g_themed_icon_new("dialog-information"));
 				break;
 			case 2:
 				// A warning icon
-				gioNotifi->set_icon(Gio::ThemedIcon::create("dialog-warning"));
+				g_notification_set_icon(gioNotify, g_themed_icon_new("dialog-warning"));
 				break;
 			case 3:
 				// An error icon
-				gioNotifi->set_icon(Gio::ThemedIcon::create("dialog-error"));
+				g_notification_set_icon(gioNotify, g_themed_icon_new("dialog-error"));
 				break;
 		}
 	}
 	else if (iconPath)
 	{
-		// TODO: make notification icon from file
+		// Set icon from local file (PNG, JPEG, GIF, TIFF, ICO, etc.)
+		g_autoptr(GFile) gioFile = g_file_new_for_path(iconPath);
+		g_autoptr(GIcon) gioIcon = g_file_icon_new(gioFile);
+		g_notification_set_icon(gioNotify, gioIcon);
 	}
 
 	// Send notification to Gio application
-	p->gioApp->send_notification(gioNotifi);
+	g_application_send_notification(p->gioApp, "oneshot-notification", gioNotify);
 
 	return true;
+#else
+	// macOS X notifications?
+	return NULL;
 #endif
 }
 
