@@ -25,10 +25,9 @@ if host_system == 'windows'
 else
 	bz2 = compilers['cpp'].find_library('bz2')
 	iconv = compilers['cpp'].find_library('iconv')
-	gtk = dependency('gtk+-2.0')
-	giomm = dependency('giomm-2.4')
+	gtk = dependency('gtk+-3.0')
 	xfconf = dependency('libxfconf-0')
-	global_dependencies += [gtk, giomm, xfconf]
+	global_dependencies += [gtk, xfconf]
 endif
 
 # Windows needs to be treated like a special needs child here
