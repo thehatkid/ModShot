@@ -173,9 +173,8 @@ RB_METHOD(wallpaperSet)
 	int color;
 	rb_get_args(argc, argv, "zi", &name, &color RB_ARG_END);
 	std::string path;
-	std::string nameStr = name;
 #ifdef _WIN32
-	path = "Wallpaper\\" + nameStr + ".bmp";
+	path = shState->config().gameFolder + "\\Wallpaper\\" + name + ".bmp";
 	Debug() << "Setting wallpaper to" << path;
 	// Crapify the slashes
 	size_t index = 0;

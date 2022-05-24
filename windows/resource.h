@@ -1,2 +1,1 @@
 #define IDI_APPICON 101
-#define IDR_APPVERINFO 1

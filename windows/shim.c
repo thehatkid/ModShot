@@ -3,13 +3,12 @@
 #include <errno.h>
 #include <stdio.h>
 
-wchar_t *ARGV0 = L"lib\\modshot.exe";
+const wchar_t *ARGV0 = "lib\\modshot.exe";
 
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine,
-                   int nCmdShow)
-{
+                   int nCmdShow) {
     (void)hInstance;
     (void)hPrevInstance;
     (void)lpCmdLine;
@@ -19,38 +18,30 @@ int WINAPI WinMain(HINSTANCE hInstance,
     LPWSTR *argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
     HMODULE hModule = GetModuleHandle(NULL);
-
     if (hModule != NULL) {
         wchar_t oneshotDir[MAX_PATH];
         GetModuleFileNameW(hModule, oneshotDir, sizeof(oneshotDir));
         wchar_t *pathend = wcsrchr(oneshotDir, L'\\');
-
-        if (pathend != NULL) {
+        if(pathend != NULL) {
             *pathend = L'\0';
         }
-        if (_wchdir(oneshotDir)) {
-            MessageBoxW(
-                NULL,
+        if(_wchdir(oneshotDir)) {
+            MessageBoxW(NULL,
                 L"Changing working directory failed. This should never happen.\nFind rkevin and beat him with a stick.",
                 L"ModShot Shim",
-                MB_ICONERROR
-            );
+                MB_ICONERROR);
             printf("chdir errno: %d", errno);
         }
     }
 
-    if (argv != 0) {
+    if (argc != 0) {
         argv[0] = ARGV0;
     }
 
-    _wexecv(L"lib\\modshot.exe", (const wchar_t * const*)argv);
-
-    MessageBoxW(
-        NULL,
+    _wexecv(L"lib\\modshot.exe", argv);
+    MessageBoxW(NULL,
         L"Cannot start ModShot for some reason.\nPlease check your ModShot installation.",
         L"ModShot Shim",
-        MB_ICONERROR
-    );
-
+        MB_ICONERROR);
     return 1;
 }

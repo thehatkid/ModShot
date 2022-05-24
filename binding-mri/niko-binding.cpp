@@ -38,10 +38,7 @@ namespace syswm {
 
 #define BUFFER_SIZE 256
 
-#ifdef LINUX
-    static SDL_Thread *thread = NULL;
-#endif
-
+static SDL_Thread *thread = NULL;
 static SDL_mutex *mutex = NULL;
 static volatile char message_buffer[BUFFER_SIZE];
 static volatile bool active = false;

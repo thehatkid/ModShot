@@ -1,7 +1,3 @@
-#if defined _WIN32
-    #define WIN32_LEAN_AND_MEAN
-#endif
-
 #include "oneshot.h"
 #include "etc.h"
 #include "sharedstate.h"
@@ -105,42 +101,6 @@ RB_METHOD(oneshotCRC32)
 	return UINT2NUM(result.checksum());
 }
 
-RB_METHOD(oneshotNotificaion)
-{
-	RB_UNUSED_PARAM;
-	char* title;
-	char* info;
-	VALUE icon = Qnil;
-	rb_get_args(argc, argv, "zz|o", &title, &info, &icon RB_ARG_END);
-
-#ifdef _WIN32
-	if (!shState->oneshot().hasTrayIcon()) {
-		shState->oneshot().addNotifyIcon("OneShot");
-	}
-#endif
-
-	switch (TYPE(icon))
-	{
-		case T_NIL:
-			shState->oneshot().sendBalloon(title, info, 0, NULL);
-			break;
-		case T_FIXNUM:
-			shState->oneshot().sendBalloon(title, info, NUM2INT(icon), NULL);
-			break;
-		case T_STRING:
-		{
-			std::string iconStr = std::string(RSTRING_PTR(icon), RSTRING_LEN(icon));
-			shState->oneshot().sendBalloon(title, info, 0, iconStr.c_str());
-			break;
-		}
-		default:
-			shState->oneshot().sendBalloon(title, info, 0, NULL);
-			break;
-	}
-
-	return Qnil;
-}
-
 void oneshotBindingInit()
 {
 	VALUE module = rb_define_module("Oneshot");
@@ -172,5 +132,4 @@ void oneshotBindingInit()
 	_rb_define_module_function(module, "exiting", oneshotExiting);
 	_rb_define_module_function(module, "shake", oneshotShake);
 	_rb_define_module_function(module, "crc32", oneshotCRC32);
-	_rb_define_module_function(module, "notify", oneshotNotificaion);
 }
