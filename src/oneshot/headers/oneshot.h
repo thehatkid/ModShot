@@ -8,6 +8,10 @@
 #include "etc-internal.h"
 #include <string>
 
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
 struct OneshotPrivate;
 struct RGSSThreadData;
 
@@ -60,6 +64,7 @@ public:
 	bool obscuredCleared() const;
 	bool allowExit() const;
 	bool exiting() const;
+	bool hasTrayIcon() const;
 
 	//Mutators
 	void setYesNo(const char *yes, const char *no);
@@ -70,6 +75,9 @@ public:
 
 	//Functions
 	bool msgbox(int type, const char *body, const char *title);
+	bool addNotifyIcon(const char* tip);
+	bool delNotifyIcon();
+	bool sendBalloon(const char* title, const char* info, const int iconId, const char* iconPath);
 	std::string textinput(const char* prompt, int char_limit, const char* fontName);
 
 	//Dirty flag for obscured texture
