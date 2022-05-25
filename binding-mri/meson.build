@@ -23,7 +23,6 @@ binding_source = [files(
     'graphics-binding.cpp',
     'input-binding.cpp',
     'journal-binding.cpp',
-    'modshot-window-binding.cpp',
     'module_rpg.cpp',
     'niko-binding.cpp',
     'oneshot-binding.cpp',
