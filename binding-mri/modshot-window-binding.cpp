@@ -1,7 +1,3 @@
-#ifdef _WIN32
-    #define WIN32_LEAN_AND_MEAN
-#endif
-
 #include "oneshot.h"
 #include "etc.h"
 #include "sharedstate.h"
@@ -15,6 +11,7 @@
 #include <boost/crc.hpp>
 
 #ifdef _WIN32
+	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
 #else
 	//#include 
