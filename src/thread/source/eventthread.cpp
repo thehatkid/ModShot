@@ -342,10 +342,6 @@ void EventThread::process(RGSSThreadData &rtData)
 			if (rtData.allowExit) {
 				terminate = true;
 				Debug() << "EventThread termination requested";
-
-				if (shState->oneshot().hasTrayIcon()) {
-					shState->oneshot().delNotifyIcon();
-				}
 			} else {
 				rtData.triedExit.set();
 			}
@@ -358,7 +354,7 @@ void EventThread::process(RGSSThreadData &rtData)
 			SDL_UnlockMutex(inputMut);
 			break;
 
-		case SDL_KEYDOWN :
+		case SDL_KEYDOWN:
 			SDL_LockMutex(inputMut);
 			keyStates[KEYCODE_TO_SCUFFEDCODE(event.key.keysym.sym)] = true;
 			SDL_UnlockMutex(inputMut);

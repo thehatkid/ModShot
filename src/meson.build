@@ -127,6 +127,8 @@ if steam == true
 endif
 
 if host_system == 'windows'
+    global_sources += files('modshot/source/notifications_win32.cpp')
 else
     global_sources += files('oneshot/source/xdg-user-dir-lookup.c')
+    global_sources += files('modshot/source/notifications_unix.cpp')
 endif

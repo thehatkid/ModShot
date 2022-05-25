@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
         }
     }
 
-    if (argv != 0) {
+    if (argc != 0) {
         argv[0] = ARGV0;
     }
 

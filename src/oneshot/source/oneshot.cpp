@@ -20,11 +20,9 @@
 	#define SECURITY_WIN32
 	#include <windows.h>
 	#include <mmsystem.h>
-	#include <gdiplus.h>
 	#include <security.h>
 	#include <shlobj.h>
 	#include <SDL2/SDL_syswm.h>
-	#include "resource.h"
 #elif defined __APPLE__ || __linux__
 	#include <stdlib.h>
 	#include <unistd.h>
@@ -38,7 +36,6 @@
 		#define OS_LINUX
 		#include <gtk/gtk.h>
 		#include <gdk/gdk.h>
-		#include <gio/gio.h>
 		#include "xdg-user-dir-lookup.h"
 	#endif
 #else
@@ -69,11 +66,6 @@ struct OneshotPrivate
 	// Booleans
 	bool exiting;
 	bool allowExit;
-	bool trayIcon;
-
-#ifdef OS_LINUX
-	GApplication *gioApp;
-#endif
 
 	// Alpha texture data for portions of window obscured by screen edges
 	int winX, winY;
@@ -195,25 +187,12 @@ Oneshot::Oneshot(RGSSThreadData &threadData) :
 	p->winPosChanged = false;
 	p->allowExit = true;
 	p->exiting = false;
-	p->trayIcon = false;
 	#ifdef OS_W32
 		p->os = "windows";
 	#elif defined OS_OSX
 		p->os = "macos";
 	#else
 		p->os = "linux";
-	#endif
-
-	#ifdef OS_LINUX
-		// Create and register Gio application
-		GError **gioErr;
-		p->gioApp = g_application_new("org.OneShot.Notifier", G_APPLICATION_FLAGS_NONE);
-		g_application_register(p->gioApp, nullptr, gioErr);
-
-		if (gioErr)
-		{
-			Debug() << "Failed to register Gio application!";
-		}
 	#endif
 
 	/********************
@@ -465,11 +444,6 @@ bool Oneshot::exiting() const
 	return p->exiting;
 }
 
-bool Oneshot::hasTrayIcon() const
-{
-	return p->trayIcon;
-}
-
 bool Oneshot::allowExit() const
 {
 	return p->allowExit;
@@ -595,199 +569,6 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 
 	return button ? true : false;
 #endif // #ifdef OS_LINUX
-}
-
-bool Oneshot::addNotifyIcon(const char* tip)
-{
-	if (p->trayIcon) {
-		Debug() << "Already added tray icon";
-		return false;
-	}
-
-#ifdef OS_W32
-	// Convert to wide char string
-	const wchar_t* wchar_tip = w32_toWide(tip);
-
-	// Get window handle
-	SDL_SysWMinfo wmInfo;
-	SDL_VERSION(&wmInfo.version);
-	SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
-	HWND hWnd = wmInfo.info.win.window;
-
-	// Get Win32 handle
-	HINSTANCE hInst = GetModuleHandle(NULL);
-
-	// Prepare Notify Icon Data
-	NOTIFYICONDATAW nid;
-	ZeroMemory(&nid, sizeof(NOTIFYICONDATAW));
-	nid.cbSize = sizeof(NOTIFYICONDATAW);
-	nid.hWnd = hWnd;
-	nid.uID = 0;
-	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
-	nid.uCallbackMessage = WM_APP + 1; // 32769
-	nid.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_APPICON)); // main app icon
-	wcscpy_s(nid.szTip, sizeof(nid.szTip), wchar_tip);
-
-	// Add notify icon on tray
-	bool result = Shell_NotifyIconW(NIM_ADD, &nid);
-
-	if (result) {
-		p->trayIcon = true;
-	}
-
-	return result;
-#else
-	return false;
-#endif
-}
-
-bool Oneshot::delNotifyIcon()
-{
-	if (!p->trayIcon) {
-		Debug() << "Already deleted tray icon";
-		return true;
-	}
-
-#ifdef OS_W32
-	// Get window handle
-	SDL_SysWMinfo wmInfo;
-	SDL_VERSION(&wmInfo.version);
-	SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
-	HWND hWnd = wmInfo.info.win.window;
-
-	// Prepare Notify Icon Data
-	NOTIFYICONDATA nid;
-	ZeroMemory(&nid, sizeof(NOTIFYICONDATA));
-	nid.cbSize = sizeof(NOTIFYICONDATA);
-	nid.hWnd = hWnd;
-	nid.uFlags = 0x0;
-
-	// Delete notify icon from tray
-	bool result = Shell_NotifyIcon(NIM_DELETE, &nid);
-
-	if (result) {
-		p->trayIcon = false;
-	}
-#endif
-
-	return true;
-}
-
-bool Oneshot::sendBalloon(const char* title, const char* info, const int iconId, const char* iconPath)
-{
-#ifdef OS_W32
-	// Convert to wide char strings
-	const wchar_t* wchar_title = w32_toWide(title);
-	const wchar_t* wchar_info = w32_toWide(info);
-
-	// Get window handle
-	SDL_SysWMinfo wmInfo;
-	SDL_VERSION(&wmInfo.version);
-	SDL_GetWindowWMInfo(shState->rtData().window, &wmInfo);
-	HWND hWnd = wmInfo.info.win.window;
-
-	// Prepare Notify Icon Data
-	NOTIFYICONDATAW nid;
-	ZeroMemory(&nid, sizeof(NOTIFYICONDATAW));
-	nid.cbSize = sizeof(NOTIFYICONDATAW);
-	nid.hWnd = hWnd;
-	nid.uID = 0;
-	nid.uFlags = NIF_INFO;
-	wcscpy_s(nid.szInfo, sizeof(nid.szInfo), wchar_info);
-	wcscpy_s(nid.szInfoTitle, sizeof(nid.szInfoTitle), wchar_title);
-
-	if (iconId > 0 && iconId <= 4)
-	{
-		switch (iconId)
-		{
-			case 1:
-				// An information icon
-				nid.dwInfoFlags = NIIF_INFO;
-				break;
-			case 2:
-				// A warning icon
-				nid.dwInfoFlags = NIIF_WARNING;
-				break;
-			case 3:
-				// An error icon
-				nid.dwInfoFlags = NIIF_ERROR;
-				break;
-			case 4:
-				// An icon from executable
-				nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
-				break;
-			default:
-				// No icon
-				nid.dwInfoFlags = NIIF_NONE;
-				break;
-		}
-	}
-	else if (iconPath)
-	{
-		const wchar_t* wchar_iconPath = w32_toWide(iconPath);
-
-		// Startup GDI+
-		Gdiplus::GdiplusStartupInput gdiStartupInput;
-		ULONG_PTR gdiToken;
-		Gdiplus::GdiplusStartup(&gdiToken, &gdiStartupInput, NULL);
-
-		// Load image and get icon handle
-		Gdiplus::Bitmap* gdiBitmap = Gdiplus::Bitmap::FromFile(wchar_iconPath, false);
-		HICON hIcon;
-		gdiBitmap->GetHICON(&hIcon);
-
-		// Shutdown GDI+
-		Gdiplus::GdiplusShutdown(gdiToken);
-
-		nid.hBalloonIcon = hIcon;
-		nid.dwInfoFlags = NIIF_USER | NIIF_LARGE_ICON;
-	}
-
-	// Modify notify icon data to show balloon
-	bool result = Shell_NotifyIconW(NIM_MODIFY, &nid);
-
-	return result;
-#elif defined OS_LINUX
-	// Create Gio notification object
-	g_autoptr(GNotification) gioNotify = g_notification_new(title);
-	g_notification_set_body(gioNotify, info);
-
-	// Set notification icon
-	if (iconId > 0 && iconId <= 4)
-	{
-		// Set icon from FreeDesktop defineded
-		switch (iconId)
-		{
-			case 1:
-				// An information icon
-				g_notification_set_icon(gioNotify, g_themed_icon_new("dialog-information"));
-				break;
-			case 2:
-				// A warning icon
-				g_notification_set_icon(gioNotify, g_themed_icon_new("dialog-warning"));
-				break;
-			case 3:
-				// An error icon
-				g_notification_set_icon(gioNotify, g_themed_icon_new("dialog-error"));
-				break;
-		}
-	}
-	else if (iconPath)
-	{
-		// Set icon from local file (PNG, JPEG, GIF, TIFF, ICO, etc.)
-		g_autoptr(GFile) gioFile = g_file_new_for_path(iconPath);
-		g_autoptr(GIcon) gioIcon = g_file_icon_new(gioFile);
-		g_notification_set_icon(gioNotify, gioIcon);
-	}
-
-	// Send notification to Gio application
-	g_application_send_notification(p->gioApp, "oneshot-notification", gioNotify);
-
-	return true;
-#else
-	// macOS X notifications?
-	return NULL;
-#endif
 }
 
 std::string Oneshot::textinput(const char* prompt, int char_limit, const char* fontName) {
