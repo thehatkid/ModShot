@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+    <assemblyIdentity
+        type="win32"
+        name="ModShot"
+        processorArchitecture="AMD64"
+        version="1.0.0.0"
+    />
+    <description>ModShot - A modified mkxp-oneshot for OneShot mods</description>
+    <dependency>
+        <dependentAssembly>
+            <assemblyIdentity
+                type="win32"
+                name="Microsoft.Windows.Common-Controls"
+                language="*"
+                processorArchitecture="AMD64"
+                version="6.0.0.0"
+                publicKeyToken="6595b64144ccf1df"
+            />
+        </dependentAssembly>
+    </dependency>
+</assembly>
