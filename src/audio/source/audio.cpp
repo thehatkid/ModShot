@@ -337,7 +337,7 @@ void Audio::bgmCrossfade(const char *filename,
 				   		 int pitch,
 				   		 float offset)
 {
-	p->bgm.crossfade(filename, time, volume, pitch, offset);
+	p->bgm.crossfade(filename, time, (volume*p->bgm_volume), pitch, offset);
 }
 
 void Audio::bgsCrossfade(const char *filename,
@@ -346,7 +346,7 @@ void Audio::bgsCrossfade(const char *filename,
 				   		 int pitch,
 				   		 float offset)
 {
-	p->bgs.crossfade(filename, time, volume, pitch, offset);
+	p->bgs.crossfade(filename, time, (volume*p->bgm_volume), pitch, offset);
 }
 
 void Audio::meCrossfade(const char *filename,
@@ -355,7 +355,7 @@ void Audio::meCrossfade(const char *filename,
 				   		int pitch,
 				   		float offset)
 {
-	p->me.crossfade(filename, time, volume, pitch, offset);
+	p->me.crossfade(filename, time, (volume*p->sfx_volume), pitch, offset);
 }
 
 float Audio::bgmPos()
