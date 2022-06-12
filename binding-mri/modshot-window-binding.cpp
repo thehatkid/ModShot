@@ -28,12 +28,6 @@ RB_METHOD(GetWindowPosition) {
 	return rb_ary_new3(2, LONG2FIX(x), LONG2FIX(y));
 }
 
-RB_METHOD(GetScreenResolution) {
-	SDL_DisplayMode displayMode;
-	SDL_GetCurrentDisplayMode(0, &displayMode);
-	return rb_ary_new3(2, LONG2FIX(displayMode.w), LONG2FIX(displayMode.h));
-}
-
 RB_METHOD(SetWindowPosition) {
 	int x, y;
 	rb_get_args(argc, argv, "ii", &x, &y);
@@ -98,7 +92,6 @@ void modshotwindowBindingInit()
 {
 	VALUE module = rb_define_module("ModWindow");
 	_rb_define_module_function(module, "GetWindowSize", GetWindowSize);
-	_rb_define_module_function(module, "GetScreenResolution", GetScreenResolution);
 	_rb_define_module_function(module, "GetWindowPosition", GetWindowPosition);
 	_rb_define_module_function(module, "SetWindowPosition", SetWindowPosition);
 	_rb_define_module_function(module, "SetTitle", SetTitle);
