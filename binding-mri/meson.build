@@ -35,7 +35,7 @@ binding_source = [files(
     'tilemap-binding.cpp',
     'viewport-binding.cpp',
     'wallpaper-binding.cpp',
-    'window-binding.cpp',
+    'window-binding.cpp'
 )]
 
 global_sources += binding_source

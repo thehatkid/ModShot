@@ -44,7 +44,7 @@ RUBY_VER && -Dmri_version (default 3.1) sets the ruby version.
 
 ## Building on Windows
 
-First, you'll need to download [msys2](https://www.msys2.org/) and install it. 
+First, you'll need to download [msys2](https://www.msys2.org/) and install it.
 Then, you'll want to determine what Ruby version you're using, as this will determine what build environment you'll be using.
 As is, ModShot is set up to use Ruby 3.1, so keep that in mind. Please refer to this table to determine the environment.
 (You *can* use the wrong environment and it will work fine, just not with C extensions.)
@@ -105,5 +105,5 @@ Example: `./oneshot --gameFolder="oneshot" --vsync=true`
 
 Modshot builds come pre-packaged with the ruby standard library in `/lib/ruby/`. You can require gems from this folder at any point by using `require '<gem>'`.
 
-You can ship your own gems by finding the gem install location (Typically `C:\Ruby27-x64\lib\ruby\gems\2.7.0\gems`), going inside the gem, and copying over all the files inside lib. 
+You can ship your own gems by finding the gem install location (Typically `C:\Ruby27-x64\lib\ruby\gems\2.7.0\gems`), going inside the gem, and copying over all the files inside lib.
 
