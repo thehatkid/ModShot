@@ -88,8 +88,8 @@ void wallpaperBindingTerminate();
 #endif
 void nikoBindingInit();
 void oneshotBindingInit();
+void modshotBindingInit();
 void steamBindingInit();
-void modshotwindowBindingInit();
 void aleffectBindingInit();
 void otherviewBindingInit();
 void screenBindingInit();
@@ -128,8 +128,8 @@ static void mriBindingInit()
 	wallpaperBindingInit();
 	nikoBindingInit();
 	oneshotBindingInit();
+	modshotBindingInit();
 	steamBindingInit();
-	modshotwindowBindingInit();
 	aleffectBindingInit();
 	otherviewBindingInit();
 	screenBindingInit();

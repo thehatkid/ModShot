@@ -22,13 +22,13 @@ zmqpp = dependency('libzmqpp', static: build_static)
 nsgif = dependency('libnsgif', static: build_static)
 
 if host_system == 'windows'
-    bz2 = dependency('bzip2')
+	bz2 = dependency('bzip2')
 	iconv = compilers['cpp'].find_library('iconv')
 else
-    bz2 = compilers['cpp'].find_library('bz2')
+	bz2 = compilers['cpp'].find_library('bz2')
 	iconv = compilers['cpp'].find_library('iconv')
-    gtk = dependency('gtk+-2.0')
-    xfconf = dependency('libxfconf-0')
+	gtk = dependency('gtk+-3.0')
+	xfconf = dependency('libxfconf-0')
 
 	global_dependencies += [gtk, xfconf]
 endif
@@ -51,12 +51,12 @@ global_include_dirs += include_directories('.',
     'filesystem/headers',
     'graphics/headers',
     'input/headers',
-	'modshot/headers',
-	'oneshot/headers',
+    'modshot/headers',
+    'oneshot/headers',
     'opengl/headers',
-	'rgss/headers',
-	'thread/headers',
-	'util/headers'
+    'rgss/headers',
+    'thread/headers',
+    'util/headers'
 )
 
 global_dependencies += [boost, bz2, openal, zlib,  sdl2, sdl_sound, pixman, physfs, vorbisfile, vorbis, iconv, ogg, sdl2_ttf, sigcxx, sdl2_image, png, jpeg, libzmq, zmqpp, nsgif, freetype, tiff, webp, harfbuzz]
@@ -66,6 +66,7 @@ if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('winmm')
     global_dependencies += compilers['cpp'].find_library('Secur32')
     global_dependencies += compilers['cpp'].find_library('Shlwapi')
+    global_dependencies += compilers['cpp'].find_library('gdiplus')
 endif
 
 main_source = files(
@@ -130,6 +131,8 @@ if steam == true
 endif
 
 if host_system == 'windows'
+    global_sources += files('modshot/source/notifications_win32.cpp')
 else
     global_sources += files('oneshot/source/xdg-user-dir-lookup.c')
+    global_sources += files('modshot/source/notifications_unix.cpp')
 endif
