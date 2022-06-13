@@ -19,12 +19,6 @@
 
 Notification notifi;
 
-RB_METHOD(GetWindowSize) {
-	int w, h;
-	SDL_GetWindowSize(shState->rtData().window, &w, &h);
-	return rb_ary_new3(2, LONG2FIX(w), LONG2FIX(h));
-}
-
 RB_METHOD(modwindowGetWindowPosition)
 {
 	int x, y;
@@ -161,7 +155,6 @@ void modshotBindingInit()
 	_rb_define_module_function(modshot_module, "notify_cleanup", modshotNotifyCleanup);
 
 	// ModWindow:: module functions
-	_rb_define_module_function(modwindow_module, "GetWindowSize", GetWindowSize);
 	_rb_define_module_function(modwindow_module, "GetWindowPosition", modwindowGetWindowPosition);
 	_rb_define_module_function(modwindow_module, "SetWindowPosition", modwindowSetWindowPosition);
 	_rb_define_module_function(modwindow_module, "SetTitle", modwindowSetTitle);

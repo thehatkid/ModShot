@@ -49,11 +49,6 @@
 	#include <SDL2/SDL_syswm.h>
 #endif
 
-#ifdef _WIN32
-	#include <windows.h>
-	#include <SDL2/SDL_syswm.h>
-#endif
-
 #define KEYCODE_TO_SCUFFEDCODE(keycode) (((keycode & 0xff) | ((keycode & 0x180) == 0x100 ? 0x180 : 0)) + SDL_NUM_SCANCODES)
 
 typedef void (ALC_APIENTRY *LPALCDEVICEPAUSESOFT) (ALCdevice *device);
@@ -404,7 +399,7 @@ void EventThread::process(RGSSThreadData &rtData)
 				break;
 			}
 
-
+			
 			if (event.key.keysym.scancode == SDL_SCANCODE_F3 && rtData.allowForceQuit) {
 				// ModShot addition: force quit the game, no prompting or saving
 				Debug() << "Force terminating ModShot";

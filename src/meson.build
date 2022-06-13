@@ -27,7 +27,6 @@ else
 	iconv = compilers['cpp'].find_library('iconv')
 	gtk = dependency('gtk+-3.0')
 	xfconf = dependency('libxfconf-0')
-
 	global_dependencies += [gtk, xfconf]
 endif
 
