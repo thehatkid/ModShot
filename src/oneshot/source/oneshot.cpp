@@ -481,8 +481,12 @@ void Oneshot::setAllowExit(bool allowExit)
 
 bool Oneshot::msgbox(int type, const char *body, const char *title)
 {
-	if (!title)
+	if (title && !title[0])
+#ifdef _WIN32
+		title = "\u200b"; // Zero width space instead of filename in messagebox title
+#else
 		title = "";
+#endif
 
 #ifdef OS_LINUX
 	linux_DialogData data = { type, body, title, 0 };
