@@ -64,6 +64,16 @@ if compilers['cpp'].get_id() == 'clang'
 endif
 
 if host_system == 'windows'
+    # Win32 Subsystem and Operating System version
+    # (default: 6.00 - Windows Vista/7 and higher)
+    winnt_ver_args = [
+        '-Wl,--major-subsystem-version=6',
+        '-Wl,--minor-subsystem-version=0',
+        '-Wl,--major-os-version=6',
+        '-Wl,--minor-os-version=0'
+    ]
+    global_link_args += winnt_ver_args
+
     if compilers['cpp'].get_id() != 'clang'
         global_args += '-masm=intel'
     endif
@@ -128,6 +138,9 @@ if host_system == 'windows'
         sources: [
             'windows/shim.c',
             windows_resources
+        ],
+        link_args: [
+            winnt_ver_args
         ],
         win_subsystem: 'windows'
     )
