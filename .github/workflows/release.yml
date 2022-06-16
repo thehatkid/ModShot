@@ -4,7 +4,7 @@ on:
     workflows: [Build ModShot]
     types:
       - completed
-    branches: [master]
+    # branches: [master]
 
 jobs:
   release:
