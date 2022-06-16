@@ -311,9 +311,14 @@ RB_METHOD(mriRgssMain)
 	{
 		VALUE exc = Qnil;
 
-		rb_rescue2((VALUE(*)(ANYARGS)) rgssMainCb, rb_block_proc(),
-		           (VALUE(*)(ANYARGS)) rgssMainRescue, (VALUE) &exc,
-		           rb_eException, (VALUE) 0);
+#if RAPI_FULL < 270
+        rb_rescue2((VALUE(*)(ANYARGS))rgssMainCb, rb_block_proc(),
+                   (VALUE(*)(ANYARGS))rgssMainRescue, (VALUE)&exc, rb_eException,
+                   (VALUE)0);
+#else
+        rb_rescue2(rgssMainCb, rb_block_proc(), rgssMainRescue, (VALUE)&exc,
+                   rb_eException, (VALUE)0);
+#endif
 
 		if (NIL_P(exc))
 			break;
