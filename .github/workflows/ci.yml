@@ -1,10 +1,6 @@
 name: Build ModShot
 on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - master
+  workflow_dispatch
 jobs:
   build-windows:
     name: Build ModShot for Windows
