@@ -31,6 +31,7 @@
 #include "audio.h"
 #include "boost-hash.h"
 #include "version.h"
+#include "oneshot.h"
 
 #ifdef __WIN32
 #include "binding-mri-win32.h"
@@ -208,7 +209,10 @@ static void printP(int argc, VALUE *argv,
 			rb_str_buf_cat2(dispString, sep);
 	}
 
-	showMsg(RSTRING_PTR(dispString));
+	shState->oneshot().msgbox(
+		0, RSTRING_PTR(dispString), shState->config().game.title.data()
+	);
+	// showMsg(RSTRING_PTR(dispString));
 }
 
 RB_METHOD(mriPrint)
