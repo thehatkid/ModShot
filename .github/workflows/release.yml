@@ -9,7 +9,7 @@ on:
 jobs:
   release-dev:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} && !startsWith(github.ref, 'refs/tags/v')
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} && !startsWith(${{ github.ref }}, 'refs/tags/v')
     steps:
       - name: Download artifact
         uses: actions/github-script@v6
@@ -27,21 +27,26 @@ jobs:
                  artifact_id: artifact.id,
                  archive_format: 'zip',
               });
+              console.log(`Downloading artifact: ${artifact.name}`);
               let fs = require('fs');
               fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/${artifact.name}.zip`, Buffer.from(download.data));
+              console.log(`Downloaded artifact: ${artifact.name}`);
             }
+      - name: Set outputs
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: true
-          title: "ModShot v${{ github.event.head_sha }}"
+          title: "ModShot v${{ steps.vars.outputs.sha_short }}"
           files: |
             ${{ github.workspace }}/*.zip
 
   release-tagged:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} && startsWith(github.ref, 'refs/tags/v')
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} && startsWith(${{ github.ref }}, 'refs/tags/v')
     steps:
       - name: Download artifact
         uses: actions/github-script@v6
