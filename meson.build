@@ -4,7 +4,7 @@ project(
     ['c', 'cpp'],
     version: '1.0.0',
     license: 'GPL-2.0',
-    meson_version: '>=0.56.0',
+    meson_version: '>=0.60.0',
     default_options: [
         'cpp_std=c++14',
         'buildtype=release'
@@ -18,6 +18,7 @@ compilers = {
 }
 
 xxd = find_program('xxd', native: true)
+ruby = find_program('ruby', native: true)
 
 global_sources = []
 global_dependencies = []
@@ -90,7 +91,7 @@ if get_option('steam') == true
 endif
 
 build_static = false
-if get_option('build_static') == true 
+if get_option('build_static') == true
     if host_system == 'windows'
         build_static = true
     endif
@@ -101,6 +102,7 @@ subdir('src')
 subdir('binding-mri')
 subdir('shader')
 subdir('assets')
+subdir('scripts')
 
 global_include_dirs += include_directories('src', 'binding-mri')
 
