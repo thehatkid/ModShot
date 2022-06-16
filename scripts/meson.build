@@ -1,5 +1,11 @@
-global_sources += custom_target(
-    input: ['ruby/rpgscript.rb', 'rgss'],
+global_sources += custom_target('pack scripts',
     output: 'xScripts.rxdata',
-    command: [ruby, '@INPUT0@', '-s', '@INPUT1@', '-o', '@OUTPUT@']
+    command: [
+            ruby,
+            meson.current_source_dir() + '/ruby/rpgscript.rb',
+            '-s', meson.current_source_dir() + '/rgss',
+            '-o', '@OUTPUT@'
+        ],
+    install: true,
+    install_dir: 'Data'
 )

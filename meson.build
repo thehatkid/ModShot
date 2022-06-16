@@ -4,7 +4,7 @@ project(
     ['c', 'cpp'],
     version: '1.0.0',
     license: 'GPL-2.0',
-    meson_version: '>=0.56.0',
+    meson_version: '>=0.60.0',
     default_options: [
         'cpp_std=c++14',
         'buildtype=release'
