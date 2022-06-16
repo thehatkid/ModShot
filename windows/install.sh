@@ -46,4 +46,7 @@ echo "Downloading cacert.pem..."
 curl -o "$DESTDIR/cacert.pem" https://curl.se/ca/cacert.pem
 echo "Moving shim..."
 cp $SHIM_BINARY "$DESTDIR/../$BINARY"
+echo "Moving xScripts..."
+mkdir -p "$DESTDIR/../Data"
+cp "$MESON_BUILD_ROOT/scripts/xScripts.rxdata" "$DESTDIR/../Data"
 echo "Done!"

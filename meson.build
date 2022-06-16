@@ -18,6 +18,7 @@ compilers = {
 }
 
 xxd = find_program('xxd', native: true)
+ruby = find_program('ruby', native: true)
 
 global_sources = []
 global_dependencies = []
@@ -90,7 +91,7 @@ if get_option('steam') == true
 endif
 
 build_static = false
-if get_option('build_static') == true 
+if get_option('build_static') == true
     if host_system == 'windows'
         build_static = true
     endif
@@ -101,6 +102,7 @@ subdir('src')
 subdir('binding-mri')
 subdir('shader')
 subdir('assets')
+subdir('scripts')
 
 global_include_dirs += include_directories('src', 'binding-mri')
 

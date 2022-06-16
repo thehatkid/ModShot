@@ -50,4 +50,7 @@ echo "Downloading cacert.pem..."
 curl -o "$DESTDIR/cacert.pem" https://curl.se/ca/cacert.pem
 echo "Sym-linking modshot..."
 ln -sf "$DESTDIR/lmodshot" $BINARY
+echo "Moving xScripts..."
+mkdir -p "$DESTDIR/../Data"
+cp "$MESON_BUILD_ROOT/scripts/xScripts.rxdata" "$DESTDIR/../Data"
 echo "Done!"
