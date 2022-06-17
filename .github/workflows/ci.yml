@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build-ubuntu:
+  build-linux:
     name: Build ModShot for Linux
     runs-on: ubuntu-latest
     strategy:
@@ -17,36 +17,41 @@ jobs:
         ruby_ver: ['3.1', '3.0', '2.7']
         steam: [true, false]
     steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-        - name: Setup Python
-          uses: actions/setup-python@v2
-        - name: Build
-          working-directory: ${{ github.workspace }}
-          run: |
-              sudo apt update
-              bash setup.sh
-              pip3 install meson ninja
-              cd linux
-              make RUBY_VER=${{ matrix.ruby_ver }}
-              source vars.sh
-              cd ..
-              meson build -Dmri_version=${{ matrix.ruby_ver }} --prefix=$PWD/out/ -Dsteam=${{ matrix.steam }}
-              cd build && ninja install
-        - name: Create dist folder
-          run: |
-            mkdir ${{ runner.temp }}/built_artifact;
-            mv ${{ github.workspace }}/out/* ${{ runner.temp }}/built_artifact/;
-        - name: Upload artifact
-          uses: actions/upload-artifact@v2
-          with:
-            name: modshot_build_ubuntu_rb-${{ matrix.ruby_ver }}_steam-${{ matrix.steam }}
-            path: ${{ runner.temp }}/built_artifact
+      - name: Shorten SHA signature
+        run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        working-directory: ${{ github.workspace }}
+        run: |
+          sudo apt update
+          bash setup.sh
+          pip3 install meson ninja
+      - name: Build Ruby ${{ matrix.ruby_ver }}
+        working-directory: ${{ github.workspace }}
+        run: cd linux; make RUBY_VER=${{ matrix.ruby_ver }}
+      - name: Build ModShot
+        working-directory: ${{ github.workspace }}
+        run: |
+          cd linux; source vars.sh; cd ..
+          meson build --prefix=$PWD/out -Dmri_version=${{ matrix.ruby_ver }} -Dsteam=${{ matrix.steam }}
+          cd build; ninja install
+      - name: Prepare artifact
+        run: |
+          mkdir ${{ runner.temp }}/artifact
+          mv ${{ github.workspace }}/out/* ${{ runner.temp }}/artifact/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ModShot_Linux_${{ env.SHA7 }}_Ruby-${{ matrix.ruby_ver }}_Steam-${{ matrix.steam }}
+          path: ${{ runner.temp }}/artifact
 
   build-windows:
     name: Build ModShot for Windows
     runs-on: windows-latest
-    needs: build-ubuntu
+    needs: build-linux
     strategy:
       fail-fast: false
       matrix:
@@ -61,78 +66,93 @@ jobs:
             ruby_ver: '3.1'
             steam: false
     steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-        - name: Setup msys2
-          uses: msys2/setup-msys2@v2
-          with:
-            msystem: ${{matrix.sys}}
-        - name: Install packages with pacman
-          shell: msys2 {0}
-          run: |
-            pacman -S --noconfirm  mm-common autoconf automake gcc make cmake libtool
-        - name: Build
-          working-directory: ${{ github.workspace }}
-          shell: msys2 {0}
-          run: |
-              bash setup.sh
-              cd windows
-              make RUBY_VER=${{ matrix.ruby_ver }}
-              source vars.sh
-              cd ..
-              meson build -Dmri_version=${{ matrix.ruby_ver }} --prefix=$PWD/out/ -Dsteam=${{ matrix.steam }}
-              cd build && ninja install
-        - name: Create dist folder
-          run: |
-            mkdir ${{ runner.temp }}\built_artifact;
-            move ${{ github.workspace }}\out\* ${{ runner.temp }}\built_artifact\;
-        - name: Upload artifact
-          uses: actions/upload-artifact@v2
-          with:
-            name: modshot_build_windows_rb-${{ matrix.ruby_ver }}-${{ matrix.sys }}_steam-${{ matrix.steam }}
-            path: ${{ runner.temp }}\built_artifact
+      - name: Shorten SHA signature
+        run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+      - name: Install packages
+        shell: msys2 {0}
+        run: pacman -S --noconfirm mm-common autoconf automake gcc make cmake libtool
+      - name: Install dependencies
+        shell: msys2 {0}
+        working-directory: ${{ github.workspace }}
+        run: bash setup.sh
+      - name: Build Ruby ${{ matrix.ruby_ver }}
+        shell: msys2 {0}
+        working-directory: ${{ github.workspace }}
+        run: cd windows; make RUBY_VER=${{ matrix.ruby_ver }}
+      - name: Build ModShot
+        shell: msys2 {0}
+        working-directory: ${{ github.workspace }}
+        run: |
+          cd windows; source vars.sh; cd ..
+          meson build --prefix=$PWD/out -Dmri_version=${{ matrix.ruby_ver }} -Dsteam=${{ matrix.steam }}
+          cd build; ninja install
+      - name: Prepare artifact
+        run: |
+          mkdir ${{ runner.temp }}\artifact
+          move ${{ github.workspace }}\out\* ${{ runner.temp }}\artifact\
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ModShot_Windows_Ruby-${{ matrix.ruby_ver }}-${{ matrix.sys }}_Steam-${{ matrix.steam }}
+          path: ${{ runner.temp }}\artifact
 
   release-dev:
-    name: Release ModShot Dev
-    needs: build-windows
+    name: Release ModShot (dev)
+    needs: build-ubuntu
     runs-on: ubuntu-latest
     if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
     steps:
+      - name: Shorten SHA commit signature
+        run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Create directory for artifacts
+        run: mkdir ${{ runner.temp }}/artifacts
       - name: Download artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          workflow: ci.yml
-          skip_unpack: false
-          path: ${{ github.workspace }}
-          run_id: ${{ github.run_id }}
-      - name: Shorten SHA
-        id: sha
-        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
-      - uses: "marvinpinto/action-automatic-releases@latest"
+          path: ${{ runner.temp }}/artifacts
+      - name: Make archives
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir release
+          cd artifacts
+          for i in */; do (cd "$i"; zip -r "../../release/${i%/}.zip" .); done
+      - name: Release ModShot
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          title: ModShot ${{ env.SHA7 }}
           prerelease: true
-          title: "ModShot ${{ steps.sha.outputs.sha_short }}"
-          files: |
-            ${{ github.workspace }}/*.zip
+          automatic_release_tag: latest
+          files: ${{ runner.temp }}/release/*.zip
 
   release-tagged:
-    name: Release ModShot Tagged
-    needs: build-windows
+    name: Release ModShot (tagged)
+    needs: build-ubuntu
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
+      - name: Shorten SHA commit signature
+        run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Create directory for artifacts
+        run: mkdir ${{ runner.temp }}/artifacts
       - name: Download artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
-          workflow: ci.yml
-          skip_unpack: false
-          path: ${{ github.workspace }}
-          run_id: ${{ github.run_id }}
-      - uses: "marvinpinto/action-automatic-releases@latest"
+          path: ${{ runner.temp }}/artifacts
+      - name: Make archives
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir release
+          cd artifacts
+          for i in */; do (cd "$i"; zip -r "../../release/${i%/}.zip" .); done
+      - uses: marvinpinto/action-automatic-releases@latest
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
-          files: |
-            ${{ github.workspace }}/*.zip
+          files: ${{ runner.temp }}/release/*.zip
