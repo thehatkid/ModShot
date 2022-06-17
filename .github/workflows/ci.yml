@@ -1,4 +1,4 @@
-name: Build ModShot
+name: ModShot CI
 on:
   workflow_dispatch:
   pull_request:
@@ -91,3 +91,42 @@ jobs:
           with:
             name: modshot_build_windows_rb-${{ matrix.ruby_ver }}-${{ matrix.sys }}_steam-${{ matrix.steam }}
             path: ${{ runner.temp }}\built_artifact
+
+  release-dev:
+    name: Release ModShot Dev
+    needs: build-windows
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(${{ github.ref }}, 'refs/tags/v') }}
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
+      - name: Shorten SHA
+        id: sha
+        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "ModShot ${{ steps.sha.outputs.sha_short }}"
+          files: |
+            ${{ github.workspace }}/*.zip
+
+  release-tagged:
+    name: Release ModShot Tagged
+    needs: build-windows
+    runs-on: ubuntu-latest
+    if: ${{ startsWith(${{ github.ref }}, 'refs/tags/v') }}
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.workspace }}
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            ${{ github.workspace }}/*.zip
