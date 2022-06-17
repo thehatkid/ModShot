@@ -101,7 +101,7 @@ jobs:
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: ci.yml
+          workflow: ci.yml
           skip_unpack: false
           path: ${{ github.workspace }}
           run_id: ${{ github.run_id }}
@@ -126,7 +126,7 @@ jobs:
       - name: Download artifacts
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: ci.yml
+          workflow: ci.yml
           skip_unpack: false
           path: ${{ github.workspace }}
           run_id: ${{ github.run_id }}

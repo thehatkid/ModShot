@@ -153,25 +153,25 @@ static std::string w32_fromWide(const WCHAR *ustr)
 	return result;
 }
 /* Convert WCHAR pointer from const char* */
-static WCHAR *w32_toWide(const char *str)
-{
-	if (str)
-	{
-		int size = MultiByteToWideChar(CP_UTF8, 0, str, -1, 0, 0);
-		if (size > 0)
-		{
-			WCHAR *ustr = new WCHAR[size];
-			if (MultiByteToWideChar(CP_UTF8, 0, str, -1, ustr, size) == size)
-				return ustr;
-			delete [] ustr;
-		}
-	}
-
-	//Return empty string
-	WCHAR *ustr = new WCHAR[1];
-	*ustr = 0;
-	return ustr;
-}
+// static WCHAR *w32_toWide(const char *str)
+// {
+// 	if (str)
+// 	{
+// 		int size = MultiByteToWideChar(CP_UTF8, 0, str, -1, 0, 0);
+// 		if (size > 0)
+// 		{
+// 			WCHAR *ustr = new WCHAR[size];
+// 			if (MultiByteToWideChar(CP_UTF8, 0, str, -1, ustr, size) == size)
+// 				return ustr;
+// 			delete [] ustr;
+// 		}
+// 	}
+//
+// 	//Return empty string
+// 	WCHAR *ustr = new WCHAR[1];
+// 	*ustr = 0;
+// 	return ustr;
+// }
 #endif
 
 Oneshot::Oneshot(RGSSThreadData &threadData) :
