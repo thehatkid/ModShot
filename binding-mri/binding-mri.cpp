@@ -31,6 +31,7 @@
 #include "audio.h"
 #include "boost-hash.h"
 #include "version.h"
+#include "oneshot.h"
 
 #ifdef __WIN32
 #include "binding-mri-win32.h"
@@ -208,7 +209,10 @@ static void printP(int argc, VALUE *argv,
 			rb_str_buf_cat2(dispString, sep);
 	}
 
-	showMsg(RSTRING_PTR(dispString));
+	shState->oneshot().msgbox(
+		0, RSTRING_PTR(dispString), shState->config().game.title.data()
+	);
+	// showMsg(RSTRING_PTR(dispString));
 }
 
 RB_METHOD(mriPrint)
@@ -307,9 +311,14 @@ RB_METHOD(mriRgssMain)
 	{
 		VALUE exc = Qnil;
 
-		rb_rescue2((VALUE(*)(ANYARGS)) rgssMainCb, rb_block_proc(),
-		           (VALUE(*)(ANYARGS)) rgssMainRescue, (VALUE) &exc,
-		           rb_eException, (VALUE) 0);
+#if RAPI_FULL < 270
+        rb_rescue2((VALUE(*)(ANYARGS))rgssMainCb, rb_block_proc(),
+                   (VALUE(*)(ANYARGS))rgssMainRescue, (VALUE)&exc, rb_eException,
+                   (VALUE)0);
+#else
+        rb_rescue2(rgssMainCb, rb_block_proc(), rgssMainRescue, (VALUE)&exc,
+                   rb_eException, (VALUE)0);
+#endif
 
 		if (NIL_P(exc))
 			break;
