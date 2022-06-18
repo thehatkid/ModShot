@@ -100,7 +100,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ModShot_Windows_Ruby-${{ matrix.ruby_ver }}-${{ matrix.sys }}_Steam-${{ matrix.steam }}
+          name: ModShot_Windows_${{ env.SHA7 }}_Ruby-${{ matrix.ruby_ver }}-${{ matrix.sys }}_Steam-${{ matrix.steam }}
           path: ${{ runner.temp }}\artifact
 
   release-dev:
