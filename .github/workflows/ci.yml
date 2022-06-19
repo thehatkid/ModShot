@@ -122,14 +122,14 @@ jobs:
         run: |
           mkdir release
           cd artifacts
-          for i in */; do (cd "$i"; zip -r "../../release/${i%/}.zip" .); done
+          for i in */; do (cd "$i"; echo "Archiving artifact: $i ..."; zip -qr "../../release/${i%/}.zip" .); done
       - name: Release ModShot
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title: ModShot ${{ env.SHA7 }}
+          title: ModShot ${{ env.SHA7 }}-dev
           prerelease: true
-          automatic_release_tag: latest
+          automatic_release_tag: latest-dev
           files: ${{ runner.temp }}/release/*.zip
 
   release-tagged:
@@ -151,9 +151,10 @@ jobs:
         run: |
           mkdir release
           cd artifacts
-          for i in */; do (cd "$i"; zip -r "../../release/${i%/}.zip" .); done
+          for i in */; do (cd "$i"; echo "Archiving artifact: $i ..."; zip -qr "../../release/${i%/}.zip" .); done
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          title: ModShot ${{ env.SHA7 }}
           prerelease: false
           files: ${{ runner.temp }}/release/*.zip
