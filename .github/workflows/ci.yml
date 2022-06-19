@@ -129,7 +129,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: ModShot ${{ env.SHA7 }}-dev
           prerelease: true
-          automatic_release_tag: latest-dev
+          automatic_release_tag: latest
           files: ${{ runner.temp }}/release/*.zip
 
   release-tagged:
