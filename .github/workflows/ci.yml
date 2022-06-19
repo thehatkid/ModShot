@@ -107,22 +107,20 @@ jobs:
     name: Release ModShot (dev)
     needs: build-windows
     runs-on: ubuntu-latest
-    if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
+    if: ${{ !startsWith(github.ref, 'refs/tags/v') }} && github.event_name != 'pull_request'
     steps:
-      - name: Shorten SHA commit signature
+      - name: Set environment variables
         run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
       - name: Create directory for artifacts
         run: mkdir ${{ runner.temp }}/artifacts
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ci.yml
+          workflow_conclusion: success
           path: ${{ runner.temp }}/artifacts
-      - name: Make archives
-        working-directory: ${{ runner.temp }}
-        run: |
-          mkdir release
-          cd artifacts
-          for i in */; do (cd "$i"; echo "Archiving artifact: $i ..."; zip -qr "../../release/${i%/}.zip" .); done
+          skip_unpack: true
       - name: Release ModShot
         uses: marvinpinto/action-automatic-releases@latest
         with:
@@ -130,31 +128,31 @@ jobs:
           title: ModShot ${{ env.SHA7 }}-dev
           prerelease: true
           automatic_release_tag: latest
-          files: ${{ runner.temp }}/release/*.zip
+          files: ${{ runner.temp }}/artifacts/*.zip
 
   release-tagged:
     name: Release ModShot (tagged)
     needs: build-windows
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    if: startsWith(github.ref, 'refs/tags/v') && github.event_name != 'pull_request'
     steps:
-      - name: Shorten SHA commit signature
-        run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Set environment variables
+        run: |
+          echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+          echo "RELEASE_VER=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Create directory for artifacts
         run: mkdir ${{ runner.temp }}/artifacts
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           path: ${{ runner.temp }}/artifacts
-      - name: Make archives
-        working-directory: ${{ runner.temp }}
-        run: |
-          mkdir release
-          cd artifacts
-          for i in */; do (cd "$i"; echo "Archiving artifact: $i ..."; zip -qr "../../release/${i%/}.zip" .); done
-      - uses: marvinpinto/action-automatic-releases@latest
+          skip_unpack: true
+      - name: Release ModShot
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title: ModShot ${{ env.SHA7 }}
+          title: ModShot ${{ env.RELEASE_VER }}-${{ env.SHA7 }}
           prerelease: false
-          files: ${{ runner.temp }}/release/*.zip
+          automatic_release_tag: ${{ env.RELEASE_VER }}
+          files: ${{ runner.temp }}/artifacts/*.zip
