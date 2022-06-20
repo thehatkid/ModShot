@@ -107,7 +107,7 @@ jobs:
     name: Release ModShot (dev)
     needs: build-windows
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.ref, 'refs/tags/v') }} && github.event_name != 'pull_request'
+    if: ${{ !startsWith(github.ref, 'refs/tags/v') && github.event_name != 'pull_request' }}
     steps:
       - name: Set environment variables
         run: echo "SHA7=`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
@@ -134,7 +134,7 @@ jobs:
     name: Release ModShot (tagged)
     needs: build-windows
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v') && github.event_name != 'pull_request'
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name != 'pull_request' }}
     steps:
       - name: Set environment variables
         run: |
