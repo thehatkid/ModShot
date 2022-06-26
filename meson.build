@@ -32,7 +32,14 @@ sizeof = {
 }
 win64 = (sizeof['void*'] != sizeof['long'])
 
-global_args += '-DHAVE_NANOSLEEP'
+if host_system == 'windows'
+    # Optional for Windows, affects to FPS
+    if get_option('have_nanosleep') == true
+        global_args += '-DHAVE_NANOSLEEP'
+    endif
+else
+    global_args += '-DHAVE_NANOSLEEP'
+endif
 
 gfx_backend = get_option('gfx_backend')
 if gfx_backend == 'gles'
