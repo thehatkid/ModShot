@@ -34,11 +34,12 @@ win64 = (sizeof['void*'] != sizeof['long'])
 
 if host_system == 'windows'
     # Optional for Windows, affects to FPS
-    if get_option('have_nanosleep') == true
-        global_args += '-DHAVE_NANOSLEEP'
+    if get_option('use_nanosleep_for_ticks') == true
+        global_args += '-DUSE_NANOSLEEP_FOR_TICKS'
     endif
 else
     global_args += '-DHAVE_NANOSLEEP'
+    global_args += '-DUSE_NANOSLEEP_FOR_TICKS'
 endif
 
 gfx_backend = get_option('gfx_backend')

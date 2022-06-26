@@ -625,7 +625,7 @@ struct FPSLimiter
 private:
 	void delayTicks(uint64_t ticks)
 	{
-#if defined(HAVE_NANOSLEEP)
+#ifdef USE_NANOSLEEP_FOR_TICKS
 		struct timespec req;
 		uint64_t nsec = ticks / tickFreqNS;
 		req.tv_sec = nsec / NS_PER_S;

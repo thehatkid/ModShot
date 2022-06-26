@@ -9,4 +9,4 @@ option('workdir_current', type: 'boolean', value: false, description: 'Keep curr
 option('steam', type: 'boolean', value: false, description: 'Add steamworks support')
 option('build_static', type: 'boolean', value: true, description: 'Use static libraries')
 option('gfx_backend', type: 'combo', value: 'gl', choices: ['gl', 'gles'], description: 'Graphics rendering API to use')
-option('have_nanosleep', type: 'boolean', value: false, description: 'Whether do we having nanosleep or not (ignores if unix-like system)')
+option('use_nanosleep_for_ticks', type: 'boolean', value: false, description: 'Whether do use nanosleep for ticking FPS or not (ignores if unix-like system)')
