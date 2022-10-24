@@ -1,4 +1,4 @@
-# ModShot-Test
+# ModShot-Core
 
 [![ModShot CI](https://github.com/Astrabit-ST/ModShot-Core/actions/workflows/ci.yml/badge.svg)](https://github.com/Astrabit-ST/ModShot-Core/actions/workflows/ci.yml)
 
